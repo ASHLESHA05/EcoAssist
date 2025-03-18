@@ -1,0 +1,519 @@
+"use client"
+
+import { useState } from "react"
+import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Slider } from "@/components/ui/slider"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import CarbonImpactChart from "@/components/calculator/carbon-impact-chart"
+import ComparisonSimulator from "@/components/calculator/comparison-simulator"
+
+export default function CalculatorPage() {
+  const [transportEmissions, setTransportEmissions] = useState(120)
+  const [homeEmissions, setHomeEmissions] = useState(80)
+  const [foodEmissions, setFoodEmissions] = useState(60)
+  const [shoppingEmissions, setShoppingEmissions] = useState(40)
+
+  const totalEmissions = transportEmissions + homeEmissions + foodEmissions + shoppingEmissions
+
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold tracking-tight">Carbon Calculator</h1>
+        <p className="text-muted-foreground">Estimate and track your carbon footprint</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="md:col-span-2">
+          <Tabs defaultValue="transport">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="transport">
+                <Car className="h-4 w-4 mr-2" />
+                Transport
+              </TabsTrigger>
+              <TabsTrigger value="home">
+                <Home className="h-4 w-4 mr-2" />
+                Home
+              </TabsTrigger>
+              <TabsTrigger value="food">
+                <Utensils className="h-4 w-4 mr-2" />
+                Food
+              </TabsTrigger>
+              <TabsTrigger value="shopping">
+                <ShoppingBag className="h-4 w-4 mr-2" />
+                Shopping
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="transport" className="mt-6 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Transportation</CardTitle>
+                  <CardDescription>Calculate emissions from your daily commute and travel</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Primary mode of transportation</Label>
+                    <RadioGroup defaultValue="car" className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="car" id="car" />
+                        <Label htmlFor="car" className="flex items-center">
+                          <Car className="h-4 w-4 mr-2" />
+                          Car
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="public" id="public" />
+                        <Label htmlFor="public" className="flex items-center">
+                          <Plane className="h-4 w-4 mr-2" />
+                          Public Transit
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="bike" id="bike" />
+                        <Label htmlFor="bike" className="flex items-center">
+                          <Car className="h-4 w-4 mr-2" />
+                          Bicycle
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="walk" id="walk" />
+                        <Label htmlFor="walk" className="flex items-center">
+                          <Car className="h-4 w-4 mr-2" />
+                          Walking
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label>Daily commute distance (miles)</Label>
+                      <span className="text-sm font-medium">{transportEmissions / 10} miles</span>
+                    </div>
+                    <Slider
+                      defaultValue={[transportEmissions / 10]}
+                      max={50}
+                      step={1}
+                      onValueChange={(value) => setTransportEmissions(value[0] * 10)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Flights per year</Label>
+                    <Select defaultValue="1-2">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select flights" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">None</SelectItem>
+                        <SelectItem value="1-2">1-2 flights</SelectItem>
+                        <SelectItem value="3-5">3-5 flights</SelectItem>
+                        <SelectItem value="6+">6+ flights</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button>Save Transportation Data</Button>
+                </CardFooter>
+              </Card>
+
+              <ComparisonSimulator category="transport" />
+            </TabsContent>
+
+            <TabsContent value="home" className="mt-6 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Home Energy</CardTitle>
+                  <CardDescription>Calculate emissions from your home energy usage</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Home energy source</Label>
+                    <RadioGroup defaultValue="grid" className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="grid" id="grid" />
+                        <Label htmlFor="grid" className="flex items-center">
+                          <Home className="h-4 w-4 mr-2" />
+                          Standard Grid
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="green" id="green" />
+                        <Label htmlFor="green" className="flex items-center">
+                          <Home className="h-4 w-4 mr-2" />
+                          Green Energy
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="solar" id="solar" />
+                        <Label htmlFor="solar" className="flex items-center">
+                          <Home className="h-4 w-4 mr-2" />
+                          Solar Panels
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="mixed" id="mixed" />
+                        <Label htmlFor="mixed" className="flex items-center">
+                          <Home className="h-4 w-4 mr-2" />
+                          Mixed Sources
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label>Monthly electricity usage (kWh)</Label>
+                      <span className="text-sm font-medium">{homeEmissions * 5} kWh</span>
+                    </div>
+                    <Slider
+                      defaultValue={[homeEmissions]}
+                      max={200}
+                      step={1}
+                      onValueChange={(value) => setHomeEmissions(value[0])}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Home size</Label>
+                    <Select defaultValue="medium">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select home size" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="small">Small apartment (&lt; 800 sq ft)</SelectItem>
+                        <SelectItem value="medium">Medium home (800-1500 sq ft)</SelectItem>
+                        <SelectItem value="large">Large home (1500-3000 sq ft)</SelectItem>
+                        <SelectItem value="xlarge">Very large home (&gt; 3000 sq ft)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Heating type</Label>
+                    <Select defaultValue="gas">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select heating type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="gas">Natural Gas</SelectItem>
+                        <SelectItem value="electric">Electric</SelectItem>
+                        <SelectItem value="oil">Oil</SelectItem>
+                        <SelectItem value="heatpump">Heat Pump</SelectItem>
+                        <SelectItem value="wood">Wood/Pellet</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button>Save Home Energy Data</Button>
+                </CardFooter>
+              </Card>
+
+              <ComparisonSimulator category="home" />
+            </TabsContent>
+
+            <TabsContent value="food" className="mt-6 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Food Consumption</CardTitle>
+                  <CardDescription>Calculate emissions from your diet and food choices</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Diet type</Label>
+                    <RadioGroup defaultValue="mixed" className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="meat" id="meat" />
+                        <Label htmlFor="meat" className="flex items-center">
+                          <Utensils className="h-4 w-4 mr-2" />
+                          Meat Heavy
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="mixed" id="mixed" />
+                        <Label htmlFor="mixed" className="flex items-center">
+                          <Utensils className="h-4 w-4 mr-2" />
+                          Mixed Diet
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="vegetarian" id="vegetarian" />
+                        <Label htmlFor="vegetarian" className="flex items-center">
+                          <Utensils className="h-4 w-4 mr-2" />
+                          Vegetarian
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="vegan" id="vegan" />
+                        <Label htmlFor="vegan" className="flex items-center">
+                          <Utensils className="h-4 w-4 mr-2" />
+                          Vegan
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label>Local food percentage</Label>
+                      <span className="text-sm font-medium">{foodEmissions}%</span>
+                    </div>
+                    <Slider
+                      defaultValue={[foodEmissions]}
+                      max={100}
+                      step={5}
+                      onValueChange={(value) => setFoodEmissions(value[0])}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Food waste</Label>
+                    <Select defaultValue="medium">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select waste level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low (&lt; 10% wasted)</SelectItem>
+                        <SelectItem value="medium">Medium (10-25% wasted)</SelectItem>
+                        <SelectItem value="high">High (&gt; 25% wasted)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Organic food consumption</Label>
+                    <Select defaultValue="some">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select organic consumption" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None (0%)</SelectItem>
+                        <SelectItem value="some">Some (25%)</SelectItem>
+                        <SelectItem value="half">Half (50%)</SelectItem>
+                        <SelectItem value="most">Most (75%)</SelectItem>
+                        <SelectItem value="all">All (100%)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button>Save Food Data</Button>
+                </CardFooter>
+              </Card>
+
+              <ComparisonSimulator category="food" />
+            </TabsContent>
+
+            <TabsContent value="shopping" className="mt-6 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Shopping & Consumption</CardTitle>
+                  <CardDescription>Calculate emissions from your purchases and consumption habits</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label>Shopping frequency</Label>
+                    <RadioGroup defaultValue="moderate" className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="minimal" id="minimal" />
+                        <Label htmlFor="minimal" className="flex items-center">
+                          <ShoppingBag className="h-4 w-4 mr-2" />
+                          Minimal
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="moderate" id="moderate" />
+                        <Label htmlFor="moderate" className="flex items-center">
+                          <ShoppingBag className="h-4 w-4 mr-2" />
+                          Moderate
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="frequent" id="frequent" />
+                        <Label htmlFor="frequent" className="flex items-center">
+                          <ShoppingBag className="h-4 w-4 mr-2" />
+                          Frequent
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-md border p-3">
+                        <RadioGroupItem value="heavy" id="heavy" />
+                        <Label htmlFor="heavy" className="flex items-center">
+                          <ShoppingBag className="h-4 w-4 mr-2" />
+                          Heavy
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label>Sustainable products percentage</Label>
+                      <span className="text-sm font-medium">{shoppingEmissions}%</span>
+                    </div>
+                    <Slider
+                      defaultValue={[shoppingEmissions]}
+                      max={100}
+                      step={5}
+                      onValueChange={(value) => setShoppingEmissions(value[0])}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Recycling habits</Label>
+                    <Select defaultValue="most">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select recycling level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">None (Don't recycle)</SelectItem>
+                        <SelectItem value="some">Some (Basic recycling)</SelectItem>
+                        <SelectItem value="most">Most (Regular recycling)</SelectItem>
+                        <SelectItem value="all">All (Zero waste lifestyle)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Fast fashion vs. sustainable clothing</Label>
+                    <Select defaultValue="mixed">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select clothing habits" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="fast">Mostly fast fashion</SelectItem>
+                        <SelectItem value="mixed">Mix of both</SelectItem>
+                        <SelectItem value="sustainable">Mostly sustainable</SelectItem>
+                        <SelectItem value="secondhand">Mostly secondhand</SelectItem>
+                        <SelectItem value="minimal">Minimal new purchases</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button>Save Shopping Data</Button>
+                </CardFooter>
+              </Card>
+
+              <ComparisonSimulator category="shopping" />
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Carbon Footprint</CardTitle>
+              <CardDescription>Based on your current lifestyle choices</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center mb-6">
+                <div className="text-4xl font-bold">{totalEmissions}</div>
+                <div className="text-sm text-muted-foreground">kg CO2e per month</div>
+              </div>
+
+              <CarbonImpactChart
+                data={[
+                  { name: "Transport", value: transportEmissions },
+                  { name: "Home", value: homeEmissions },
+                  { name: "Food", value: foodEmissions },
+                  { name: "Shopping", value: shoppingEmissions },
+                ]}
+              />
+
+              <div className="mt-6 space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-primary mr-2"></div>
+                    <span>Transport</span>
+                  </div>
+                  <span className="font-medium">{transportEmissions} kg</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                    <span>Home</span>
+                  </div>
+                  <span className="font-medium">{homeEmissions} kg</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                    <span>Food</span>
+                  </div>
+                  <span className="font-medium">{foodEmissions} kg</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
+                    <span>Shopping</span>
+                  </div>
+                  <span className="font-medium">{shoppingEmissions} kg</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Reduction Potential</CardTitle>
+              <CardDescription>How much you could reduce with small changes</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Current footprint</span>
+                    <span>{totalEmissions} kg/month</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div className="bg-primary h-2 rounded-full w-full"></div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>With easy changes</span>
+                    <span>{Math.round(totalEmissions * 0.8)} kg/month</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div className="bg-blue-500 h-2 rounded-full w-[80%]"></div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>With moderate changes</span>
+                    <span>{Math.round(totalEmissions * 0.6)} kg/month</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full w-[60%]"></div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>With significant changes</span>
+                    <span>{Math.round(totalEmissions * 0.4)} kg/month</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div className="bg-yellow-500 h-2 rounded-full w-[40%]"></div>
+                  </div>
+                </div>
+              </div>
+
+              <Button className="w-full mt-6">Get Personalized Reduction Plan</Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
+
