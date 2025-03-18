@@ -662,9 +662,14 @@ const SidebarMenuSkeleton = React.forwardRef<
 >(({ className, showIcon = false, ...props }, ref) => {
   // Random width between 50 to 90%.
   const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
-  }, [])
+    if (typeof window === "undefined") return "50%"; // Default server value
+    return `${Math.floor(Math.random() * 40) + 50}%`; // Client-only logic
+  }, []);
+  const [isMobile, setIsMobile] = React.useState(false);
 
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 768); // Example breakpoint
+  }, []);
   return (
     <div
       ref={ref}

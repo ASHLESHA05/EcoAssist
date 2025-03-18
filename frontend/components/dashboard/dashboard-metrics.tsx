@@ -1,6 +1,15 @@
 "use client"
+import dynamic from "next/dynamic"
 
-import { ArrowDown, ArrowUp, Leaf, Droplet, Zap, Recycle } from "lucide-react"
+// import { ArrowDown, ArrowUp, Leaf, Droplet, Zap, Recycle } from "lucide-react"
+
+const ArrowDown = dynamic(() => import("lucide-react").then((mod) => mod.ArrowDown), { ssr: false })
+const ArrowUp = dynamic(() => import("lucide-react").then((mod) => mod.ArrowUp), { ssr: false })
+const Leaf = dynamic(() => import("lucide-react").then((mod) => mod.Leaf), { ssr: false })
+const Droplet = dynamic(() => import("lucide-react").then((mod) => mod.Droplet), { ssr: false })
+const Zap = dynamic(() => import("lucide-react").then((mod) => mod.Zap), { ssr: false })
+const Recycle = dynamic(() => import("lucide-react").then((mod) => mod.Recycle), { ssr: false })
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardMetrics() {

@@ -1,4 +1,13 @@
-import { ArrowRight, Car, Lightbulb, ShoppingBag, Utensils } from "lucide-react"
+"use client"
+import dynamic from "next/dynamic"
+// import { ArrowRight, Car, Lightbulb, ShoppingBag, Utensils } from "lucide-react"
+
+const ArrowRight = dynamic(() => import("lucide-react").then((mod) => mod.ArrowRight), { ssr: false })
+const Car = dynamic(() => import("lucide-react").then((mod) => mod.Car), { ssr: false })
+const Lightbulb = dynamic(() => import("lucide-react").then((mod) => mod.Lightbulb), { ssr: false })
+const ShoppingBag = dynamic(() => import("lucide-react").then((mod) => mod.ShoppingBag), { ssr: false })
+const Utensils = dynamic(() => import("lucide-react").then((mod) => mod.Utensils), { ssr: false })
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 

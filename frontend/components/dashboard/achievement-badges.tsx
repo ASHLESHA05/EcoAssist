@@ -1,5 +1,8 @@
+"use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Award } from "lucide-react"
+import dynamic from "next/dynamic"
+// import { Award } from "lucide-react"
+const Award = dynamic(() => import("lucide-react").then((mod) => mod.Award), { ssr: false })
 
 export default function AchievementBadges() {
   const badges = [

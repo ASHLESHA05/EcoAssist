@@ -1,5 +1,14 @@
+"use client"
 import { Input } from "@/components/ui/input"
-import { User, Settings, Bell, Shield, Palette } from "lucide-react"
+import dynamic from "next/dynamic"
+// import { User, Settings, Bell, Shield, Palette } from "lucide-react"
+
+const User = dynamic(() => import("lucide-react").then((mod) => mod.User), { ssr: false })
+const Settings = dynamic(() => import("lucide-react").then((mod) => mod.Settings), { ssr: false })
+const Bell = dynamic(() => import("lucide-react").then((mod) => mod.Bell), { ssr: false })
+const Shield = dynamic(() => import("lucide-react").then((mod) => mod.Shield), { ssr: false })
+const Palette = dynamic(() => import("lucide-react").then((mod) => mod.Palette), { ssr: false })
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

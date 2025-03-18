@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  reactStrictMode: false, // Disable React Strict Mode
+  compiler: {
+    reactRemoveProperties: process.env.NODE_ENV === 'production' ? { properties: ['^data-suppress-hydration-warning$'] } : false,
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

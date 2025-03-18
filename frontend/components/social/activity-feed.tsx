@@ -1,7 +1,11 @@
+"use client"
 import { Avatar } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ThumbsUp } from "lucide-react"
+import dynamic from "next/dynamic"
+// import { ThumbsUp } from "lucide-react"
+const ThumbsUp = dynamic(() => import("lucide-react").then((mod) => mod.ThumbsUp), { ssr: false })
+
 
 export default function ActivityFeed() {
   const activities = [

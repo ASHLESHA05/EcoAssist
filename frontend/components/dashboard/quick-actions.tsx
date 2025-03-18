@@ -1,6 +1,14 @@
+"use client"
+import dynamic from "next/dynamic"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Car, Lightbulb, Recycle, ShoppingBag } from "lucide-react"
+// import { Car, Lightbulb, Recycle, ShoppingBag } from "lucide-react"
+
+const Car = dynamic(() => import("lucide-react").then((mod) => mod.Car), { ssr: false })
+const Lightbulb = dynamic(() => import("lucide-react").then((mod) => mod.Lightbulb), { ssr: false })
+const Recycle = dynamic(() => import("lucide-react").then((mod) => mod.Recycle), { ssr: false })
+const ShoppingBag = dynamic(() => import("lucide-react").then((mod) => mod.ShoppingBag), { ssr: false })
 
 export default function QuickActions() {
   const actions = [

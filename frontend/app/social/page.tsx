@@ -1,4 +1,13 @@
-import { Users, Trophy, Calendar, Award, Search } from "lucide-react"
+"use client"
+import dynamic from "next/dynamic"
+// import { Users, Trophy, Calendar, Award, Search } from "lucide-react"
+
+const Users = dynamic(() => import("lucide-react").then((mod) => mod.Users), { ssr: false })
+const Trophy = dynamic(() => import("lucide-react").then((mod) => mod.Trophy), { ssr: false })
+const Calendar = dynamic(() => import("lucide-react").then((mod) => mod.Calendar), { ssr: false })
+const Award = dynamic(() => import("lucide-react").then((mod) => mod.Award), { ssr: false })
+const Search = dynamic(() => import("lucide-react").then((mod) => mod.Search), { ssr: false })
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar } from "@/components/ui/avatar"

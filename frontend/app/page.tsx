@@ -1,4 +1,9 @@
-import { Sparkles } from "lucide-react"
+"use client"
+import dynamic from "next/dynamic"
+// import { Sparkles } from "lucide-react"
+
+const Sparkles = dynamic(() => import("lucide-react").then((mod) => mod.Sparkles), { ssr: false })
+
 import DashboardMetrics from "@/components/dashboard/dashboard-metrics"
 import CarbonChart from "@/components/dashboard/carbon-chart"
 import SuggestionCards from "@/components/dashboard/suggestion-cards"
@@ -9,7 +14,7 @@ import ProgressTree from "@/components/dashboard/progress-tree"
 
 export default function Dashboard() {
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6"   suppressHydrationWarning>
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">Track your sustainability journey and reduce your carbon footprint</p>

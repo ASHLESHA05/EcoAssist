@@ -1,7 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
+import dynamic from "next/dynamic"
+// import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
+
+const Car = dynamic(() => import("lucide-react").then((mod) => mod.Car), { ssr: false })
+const Home = dynamic(() => import("lucide-react").then((mod) => mod.Home), { ssr: false })
+const ShoppingBag = dynamic(() => import("lucide-react").then((mod) => mod.ShoppingBag), { ssr: false })
+const Utensils = dynamic(() => import("lucide-react").then((mod) => mod.Utensils), { ssr: false })
+const Plane = dynamic(() => import("lucide-react").then((mod) => mod.Plane), { ssr: false })
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"

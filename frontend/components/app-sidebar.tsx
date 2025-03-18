@@ -1,6 +1,14 @@
 "use client"
+import dynamic from "next/dynamic"
+// import { Home, MessageSquare, BarChart3, Users, Settings, Leaf, LogOut } from "lucide-react"
 
-import { Home, MessageSquare, BarChart3, Users, Settings, Leaf, LogOut } from "lucide-react"
+const Home = dynamic(() => import("lucide-react").then((mod) => mod.Home), { ssr: false })
+const MessageSquare = dynamic(() => import("lucide-react").then((mod) => mod.MessageSquare), { ssr: false })
+const BarChart3 = dynamic(() => import("lucide-react").then((mod) => mod.BarChart3), { ssr: false })
+const Users = dynamic(() => import("lucide-react").then((mod) => mod.Users), { ssr: false })
+const Settings = dynamic(() => import("lucide-react").then((mod) => mod.Settings), { ssr: false })
+const Leaf = dynamic(() => import("lucide-react").then((mod) => mod.Leaf), { ssr: false })
+const LogOut = dynamic(() => import("lucide-react").then((mod) => mod.LogOut), { ssr: false })
 import {
   Sidebar,
   SidebarContent,
