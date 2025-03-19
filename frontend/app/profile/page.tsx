@@ -196,9 +196,13 @@ export default function ProfilePage() {
                 </span>
               </div>
               <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full w-[65%]"></div>
+                <div 
+                  className="bg-primary h-2 rounded-full" 
+                  style={{ width: `${userData?.levelProgress || 0}%` }}
+                ></div>
               </div>
             </div>
+
           </CardContent>
           <CardFooter>
             <Button onClick={HandleEditClick} variant="outline" className="w-full">

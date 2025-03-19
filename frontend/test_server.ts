@@ -16,7 +16,7 @@ const mockUserDetails = {
   joinedDate: "2023-07-15",
   Location: "New York, USA",
   Level: 9,
-  levelProgress: 80,
+  levelProgress: 8,
   profileVisibility: "public",
 };
 
