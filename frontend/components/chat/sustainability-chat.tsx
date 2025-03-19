@@ -1,57 +1,59 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-// import { Send, Leaf } from "lucide-react";
-import dynamic from "next/dynamic"
-const Send = dynamic(() => import("lucide-react").then((mod) => mod.Send), { ssr: false })
-const Leaf = dynamic(() => import("lucide-react").then((mod) => mod.Leaf), { ssr: false })
+import type React from "react"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Avatar } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react"
+import { Send, Leaf } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Avatar } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
-// Mock implementation of useChat
+// This is a mock implementation since we don't have the actual AI integration
+// In a real app, you would use the useChat hook from ai/react
 const useChat = (options: any) => {
-  const [messages, setMessages] = useState(options.initialMessages || []);
-  const [input, setInput] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState(options.initialMessages || [])
+  const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [messageId, setMessageId] = useState(1)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
-  };
+    setInput(e.target.value)
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+    e.preventDefault()
+    if (!input.trim()) return
 
-    // Add user message
+    // Add user message with sequential ID instead of Date.now()
     const userMessage = {
-      id: Date.now().toString(),
+      id: `user-${messageId}`,
       role: "user",
       content: input,
-    };
+    }
 
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setIsLoading(true);
+    setMessages((prev) => [...prev, userMessage])
+    setInput("")
+    setIsLoading(true)
+    setMessageId((prev) => prev + 1)
 
-    // Simulate AI response (client-side only)
+    // Simulate AI response with sequential ID
     setTimeout(() => {
       const assistantMessage = {
-        id: (Date.now() + 1).toString(),
+        id: `assistant-${messageId}`,
         role: "assistant",
         content: getAIResponse(input),
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsLoading(false);
+      }
+      setMessages((prev) => [...prev, assistantMessage])
+      setIsLoading(false)
+      setMessageId((prev) => prev + 1)
 
       if (options.onFinish) {
-        options.onFinish(assistantMessage);
+        options.onFinish(assistantMessage)
       }
-    }, 1000);
-  };
+    }, 1000)
+  }
 
   return {
     messages,
@@ -59,31 +61,31 @@ const useChat = (options: any) => {
     handleInputChange,
     handleSubmit,
     isLoading,
-  };
-};
-
-// Mock AI response logic
-const getAIResponse = (query: string): string => {
-  if (query.toLowerCase().includes("electricity")) {
-    return "To reduce your electricity bill this month, try: 1) Unplug devices when not in use, 2) Switch to LED bulbs, 3) Use natural light during the day, 4) Run large appliances during off-peak hours.";
-  } else if (query.toLowerCase().includes("cleaning")) {
-    return "Some eco-friendly cleaning brands include: Method, Seventh Generation, Ecover, and Biokleen. You can also make your own cleaning solutions using vinegar, baking soda, and essential oils.";
-  } else if (query.toLowerCase().includes("carbon footprint") || query.toLowerCase().includes("car trip")) {
-    return "A 10-mile car trip in an average gasoline vehicle produces about 8.9 pounds of CO2. You can reduce this by: 1) Carpooling, 2) Using public transportation, 3) Combining errands into one trip, 4) Maintaining proper tire pressure for better fuel efficiency.";
-  } else if (query.toLowerCase().includes("diet")) {
-    return "To make your diet more sustainable: 1) Reduce meat consumption, especially beef, 2) Choose locally grown, seasonal produce, 3) Minimize food waste by planning meals, 4) Try plant-based alternatives, 5) Buy in bulk to reduce packaging waste.";
-  } else {
-    return "Here are some general tips for sustainable living: 1) Reduce single-use plastics, 2) Eat more plant-based meals, 3) Use public transportation or carpool when possible, 4) Support local and sustainable businesses.";
   }
-};
+}
+
+const getAIResponse = (query: string): string => {
+  // Simple response logic - would be replaced with actual AI integration
+  if (query.toLowerCase().includes("electricity")) {
+    return "To reduce your electricity bill this month, try: 1) Unplug devices when not in use, 2) Switch to LED bulbs, 3) Use natural light during the day, 4) Run large appliances during off-peak hours."
+  } else if (query.toLowerCase().includes("cleaning")) {
+    return "Some eco-friendly cleaning brands include: Method, Seventh Generation, Ecover, and Biokleen. You can also make your own cleaning solutions using vinegar, baking soda, and essential oils."
+  } else if (query.toLowerCase().includes("carbon footprint") || query.toLowerCase().includes("car trip")) {
+    return "A 10-mile car trip in an average gasoline vehicle produces about 8.9 pounds of CO2. You can reduce this by: 1) Carpooling, 2) Using public transportation, 3) Combining errands into one trip, 4) Maintaining proper tire pressure for better fuel efficiency."
+  } else if (query.toLowerCase().includes("diet")) {
+    return "To make your diet more sustainable: 1) Reduce meat consumption, especially beef, 2) Choose locally grown, seasonal produce, 3) Minimize food waste by planning meals, 4) Try plant-based alternatives, 5) Buy in bulk to reduce packaging waste."
+  } else {
+    return "Here are some general tips for sustainable living: 1) Reduce single-use plastics, 2) Eat more plant-based meals, 3) Use public transportation or carpool when possible, 4) Support local and sustainable businesses."
+  }
+}
 
 export function SustainabilityChat() {
-  const [points, setPoints] = useState(0);
+  const [points, setPoints] = useState(0)
 
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
     initialMessages: [
       {
-        id: "welcome",
+        id: "welcome-1",
         role: "assistant",
         content:
           "👋 Hi there! I'm your EcoAssist, ready to help you adopt more sustainable practices. What would you like to know about reducing your carbon footprint today?",
@@ -92,21 +94,21 @@ export function SustainabilityChat() {
     onFinish: (message: any) => {
       // Award points for engaging with the assistant
       if (message.content.includes("eco-friendly") || message.content.includes("sustainable")) {
-        setPoints((prev) => prev + 5);
+        setPoints((prev) => prev + 5)
       }
     },
-  });
+  })
 
   const suggestedQueries = [
     "How can I reduce my electricity bill this month?",
     "Suggest eco-friendly brands for cleaning products.",
     "What's my carbon footprint for a 10-mile car trip?",
     "How can I make my diet more sustainable?",
-  ];
+  ]
 
   const handleSuggestedQuery = (query: string) => {
-    handleInputChange({ target: { value: query } } as any);
-  };
+    handleInputChange({ target: { value: query } } as any)
+  }
 
   return (
     <div className="flex flex-col h-full bg-black text-white">
@@ -196,5 +198,6 @@ export function SustainabilityChat() {
         </form>
       </div>
     </div>
-  );
+  )
 }
+

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function ProgressTree() {
+export default function ProgressTree({level} : {level :number}) {
   return (
     <Card>
       <CardHeader>
@@ -32,7 +32,7 @@ export default function ProgressTree() {
 
           {/* Progress indicators */}
           <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-            <div className="text-xs text-muted-foreground">Level 7</div>
+            <div className="text-xs text-muted-foreground">Level {level}</div>
           </div>
         </div>
       </CardContent>

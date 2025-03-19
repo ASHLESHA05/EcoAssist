@@ -1,9 +1,11 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { EcoScoreData } from "@/types/types"
 
-export default function EcoScore() {
-  const score = 78
+
+export default function EcoScore({data}:{data:EcoScoreData}) {
+  const score = data.score
   const circumference = 2 * Math.PI * 40
   const offset = circumference - (score / 100) * circumference
 
@@ -34,7 +36,7 @@ export default function EcoScore() {
         </div>
         <div className="mt-4 text-center">
           <p className="text-sm font-medium">Great progress!</p>
-          <p className="text-xs text-muted-foreground">Top 15% in your area</p>
+          <p className="text-xs text-muted-foreground">Top {data.localTopPercentage}% in your area</p>
         </div>
         <div className="mt-6 w-full grid grid-cols-3 text-center">
           <div>

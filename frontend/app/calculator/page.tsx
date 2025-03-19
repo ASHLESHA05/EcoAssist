@@ -1,15 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import dynamic from "next/dynamic"
-// import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
-
-const Car = dynamic(() => import("lucide-react").then((mod) => mod.Car), { ssr: false })
-const Home = dynamic(() => import("lucide-react").then((mod) => mod.Home), { ssr: false })
-const ShoppingBag = dynamic(() => import("lucide-react").then((mod) => mod.ShoppingBag), { ssr: false })
-const Utensils = dynamic(() => import("lucide-react").then((mod) => mod.Utensils), { ssr: false })
-const Plane = dynamic(() => import("lucide-react").then((mod) => mod.Plane), { ssr: false })
-
+import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
@@ -104,7 +96,7 @@ export default function CalculatorPage() {
                       <span className="text-sm font-medium">{transportEmissions / 10} miles</span>
                     </div>
                     <Slider
-                      defaultValue={[transportEmissions / 10]}
+                      defaultValue={[Math.round(transportEmissions / 10)]}
                       max={50}
                       step={1}
                       onValueChange={(value) => setTransportEmissions(value[0] * 10)}

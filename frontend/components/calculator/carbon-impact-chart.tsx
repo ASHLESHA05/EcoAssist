@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
 interface CarbonImpactChartProps {
   data: {
     name: string
@@ -8,6 +10,17 @@ interface CarbonImpactChartProps {
 }
 
 export default function CarbonImpactChart({ data }: CarbonImpactChartProps) {
+  // Use state to ensure the chart only renders on the client
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return <div className="h-[200px] w-[200px] mx-auto bg-muted/20 rounded-full"></div>
+  }
+
   const total = data.reduce((acc, item) => acc + item.value, 0)
   let startAngle = 0
 
