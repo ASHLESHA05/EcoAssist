@@ -24,17 +24,17 @@ export default function DashboardMetrics({ data }: { data: DashboardMetricsData 
           <Leaf className="h-4 w-4 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{data.carbonFootPrintQty} kg</div>
+          <div className="text-2xl font-bold">{data?.carbonFootPrintQty} kg</div>
           <p className="text-xs text-muted-foreground">
-            <span className={`flex items-center ${data.isIcreaseCarbon ? "text-red-500" : "text-green-500"}`}>
-              {!data.isIcreaseCarbon ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
-              {data.PrevMonthCmp}% from last month
+            <span className={`flex items-center ${data?.isIcreaseCarbon ? "text-red-500" : "text-green-500"}`}>
+              {!data?.isIcreaseCarbon ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+              {data?.PrevMonthCmp}% from last month
             </span>
           </p>
           <div className="mt-4 h-1 w-full bg-muted">
             <div className="h-1 w-[65%] bg-primary"></div>
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">{data.RemainingMonthlyGoal}% of your monthly goal</p>
+          <p className="mt-2 text-xs text-muted-foreground">{data?.RemainingMonthlyGoal}% of your monthly goal</p>
         </CardContent>
       </Card>
 
@@ -45,17 +45,17 @@ export default function DashboardMetrics({ data }: { data: DashboardMetricsData 
           <Droplet className="h-4 w-4 text-blue-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{data.waterSaved} gal</div>
+          <div className="text-2xl font-bold">{data?.waterSaved} gal</div>
           <p className="text-xs text-muted-foreground">
-            <span className={`flex items-center ${data.isIcreaseWater ? "text-green-500" : "text-red-500"}`}>
-              {data.isIcreaseWater ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
-              {data.waterPrevMonthCmp}% from last month
+            <span className={`flex items-center ${data?.isIcreaseWater ? "text-green-500" : "text-red-500"}`}>
+              {data?.isIcreaseWater ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+              {data?.waterPrevMonthCmp}% from last month
             </span>
           </p>
           <div className="mt-4 h-1 w-full bg-muted">
             <div className="h-1 w-[75%] bg-blue-500"></div>
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">{data.waterRemainingMonthlyGoal}% of your monthly goal</p>
+          <p className="mt-2 text-xs text-muted-foreground">{data?.waterRemainingMonthlyGoal}% of your monthly goal</p>
         </CardContent>
       </Card>
 
@@ -66,17 +66,17 @@ export default function DashboardMetrics({ data }: { data: DashboardMetricsData 
           <Zap className="h-4 w-4 text-yellow-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{data.powerSaved} kWh</div>
+          <div className="text-2xl font-bold">{data?.powerSaved} kWh</div>
           <p className="text-xs text-muted-foreground">
-            <span className={`flex items-center ${data.isIcreasePower ? "text-green-500" : "text-red-500"}`}>
-              {data.isIcreasePower ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
-              {data.powerPrevMonthCmp}% from last month
+            <span className={`flex items-center ${data?.isIcreasePower ? "text-green-500" : "text-red-500"}`}>
+              {data?.isIcreasePower ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+              {data?.powerPrevMonthCmp}% from last month
             </span>
           </p>
           <div className="mt-4 h-1 w-full bg-muted">
             <div className="h-1 w-[60%] bg-yellow-500"></div>
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">{data.powerRemainingMonthlyGoal}% of your monthly goal</p>
+          <p className="mt-2 text-xs text-muted-foreground">{data?.powerRemainingMonthlyGoal}% of your monthly goal</p>
         </CardContent>
       </Card>
 
@@ -87,17 +87,17 @@ export default function DashboardMetrics({ data }: { data: DashboardMetricsData 
           <Recycle className="h-4 w-4 text-green-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{data.wasteReduced} lbs</div>
+          <div className="text-2xl font-bold">{data?.wasteReduced} lbs</div>
           <p className="text-xs text-muted-foreground">
-            <span className={`flex items-center ${data.isIcreaseWaste ? "text-green-500" : "text-red-500"}`}>
-              {data.isIcreaseWaste ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
-              {data.wastePrevMonthCmp}% from last month
+            <span className={`flex items-center ${data?.isIcreaseWaste ? "text-green-500" : "text-red-500"}`}>
+              {data?.isIcreaseWaste ? <ArrowUp className="mr-1 h-4 w-4" /> : <ArrowDown className="mr-1 h-4 w-4" />}
+              {data?.wastePrevMonthCmp}% from last month
             </span>
           </p>
           <div className="mt-4 h-1 w-full bg-muted">
             <div className="h-1 w-[45%] bg-green-500"></div>
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">{data.waseRemainingMonthlyGoal}% of your monthly goal</p>
+          <p className="mt-2 text-xs text-muted-foreground">{data?.waseRemainingMonthlyGoal}% of your monthly goal</p>
         </CardContent>
       </Card>
     </div>

@@ -14,16 +14,20 @@ import { CarbonChartProps, CarbonData } from "@/types/types";
 
 
 export default function CarbonChart({
-  weeklyData,
-  monthlyData,
-  yearlyData,
-  maxData,
-}: CarbonChartProps) {
+  weeklyData = [],
+  monthlyData = [],
+  yearlyData = [],
+  maxData = [],
+}: CarbonChartProps)  {
   const [timePeriod, setTimePeriod] = useState<string>("month");
 
+  // console.log("Weekly Data:", weeklyData);
+  // console.log("Monthly Data:", monthlyData);
+  // console.log("Yearly Data:", yearlyData);
+  // console.log("Max Data:", maxData);
   // Calculate max carbon value for the selected dataset
   const calculateMaxCarbon = (data: CarbonData[]) =>
-    Math.max(...data.map((entry) => entry.carbon));
+    Math.max(...data?.map((entry) => entry.carbon));
 
   // Select data based on the timePeriod
   const data =

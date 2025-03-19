@@ -126,8 +126,35 @@ interface NotificationType {
 
 **Endpoint:** `/get-all-details` [GET]
 
-*No parameters required.*
+**Request Parametrs:**
+```json
+{ "email": "user?.email" }
+```
 
+**Response Type:**
+{
+    dashBoardMetrics : data,
+    chartData : {
+      weeklyData: weeklyData,
+      monthlyData: monthlyData,
+      yearlyData : yearlyData,
+      maxData : maxData
+    },
+    ecoscore : ecoscoredata,
+    badges: Badges,
+    Level : Level
+}
+
+**Response Interface**
+export interface AllDetails{
+  dashBoardMetrics : DashboardMetricsData;
+  chartData : CarbonChartProps;
+  ecoscore : EcoScoreData;
+  badges: BadgesType[]
+  Level : number
+}
+
+**Do check /frontend/types/types.ts for more info**
 ---
 
 ### 8. Get Suggestion Cards
@@ -204,4 +231,36 @@ interface Action {
 ```
 
 ---
+Here’s the markdown version of your API documentation:  
+
+```md
+## 11. Save to Memory (`/update-to-memory`) [POST]
+
+### Endpoint:
+```
+POST {NEXT_PUBLIC_BACKEND_URL}/update-chat-memory
+```
+
+### Description:
+Saves chat memory by sending the user’s request and response along with their email.
+
+### Request Body (JSON):
+```json
+{
+  "req": "How can I reduce my electricity bill?",
+  "res": "To reduce your electricity bill, try: 1) Unplug devices when not in use, 2) Switch to LED bulbs, 3) Use natural light during the day.",
+  "userEmail": "user@example.com"
+}
+```
+
+### Example Usage:
+```js
+await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/update-chat-memory`, {
+  req,
+  res,
+  userEmail, // Include the user's email in the request body
+});
+```
+```
+
 

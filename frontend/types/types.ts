@@ -43,11 +43,11 @@ export interface CarbonData {
   }
 
 
-export interface CarbonChartProps {
-    weeklyData: CarbonData[];
-    monthlyData: CarbonData[];
-    yearlyData: CarbonData[];
-    maxData: CarbonData[];
+  export interface CarbonChartProps {
+    weeklyData?: CarbonData[];
+    monthlyData?: CarbonData[];
+    yearlyData?: CarbonData[];
+    maxData?: CarbonData[];
   }
   
 
@@ -75,4 +75,12 @@ export interface Actions{
   title: string;
   icon : string;
   points : number;
+}
+
+export interface AllDetails{
+  dashBoardMetrics : DashboardMetricsData;
+  chartData : CarbonChartProps;
+  ecoscore : EcoScoreData;
+  badges: BadgesType[]
+  Level : number
 }
