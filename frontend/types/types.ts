@@ -1,4 +1,4 @@
-import { color } from './../../node_modules/@types/d3-color/index.d';
+
 export interface NotificationType {
   dailyTips: boolean;
   AchievementAlert: boolean;
@@ -60,7 +60,7 @@ export interface EcoScoreData{
 export interface Suggestions{
     title : string;
     description: string;
-    icon : React.ComponentType;
+    icon : string;
     color : string;
     bgColor : string;
 }
@@ -73,6 +73,6 @@ export interface BadgesType{
 
 export interface Actions{
   title: string;
-  icon : React.ComponentType;
+  icon : string;
   points : number;
 }

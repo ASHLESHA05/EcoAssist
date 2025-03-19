@@ -215,3 +215,16 @@
 .animate-spin-slow {
   animation: spin-slow 20s linear infinite;
 }
+
+@keyframes spin-3d {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(1080deg);
+  }
+}
+
+.animate-spin-3d {
+  animation: spin-3d 1s linear infinite;
+}

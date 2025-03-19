@@ -1,13 +1,18 @@
-"use client"
+// components/dashboard/eco-score.tsx
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { EcoScoreData } from "@/types/types"
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useScoreStore } from "@/stores/useScoreStore";
 
+export default function EcoScore({ data }: { data: { localTopPercentage: number } }) {
+  const { score } = useScoreStore(); // Subscribe to the score state
+  const circumference = 2 * Math.PI * 40;
+  const [offset, setOffset] = useState(circumference - (score / 100) * circumference);
 
-export default function EcoScore({data}:{data:EcoScoreData}) {
-  const score = data.score
-  const circumference = 2 * Math.PI * 40
-  const offset = circumference - (score / 100) * circumference
+  useEffect(() => {
+    setOffset(circumference - (score / 100) * circumference);
+  }, [score]);
 
   return (
     <Card>
@@ -15,7 +20,7 @@ export default function EcoScore({data}:{data:EcoScoreData}) {
         <CardTitle>Your Eco Score</CardTitle>
         <CardDescription>How sustainable is your lifestyle?</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col items-center">
+      <CardContent className="flex flex-col items-center eco-score-place">
         <div className="relative flex items-center justify-center">
           <svg width="120" height="120" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="40" fill="none" stroke="hsl(var(--muted))" strokeWidth="10" />
@@ -54,6 +59,5 @@ export default function EcoScore({data}:{data:EcoScoreData}) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-
