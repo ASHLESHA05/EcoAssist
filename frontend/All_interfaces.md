@@ -336,10 +336,15 @@ Calculates the total amount of carbon footPrint
 
 ```js
 {
-  transportdata : Transportation ,
-  homedata : HomeEnergy,
-  fooddata : FoodConsumption,
-  shoppingdata : Shopping,
+  params: {
+    email: user?.email,
+    paramsData: {
+      transport: category === "transport" ? data : transport,
+      home: category === "home" ? data : home,
+      food: category === "food" ? data : food,
+      shopping: category === "shopping" ? data : shopping,
+    },
+  },
 }
 ```
 TODO:
