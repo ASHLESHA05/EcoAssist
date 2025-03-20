@@ -237,13 +237,12 @@ interface Action {
 ---
 Here’s the markdown version of your API documentation:  
 
-```md
+
 ## 11. Save to Memory (`/update-to-memory`) [POST]
 
 ### Endpoint:
-```
+
 POST {NEXT_PUBLIC_BACKEND_URL}/update-chat-memory
-```
 
 ### Description:
 Saves chat memory by sending the user’s request and response along with their email.
