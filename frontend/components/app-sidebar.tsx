@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./sninner"; // Ensure this file exists and is correctly named
 import axios from "axios";
 import { UserDetails } from "@/types/types";
+import { File } from "lucide-react";
 
 // Dynamically import icons from lucide-react
 const Home = dynamic(() => import("lucide-react").then((mod) => mod.Home), { ssr: false });
@@ -81,6 +82,7 @@ export function AppSidebar() {
       SOCIAL: "/social",
       PROFILE: "/profile",
       HOME: "/Home",
+      NOTES: "/list-today-details"
     };
     if (routes[val]) {
       router.push(routes[val]);
@@ -147,6 +149,14 @@ export function AppSidebar() {
               <a onClick={() => handleClick("PROFILE")} className="flex items-center gap-2 cursor-pointer">
                 <Settings className="h-5 w-5" />
                 <span>Profile & Settings</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Notes">
+              <a onClick={() => handleClick("NOTES")} className="flex items-center gap-2 cursor-pointer">
+                <File className="h-5 w-5" />
+                <span>Notes</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

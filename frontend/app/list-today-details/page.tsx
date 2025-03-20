@@ -70,8 +70,8 @@ export default function ListTodayDetails() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <Card className="bg-gradient-to-br from-green-900 to-black border-green-800">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-950 to-black">
+      <Card className="bg-gradient-to-br from-green-900 to-black border-green-800 w-full max-w-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-green-400">Today's Activities</CardTitle>
           <CardDescription className="text-green-200">
