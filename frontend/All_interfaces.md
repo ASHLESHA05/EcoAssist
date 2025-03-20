@@ -1,5 +1,5 @@
 ## API Documentation
-
+### Documented By @ashubhai [ASHLESHA05]
 ### 1. Get User Details - Sidebar
 
 **Endpoint:** `/get-userDetails` [GET]
@@ -132,7 +132,7 @@ interface NotificationType {
 ```
 
 **Response Type:**
-```json
+```
 {
     dashBoardMetrics : data,
     chartData : {
@@ -149,7 +149,7 @@ interface NotificationType {
 
 
 **Response Interface**
-```json
+```
 export interface AllDetails{
   dashBoardMetrics : DashboardMetricsData;
   chartData : CarbonChartProps;
@@ -321,142 +321,228 @@ response:
 
 
 ---
----
 
 
-###  13. calculator AI with Backend(TODO)
-Note: for AI just call a function and make dummy response of emissionData
-**Endpoint:** `/calculate-carbon-update` [GET]
+## 13. Calculator AI with Backend (TODO)
 
-Note : This has to do [POST] operations also
-**Description:**
-Calculates the total amount of carbon footPrint
+**Endpoint:** `/calculate-carbon-update` [GET, POST]  
+**Description:** Calculates the total amount of carbon footprint.
 
-**Request Body (JSON):**
-
-```js
+### Request Body (JSON):
+```json
 {
-  params: {
-    email: user?.email,
-    paramsData: {
-      transport: category === "transport" ? data : transport,
-      home: category === "home" ? data : home,
-      food: category === "food" ? data : food,
-      shopping: category === "shopping" ? data : shopping,
-    },
-  },
+  "params": {
+    "email": "user?.email",
+    "paramsData": {
+      "transport": "category === 'transport' ? data : transport",
+      "home": "category === 'home' ? data : home",
+      "food": "category === 'food' ? data : food",
+      "shopping": "category === 'shopping' ? data : shopping"
+    }
+  }
 }
 ```
-TODO:
-pass this to AI model ..get answer, store it in DB store all emission Data, return 
+**TODO:** Pass this to the AI model, get a response, store it in the database, and return all emission data.
 
-**Response Body (JSON)**
-```
+### Response Body (JSON):
+```json
 {
-emissionData : {
-  tansport : 120,
-  home : 80,
-  food : 60,
-  shopping : 40
-}
+  "emissionData": {
+    "transport": 120,
+    "home": 80,
+    "food": 60,
+    "shopping": 40
+  }
 }
 ```
+
 ---
----
 
-### 14. Calculating CARBON -AI
+## 14. Calculating Carbon - AI
 
-**Endpoint**: 
+**Endpoint:** `/calculate-carbon` [POST]  
 
-**Req Params**
-```
-params:{
-  transportdata : transport,
-  homedata: home,
-  fooddata: food,
-  shoppingdata : shopping
-}
-```
-
-**Res Params**
-```
+### Request Parameters:
+```json
 {
-emissionData : {
-  tansport : 120,
-  home : 80,
-  food : 60,
-  shopping : 40
-}
+  "params": {
+    "transportdata": "transport",
+    "homedata": "home",
+    "fooddata": "food",
+    "shoppingdata": "shopping"
+  }
 }
 ```
----
 
----
-### 15. Save User plan
-
-**Endpoints:** `/savePlan` [PUT]
-
-**Data**
-
-```
+### Response:
+```json
 {
-  email: email
-  title: string
-  description: string
+  "emissionData": {
+    "transport": 120,
+    "home": 80,
+    "food": 60,
+    "shopping": 40
+  }
 }
 ```
 
 ---
 
----
+## 15. Save User Plan
 
-### 16. Clear User Plan
+**Endpoint:** `/savePlan` [PUT]  
 
-**Endpoints** `/clearPlan` [DELETE]
-
-```
+### Request Body:
+```json
 {
-  email:email
+  "email": "email",
+  "title": "string",
+  "description": "string"
 }
 ```
 
 ---
 
----
+## 16. Clear User Plan
 
-### 17. User RegisterCheck POST
+**Endpoint:** `/clearPlan` [DELETE]  
 
-***Endpoints** `/userLogin ` [POST]
-
-```
+### Request Body:
+```json
 {
-  name : string,
-  email : email,
-  Location : string,
+  "email": "email"
 }
 ```
 
 ---
 
-### 18. Get user plans (return 500 if no plans)
+## 17. User Register Check
 
-***ENDPOINTS*** `/getMyPlan` [GET]
+**Endpoint:** `/userLogin` [POST]  
 
-```
+### Request Body:
+```json
 {
-  email: email
+  "name": "string",
+  "email": "email",
+  "Location": "string"
 }
 ```
 
-returns:
+---
 
-```
+## 18. Get User Plans  
+
+**Endpoint:** `/getMyPlan` [GET]  
+
+### Request:
+```json
 {
-  title: string,
-  description: string,
+  "email": "email"
 }
+```
+
+### Response:
+```json
+{
+  "title": "string",
+  "description": "string"
+}
+```
+**Note:** Returns `500` if no plans exist.
+
+---
+
+## 19. Check if User is New or Old  
+
+**Endpoint:** `/isNewUser` [GET]  
+
+### Request:
+```json
+{
+  "email": "email"
+}
+```
+
+### Response:
+```json
+{
+  "value": "bool" // true if the user is new
+}
+```
+
+---
+
+## 20. Get Survey Questions (AI + Backend)  
+
+**Endpoint:** `/getSurveyQuestions` [GET]  
+
+### Request:
+```json
+{
+  "email": "email"
+}
+```
+
+### Description:
+- The backend should fetch all user data (as done in the dashboard) and pass it to a function called `AISurvey()`.
+- If no data is found in the database, pass a default dictionary to AI:
+```json
+{
+  "type": "newUser/OldUser",
+  "data": {
+    "all user data"
+  }
+}
+```
+- The AI will respond with survey questions.
+
+### Response:
+```json
+{
+  "id": "string",
+  "question": "string",
+  "type": "string",
+  "options": [] // Only if type is "multiple-choice"
+}
+```
+
+---
+
+## 21. Submit Survey Answer  
+
+**Endpoint:** `/surveyAnswer` [PUT]  
+
+### Request Body:
+```json
+{
+  "question": "answer"
+}
+```
+
+**Example:**
+```json
+{
+  "Do you smoke?": "No"
+}
+```
+
+**Note:** This data may be used later for AI models.
+
+---
+
+## Function: Retrieve Survey Data from Database  
+
+```python
+def getSurveyData(email):
+    return {"question": "answers"}
 ```
 ---
+
+
+
+
+
 
 
 

@@ -117,3 +117,10 @@ export interface calculator{
   food : FoodConsumption;
   shopping: Shopping
 }
+
+export interface SurveyQuestion {
+  id: string
+  question: string
+  type: "multiple-choice" | "yes-no" | "text" | "number"
+  options?: string[]
+}
