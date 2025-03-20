@@ -262,6 +262,185 @@ await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/update-chat-memory`, {
   userEmail, // Include the user's email in the request body
 });
 ```
+
+---
+
+---
+
+
+### 12. GetCalutationsData 
+
+/get-calcData [GET]
+
+request body
+```
+            params: {
+              email: user?.email,
+            },
+```
+
+response:
+```
+{
+  transportData : {
+    transportationMode: "car",
+    commuteDistance: 12, 
+    flightsCount: "1-2",
+  },
+  homeData : {
+    energySource: "grid",
+    electricityUsage: 80,
+    homeSize: "medium",
+    heatingType: "electric",
+  },
+  foodData : {
+    dietType: "mixed",
+    localFoodPercentage: 50,
+    foodWaste: "medium",
+    OrganicFood: "some",
+  }
+  shoppingData : {
+    shoppingType: "moderate",
+    sustainableProducts: 50,
+    RecyclingHabbits: "most",
+    fashionVsustainable: "mixed",
+  }
+  emissionData : {
+    tansport : 120,
+    home : 80,
+    food : 60,
+    shopping : 40
+  }
+}
+```
+
+
+
+
+
+
+
+---
+---
+
+
+###  13. calculator AI with Backend(TODO)
+Note: for AI just call a function and make dummy response of emissionData
+**Endpoint:** `/calculate-carbon-update` [GET]
+
+Note : This has to do [POST] operations also
+**Description:**
+Calculates the total amount of carbon footPrint
+
+**Request Body (JSON):**
+
+```js
+{
+  transportdata : Transportation ,
+  homedata : HomeEnergy,
+  fooddata : FoodConsumption,
+  shoppingdata : Shopping,
+}
+```
+TODO:
+pass this to AI model ..get answer, store it in DB store all emission Data, return 
+
+**Response Body (JSON)**
+```
+{
+emissionData : {
+  tansport : 120,
+  home : 80,
+  food : 60,
+  shopping : 40
+}
+}
+```
+---
+---
+
+### 14. Calculating CARBON -AI
+
+**Endpoint**: 
+
+**Req Params**
+```
+params:{
+  transportdata : transport,
+  homedata: home,
+  fooddata: food,
+  shoppingdata : shopping
+}
+```
+
+**Res Params**
+```
+{
+emissionData : {
+  tansport : 120,
+  home : 80,
+  food : 60,
+  shopping : 40
+}
+}
+```
+---
+
+---
+### 15. Save User plan
+
+**Endpoints:** `/savePlan` [PUT]
+
+**Data**
+
+```
+{
+  email: email
+  title: string
+  description: string
+}
+```
+
+---
+
+---
+
+### 16. Clear User Plan
+
+**Endpoints** `/clearPlan` [DELETE]
+
+```
+{
+  email:email
+}
+```
+
+---
+
+---
+
+### 17. User RegisterCheck POST
+
+***Endpoints** `/userLogin ` [POST]
+
+```
+{
+  name : string,
+  email : email,
+  Location : string,
+}
+```
+
+---
+---
+
+
+
+
+
+
+
+
 ```
 prompt = """
 data = {

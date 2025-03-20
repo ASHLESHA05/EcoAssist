@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,6 +11,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import CarbonImpactChart from "@/components/calculator/carbon-impact-chart"
 import ComparisonSimulator from "@/components/calculator/comparison-simulator"
+import { useUser } from "@auth0/nextjs-auth0/client"
+import axios from "axios"
+import { calculator } from "@/types/types"
 
 // Define the interfaces
 export interface Transportation {
@@ -48,12 +51,14 @@ export interface Calculator {
 }
 
 export default function CalculatorPage() {
+
+  const {user,error,isLoading} = useUser()
   // State for emissions
   const [transportEmissions, setTransportEmissions] = useState(120)
   const [homeEmissions, setHomeEmissions] = useState(80)
   const [foodEmissions, setFoodEmissions] = useState(60)
   const [shoppingEmissions, setShoppingEmissions] = useState(40)
-
+  
   // State for form inputs
   const [transport, setTransport] = useState<Transportation>({
     transportationMode: "car",
@@ -83,7 +88,54 @@ export default function CalculatorPage() {
   })
 
   // Total emissions
-  const totalEmissions = transportEmissions + homeEmissions + foodEmissions + shoppingEmissions
+  const [TotalCarbon,setCarbontotal] = useState(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
+  const [paramsData, setParams] = useState<Calculator | any>({
+    transport: transport,
+    home: home,
+    food: food,
+    shopping: shopping,
+  });
+  
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/get-calcData`,
+          {
+            params: {
+              email: user?.email,
+            },
+          }
+        );
+        console.log("Data received:", res.data);
+        if (res.status === 200){
+          console.log("Good result");
+          setTransport(res.data.transportData)
+          setHome(res.data.homeData)
+          setFood(res.data.foodData)
+          setShopping(res.data.soppingData)
+          setTransportEmissions(res.data.emissionData.transport)
+          setFoodEmissions(res.data.emissionData.food)
+          setHomeEmissions(res.data.emissionData.home)
+          setShoppingEmissions(res.data.emissionData.shopping)
+          setCarbontotal(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
+          setParams({
+            transport: res.data.transportData,
+            home: res.data.homeData,
+            food: res.data.foodData,
+            shopping: res.data.shoppingData,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (user?.email) {
+      getData();
+    }
+  }, [user?.email]);
+
 
   // Save changes function
   const handleSaveChanges = (category: keyof Calculator) => {
@@ -95,13 +147,96 @@ export default function CalculatorPage() {
       shopping,
     }
 
+  
+
     // Call the SaveChanges function with the calculator object
-    SaveChanges(calculator[category])
+    SaveChanges(calculator[category],category)
   }
 
-  const SaveChanges = (data: Transportation | HomeEnergy | FoodConsumption | Shopping) => {
+  const SaveChanges =async (data: Transportation | HomeEnergy | FoodConsumption | Shopping,category:string) => {
     console.log("Saving changes:", data)
     // You can also store this in a global state or send it to an API
+    // API request for to save where it can calculate and return 
+    // Make anotherr buttor just to calculate
+    // Intially an get req to fetch the datase
+    try{
+      //This API request wil send email , and currently changes data, Backend task is to find all data and if avaiable else 0 ,
+      // pass that data to AI , obtain reult like
+      /*
+        emissionData : {
+            tansport : 120,
+            home : 80,
+            food : 60,
+            shopping : 40
+          }
+        Update the table and and return the emissionData
+      */
+      
+ 
+
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/calculate-carbon-update`,
+          {
+            params: {
+              email: user?.email,
+              paramsData: {
+                transport: category === "transport" ? data : transport,
+                home: category === "home" ? data : home,
+                food: category === "food" ? data : food,
+                shopping: category === "shopping" ? data : shopping,
+              },
+            },
+          }
+        );
+        
+        if (res.status === 200) {
+          console.log("Calculated Data");
+          setTransportEmissions(res.data.emissionData.transport);
+          setFoodEmissions(res.data.emissionData.food);
+          setHomeEmissions(res.data.emissionData.home);
+          setShoppingEmissions(res.data.emissionData.shopping);
+          setParams({
+            transport: category === "transport" ? data : transport,
+            home: category === "home" ? data : home,
+            food: category === "food" ? data : food,
+            shopping: category === "shopping" ? data : shopping,
+          });
+        }
+
+    }catch(error){
+      console.error("An error occured in saveChanges ",error)
+    }
+  }
+
+  const handleCalculate =async(type : string )=>{
+    console.log("Calculating")
+    //API req to backend AI to get the calculated thing
+    try{
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/calculate-carbon`,{
+          params:{
+            transportdata : transport,
+            homedata: home,
+            fooddata: food,
+            shoppingdata : shopping
+          }
+        }
+      )
+      if (res.status === 200){
+        //successfully calculated 
+        setTransportEmissions(res.data.emissionData.transport)
+        setFoodEmissions(res.data.emissionData.food)
+        setHomeEmissions(res.data.emissionData.home)
+        setShoppingEmissions(res.data.emissionData.shopping)
+        setCarbontotal(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
+
+      }
+      else{
+        console.log("Something Went wrong in calculating")
+      }
+    }catch(error){
+      console.error("Error in Calculating ",error)
+    }
   }
 
   return (
@@ -189,7 +324,8 @@ export default function CalculatorPage() {
                       step={1}
                       onValueChange={(value) => {
                         setTransport({ ...transport, commuteDistance: value[0] })
-                        setTransportEmissions(value[0] * 10)
+                        
+                        
                       }}
                     />
                   </div>
@@ -212,9 +348,11 @@ export default function CalculatorPage() {
                     </Select>
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="flex justify-between">
                   <Button onClick={() => handleSaveChanges("transport")}>Save Transportation Data</Button>
+                  <Button onClick={()=> handleCalculate('transport')} className="bg-black text-white">Calculate</Button>
                 </CardFooter>
+                
               </Card>
               <ComparisonSimulator category="transport" />
             </TabsContent>
@@ -275,7 +413,7 @@ export default function CalculatorPage() {
                       step={1}
                       onValueChange={(value) => {
                         setHome({ ...home, electricityUsage: value[0] })
-                        setHomeEmissions(value[0])
+                        // setHomeEmissions(value[0])
                       }}
                     />
                   </div>
@@ -319,6 +457,7 @@ export default function CalculatorPage() {
                 </CardContent>
                 <CardFooter>
                   <Button onClick={() => handleSaveChanges("home")}>Save Home Energy Data</Button>
+                  <Button onClick={()=> handleCalculate('home')} className="bg-black text-white">Calculate</Button>
                 </CardFooter>
               </Card>
 
@@ -381,7 +520,7 @@ export default function CalculatorPage() {
                       step={5}
                       onValueChange={(value) => {
                         setFood({ ...food, localFoodPercentage: value[0] })
-                        setFoodEmissions(value[0])
+                        // setFoodEmissions(value[0])
                       }}
                     />
                   </div>
@@ -424,6 +563,7 @@ export default function CalculatorPage() {
                 </CardContent>
                 <CardFooter>
                   <Button onClick={() => handleSaveChanges("food")}>Save Food Data</Button>
+                  <Button onClick={()=> handleCalculate('food')} className="bg-black text-white">Calculate</Button>
                 </CardFooter>
               </Card>
 
@@ -486,7 +626,7 @@ export default function CalculatorPage() {
                       step={5}
                       onValueChange={(value) => {
                         setShopping({ ...shopping, sustainableProducts: value[0] })
-                        setShoppingEmissions(value[0])
+                        // setShoppingEmissions(value[0])
                       }}
                     />
                   </div>
@@ -532,6 +672,7 @@ export default function CalculatorPage() {
                 </CardContent>
                 <CardFooter>
                   <Button onClick={() => handleSaveChanges("shopping")}>Save Shopping Data</Button>
+                  <Button onClick={()=> handleCalculate('shopping')} className="bg-black text-white">Calculate</Button>
                 </CardFooter>
               </Card>
 
@@ -546,16 +687,9 @@ export default function CalculatorPage() {
               <CardTitle>Your Carbon Footprint</CardTitle>
               <CardDescription>Based on your current lifestyle choices</CardDescription>
             </CardHeader>
-
-
-
-
-
-
-            {/* UPDATE IT ONLY WHEN SAVE CHANGES IS CLICKED AND DATA IS RECIEVED FROM BACKEND */}
             <CardContent>
               <div className="text-center mb-6">
-                <div className="text-4xl font-bold">{totalEmissions}</div>
+                <div className="text-4xl font-bold">{TotalCarbon}</div>
                 <div className="text-sm text-muted-foreground">kg CO2e per month</div>
               </div>
               <CarbonImpactChart
@@ -566,13 +700,6 @@ export default function CalculatorPage() {
                   { name: "Shopping", value: shoppingEmissions },
                 ]}
               />
-
-
-
-
-
-
-              {/* UPDATE IT ONLY WHEN SAVE CHANGES IS CLICKED AND DATA IS RECIEVED FROM BACKEND */}
               <div className="mt-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
@@ -603,21 +730,17 @@ export default function CalculatorPage() {
                   <span className="font-medium">{shoppingEmissions} kg</span>
                 </div>
               </div>
-
-
-
-
-
-
-
             </CardContent>
           </Card>
-
           <Card>
             <CardHeader>
               <CardTitle>Reduction Potential</CardTitle>
               <CardDescription>How much you could reduce with small changes</CardDescription>
             </CardHeader>
+
+
+
+
 
             {/* [HERE MAKE SOME CHANGES ..USE GEN AI TO PREDICT THE AMOUT THE THINGS CAN BE CHANGED..ABOUT HOW MUCH % THE CARBON EMISSION CAN BE REDUCED] */}
             <CardContent>
@@ -625,7 +748,7 @@ export default function CalculatorPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Current footprint</span>
-                    <span>{totalEmissions} kg/month</span>
+                    <span>{TotalCarbon} kg/month</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
                     <div className="bg-primary h-2 rounded-full w-full"></div>
@@ -635,7 +758,7 @@ export default function CalculatorPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>With easy changes</span>
-                    <span>{Math.round(totalEmissions * 0.8)} kg/month</span>
+                    <span>{Math.round(TotalCarbon * 0.8)} kg/month</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
                     <div className="bg-blue-500 h-2 rounded-full w-[80%]"></div>
@@ -645,7 +768,7 @@ export default function CalculatorPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>With moderate changes</span>
-                    <span>{Math.round(totalEmissions * 0.6)} kg/month</span>
+                    <span>{Math.round(TotalCarbon * 0.6)} kg/month</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
                     <div className="bg-green-500 h-2 rounded-full w-[60%]"></div>
@@ -655,7 +778,7 @@ export default function CalculatorPage() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>With significant changes</span>
-                    <span>{Math.round(totalEmissions * 0.4)} kg/month</span>
+                    <span>{Math.round(TotalCarbon * 0.4)} kg/month</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
                     <div className="bg-yellow-500 h-2 rounded-full w-[40%]"></div>

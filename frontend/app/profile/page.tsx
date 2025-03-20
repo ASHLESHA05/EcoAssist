@@ -15,6 +15,8 @@ import NotificationSettings from "@/components/notificaton";
 import { useRouter } from "next/navigation";
 import { UserDetails } from "@/types/types";
 import { AppSidebar } from "@/components/app-sidebar"; // Import the sidebar component
+import { Textarea } from "@/components/ui/textarea";
+import Getlocation from "../api/getLocationapi";
 
 const User = dynamic(() => import("lucide-react").then((mod) => mod.User), { ssr: false });
 const Settings = dynamic(() => import("lucide-react").then((mod) => mod.Settings), { ssr: false });
@@ -28,14 +30,35 @@ export default function ProfilePage() {
   const { user, error, isLoading } = useUser();
   const [isEdit, setEdit] = useState(false);
   const router = useRouter();
+  const [planTitle, setPlanTitle] = useState("Basic Carbon Footprint Reduction Plan")
+  const [planDescription, setPlanDescription] = useState(
+    "This plan focuses on reducing your carbon footprint by optimizing transportation, energy usage, and consumption habits. Start by reducing car usage, switching to renewable energy, and minimizing food waste."
+  )
+  const userLocation  = Getlocation()
+
 
   // Fetch user data when user is available
   useEffect(() => {
     if (user) {
+      userLogin()
       fetchData();
     }
   }, [user]);
 
+  const userLogin = async ():Promise<void>=>{
+    try{
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/userLogin`,{
+          name: user?.name,
+          email: user?.email,
+          Location: userLocation
+        }
+      )
+      console.log("userLongin: ",res.status)
+    }catch(error){
+      console.error("Error in Updating...",error)
+    }
+  }
   const fetchData = async (): Promise<void> => {
     try {
       const res = await axios.get(
@@ -163,6 +186,45 @@ export default function ProfilePage() {
   if (!user) {
     return <div>Loading...</div>;
   }
+  const savePlan =async () => {
+    // Save the plan (you can replace this with an API call or state update)
+    console.log("Plan saved:", { planTitle, planDescription })
+    try{
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/savePlan`,{
+          email: user.email,
+          title: planTitle,
+          description: planDescription
+        }
+      )
+    }catch(error){
+      console.error("Error in saving")
+    }
+    alert("Plan saved successfully!")
+  }
+  
+  const clearPlan =async () => {
+    // Clear the plan
+    setPlanTitle("")
+    setPlanDescription("")
+    console.log("Plan cleared")
+    try{
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/clearPlan`,{
+          params:{
+            email : user?.email
+          }
+        }
+     )
+    }catch(error){
+      console.error("Unable to clear data")
+    }
+  }
+
+
+
+
+
 
   return (
     <div className="grid grid-cols-[auto,1fr] min-h-screen">
@@ -217,7 +279,7 @@ export default function ProfilePage() {
 
             <div className="md:col-span-3">
               <Tabs defaultValue="account">
-                <TabsList className="grid grid-cols-4 mb-6">
+                <TabsList className="grid grid-cols-5 mb-6">
                   <TabsTrigger value="account">
                     <User className="h-4 w-4 mr-2" />
                     Account
@@ -233,6 +295,10 @@ export default function ProfilePage() {
                   <TabsTrigger value="privacy">
                     <Shield className="h-4 w-4 mr-2" />
                     Privacy
+                  </TabsTrigger>
+                  <TabsTrigger value="plan">
+                    <Shield className="h-4 w-4 mr-2" />
+                    Plan
                   </TabsTrigger>
                 </TabsList>
 
@@ -317,6 +383,59 @@ export default function ProfilePage() {
                     </CardContent>
                     <CardFooter>
                       <Button onClick={UpdateDetails} disabled={!isEdit}>Save Changes</Button>
+                    </CardFooter>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="plan" className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Current Plan</CardTitle>
+                      <CardDescription>Your personalized carbon footprint reduction plan</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {/* Plan Title and Description */}
+                      <div className="space-y-2">
+                        <Label htmlFor="plan-title">Plan Title</Label>
+                        <Input
+                          id="plan-title"
+                          value={planTitle}
+                          onChange={(e) => setPlanTitle(e.target.value)}
+                          placeholder="Enter plan title"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="plan-description">Plan Description</Label>
+                        <Textarea
+                          id="plan-description"
+                          value={planDescription}
+                          onChange={(e) => setPlanDescription(e.target.value)}
+                          placeholder="Enter plan description"
+                          rows={4}
+                        />
+                      </div>
+
+                      {/* Display Current Plan */}
+                      <div className="mt-6">
+                        <h3 className="text-lg font-semibold">Your Current Plan</h3>
+                        <div className="mt-2 p-4 bg-muted rounded-lg">
+                          <p className="font-medium">{planTitle}</p>
+                          <p className="text-sm text-muted-foreground">{planDescription}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                    <CardFooter className="flex justify-between">
+                      <Button onClick={savePlan}>Save Plan</Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          if (window.confirm("Are you sure you want to clear the plan?")) {
+                            clearPlan()
+                          }
+                        }}
+                      >
+                        Clear Plan
+                      </Button>
                     </CardFooter>
                   </Card>
                 </TabsContent>
