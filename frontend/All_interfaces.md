@@ -132,6 +132,7 @@ interface NotificationType {
 ```
 
 **Response Type:**
+```json
 {
     dashBoardMetrics : data,
     chartData : {
@@ -144,8 +145,11 @@ interface NotificationType {
     badges: Badges,
     Level : Level
 }
+```
+
 
 **Response Interface**
+```json
 export interface AllDetails{
   dashBoardMetrics : DashboardMetricsData;
   chartData : CarbonChartProps;
@@ -153,7 +157,7 @@ export interface AllDetails{
   badges: BadgesType[]
   Level : number
 }
-
+```
 **Do check /frontend/types/types.ts for more info**
 ---
 
@@ -262,5 +266,60 @@ await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/update-chat-memory`, {
 });
 ```
 ```
+prompt = """
+data = {
+  "usageMetrics": {
+    "carbonFootprint": {
+      "carbonFootPrintQty": 0,  # Replace with actual number
+      "PrevMonthCmp": 0,  # Replace with actual number
+      "isIncreaseCarbon": False,  # Replace with actual boolean
+      "RemainingMonthlyGoal": 0,  # Replace with actual number
+    },
+    "waterSaved": {
+      "waterSaved": 0,  # Replace with actual number
+      "waterPrevMonthCmp": 0,  # Replace with actual number
+      "isIncreaseWater": False,  # Replace with actual boolean
+      "waterRemainingMonthlyGoal": 0,  # Replace with actual number
+    },
+    "power": {
+      "powerSaved": 0,  # Replace with actual number
+      "powerPrevMonthCmp": 0,  # Replace with actual number
+      "isIncreasePower": False,  # Replace with actual boolean
+      "powerRemainingMonthlyGoal": 0  # Replace with actual number
+    },
+    "waste": {
+      "wasteReduced": 0,  # Replace with actual number
+      "wastePrevMonthCmp": 0,  # Replace with actual number
+      "isIncreaseWaste": False,  # Replace with actual boolean
+      "wasteRemainingMonthlyGoal": 0  # Replace with actual number
+    }
+  },
+  "ecoscore": 0,  # Replace with actual number
+  "userCarbonHistoryData": {
+    "weeklyAvgData": 0,  # Replace with actual number
+    "monthlyAvgData": 0,  # Replace with actual number
+    "yearlyAvgData": 0,  # Replace with actual number
+    "maxAvgData": 0  # Replace with actual number
+  },
+  "AdditionalUserBehaviour": {
+    "FeedbackForm": {}  # Replace with actual user preference JSON
+  }
+}
 
+Based on the provided data about the user's carbon footprint, water usage, power consumption, waste management, eco-score, and historical carbon data, generate 5 personalized plans for carbon footprint reduction.
 
+Each plan should be formatted as follows:
+{
+  "plan_1": {
+    "title": "Title of the first plan",
+    "description": "Detailed description of the first plan"
+  },
+  "plan_2": {
+    "title": "Title of the second plan",
+    "description": "Detailed description of the second plan"
+  },
+  ... and so on for plans 3, 4, and 5
+}
+
+The plans should be personalized based on the data provided, addressing specific areas where the user can improve their environmental impact. Make references to their current metrics, goals, and historical data to create meaningful and relevant recommendations.
+"""

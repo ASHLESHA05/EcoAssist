@@ -12,13 +12,97 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import CarbonImpactChart from "@/components/calculator/carbon-impact-chart"
 import ComparisonSimulator from "@/components/calculator/comparison-simulator"
 
+// Define the interfaces
+export interface Transportation {
+  transportationMode: string
+  commuteDistance: number
+  flightsCount: "0" | "1-2" | "3-5" | "6+"
+}
+
+export interface HomeEnergy {
+  energySource: string
+  electricityUsage: number
+  homeSize: "small" | "medium" | "large" | "xlarge"
+  heatingType: "gas" | "electric" | "oil" | "heatpump" | "wood"
+}
+
+export interface FoodConsumption {
+  dietType: string
+  localFoodPercentage: number
+  foodWaste: "low" | "medium" | "high"
+  OrganicFood: "none" | "some" | "half" | "most" | "all"
+}
+
+export interface Shopping {
+  shoppingType: string
+  sustainableProducts: number
+  RecyclingHabbits: "none" | "some" | "most" | "all"
+  fashionVsustainable: "fast" | "mixed" | "sustainable" | "secondhand" | "minimal"
+}
+
+export interface Calculator {
+  transport: Transportation
+  home: HomeEnergy
+  food: FoodConsumption
+  shopping: Shopping
+}
+
 export default function CalculatorPage() {
+  // State for emissions
   const [transportEmissions, setTransportEmissions] = useState(120)
   const [homeEmissions, setHomeEmissions] = useState(80)
   const [foodEmissions, setFoodEmissions] = useState(60)
   const [shoppingEmissions, setShoppingEmissions] = useState(40)
 
+  // State for form inputs
+  const [transport, setTransport] = useState<Transportation>({
+    transportationMode: "car",
+    commuteDistance: 12, // Default value based on transportEmissions / 10
+    flightsCount: "1-2",
+  })
+
+  const [home, setHome] = useState<HomeEnergy>({
+    energySource: "grid",
+    electricityUsage: 80,
+    homeSize: "medium",
+    heatingType: "electric",
+  })
+
+  const [food, setFood] = useState<FoodConsumption>({
+    dietType: "mixed",
+    localFoodPercentage: 50,
+    foodWaste: "medium",
+    OrganicFood: "some",
+  })
+
+  const [shopping, setShopping] = useState<Shopping>({
+    shoppingType: "moderate",
+    sustainableProducts: 50,
+    RecyclingHabbits: "most",
+    fashionVsustainable: "mixed",
+  })
+
+  // Total emissions
   const totalEmissions = transportEmissions + homeEmissions + foodEmissions + shoppingEmissions
+
+  // Save changes function
+  const handleSaveChanges = (category: keyof Calculator) => {
+    console.log("Handle Changes clicked")
+    const calculator: Calculator = {
+      transport,
+      home,
+      food,
+      shopping,
+    }
+
+    // Call the SaveChanges function with the calculator object
+    SaveChanges(calculator[category])
+  }
+
+  const SaveChanges = (data: Transportation | HomeEnergy | FoodConsumption | Shopping) => {
+    console.log("Saving changes:", data)
+    // You can also store this in a global state or send it to an API
+  }
 
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -58,7 +142,11 @@ export default function CalculatorPage() {
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
                     <Label>Primary mode of transportation</Label>
-                    <RadioGroup defaultValue="car" className="grid grid-cols-2 gap-4">
+                    <RadioGroup
+                      defaultValue="car"
+                      className="grid grid-cols-2 gap-4"
+                      onValueChange={(value) => setTransport({ ...transport, transportationMode: value })}
+                    >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="car" id="car" />
                         <Label htmlFor="car" className="flex items-center">
@@ -93,19 +181,25 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Daily commute distance (miles)</Label>
-                      <span className="text-sm font-medium">{transportEmissions / 10} miles</span>
+                      <span className="text-sm font-medium">{transport.commuteDistance} miles</span>
                     </div>
                     <Slider
-                      defaultValue={[Math.round(transportEmissions / 10)]}
+                      defaultValue={[transport.commuteDistance]}
                       max={50}
                       step={1}
-                      onValueChange={(value) => setTransportEmissions(value[0] * 10)}
+                      onValueChange={(value) => {
+                        setTransport({ ...transport, commuteDistance: value[0] })
+                        setTransportEmissions(value[0] * 10)
+                      }}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Flights per year</Label>
-                    <Select defaultValue="1-2">
+                    <Select
+                      defaultValue="1-2"
+                      onValueChange={(value) => setTransport({ ...transport, flightsCount: value as "0" | "1-2" | "3-5" | "6+" })}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select flights" />
                       </SelectTrigger>
@@ -119,10 +213,9 @@ export default function CalculatorPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button>Save Transportation Data</Button>
+                  <Button onClick={() => handleSaveChanges("transport")}>Save Transportation Data</Button>
                 </CardFooter>
               </Card>
-
               <ComparisonSimulator category="transport" />
             </TabsContent>
 
@@ -135,7 +228,11 @@ export default function CalculatorPage() {
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
                     <Label>Home energy source</Label>
-                    <RadioGroup defaultValue="grid" className="grid grid-cols-2 gap-4">
+                    <RadioGroup
+                      defaultValue="grid"
+                      className="grid grid-cols-2 gap-4"
+                      onValueChange={(value) => setHome({ ...home, energySource: value })}
+                    >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="grid" id="grid" />
                         <Label htmlFor="grid" className="flex items-center">
@@ -170,19 +267,25 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Monthly electricity usage (kWh)</Label>
-                      <span className="text-sm font-medium">{homeEmissions * 5} kWh</span>
+                      <span className="text-sm font-medium">{home.electricityUsage} kWh</span>
                     </div>
                     <Slider
-                      defaultValue={[homeEmissions]}
+                      defaultValue={[home.electricityUsage]}
                       max={200}
                       step={1}
-                      onValueChange={(value) => setHomeEmissions(value[0])}
+                      onValueChange={(value) => {
+                        setHome({ ...home, electricityUsage: value[0] })
+                        setHomeEmissions(value[0])
+                      }}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Home size</Label>
-                    <Select defaultValue="medium">
+                    <Select
+                      defaultValue="medium"
+                      onValueChange={(value) => setHome({ ...home, homeSize: value as "small" | "medium" | "large" | "xlarge" })}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select home size" />
                       </SelectTrigger>
@@ -197,7 +300,10 @@ export default function CalculatorPage() {
 
                   <div className="space-y-2">
                     <Label>Heating type</Label>
-                    <Select defaultValue="gas">
+                    <Select
+                      defaultValue="gas"
+                      onValueChange={(value) => setHome({ ...home, heatingType: value as "gas" | "electric" | "oil" | "heatpump" | "wood" })}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select heating type" />
                       </SelectTrigger>
@@ -212,7 +318,7 @@ export default function CalculatorPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button>Save Home Energy Data</Button>
+                  <Button onClick={() => handleSaveChanges("home")}>Save Home Energy Data</Button>
                 </CardFooter>
               </Card>
 
@@ -228,7 +334,11 @@ export default function CalculatorPage() {
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
                     <Label>Diet type</Label>
-                    <RadioGroup defaultValue="mixed" className="grid grid-cols-2 gap-4">
+                    <RadioGroup
+                      defaultValue="mixed"
+                      className="grid grid-cols-2 gap-4"
+                      onValueChange={(value) => setFood({ ...food, dietType: value })}
+                    >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="meat" id="meat" />
                         <Label htmlFor="meat" className="flex items-center">
@@ -263,19 +373,25 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Local food percentage</Label>
-                      <span className="text-sm font-medium">{foodEmissions}%</span>
+                      <span className="text-sm font-medium">{food.localFoodPercentage}%</span>
                     </div>
                     <Slider
-                      defaultValue={[foodEmissions]}
+                      defaultValue={[food.localFoodPercentage]}
                       max={100}
                       step={5}
-                      onValueChange={(value) => setFoodEmissions(value[0])}
+                      onValueChange={(value) => {
+                        setFood({ ...food, localFoodPercentage: value[0] })
+                        setFoodEmissions(value[0])
+                      }}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Food waste</Label>
-                    <Select defaultValue="medium">
+                    <Select
+                      defaultValue="medium"
+                      onValueChange={(value) => setFood({ ...food, foodWaste: value as "low" | "medium" | "high" })}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select waste level" />
                       </SelectTrigger>
@@ -289,7 +405,10 @@ export default function CalculatorPage() {
 
                   <div className="space-y-2">
                     <Label>Organic food consumption</Label>
-                    <Select defaultValue="some">
+                    <Select
+                      defaultValue="some"
+                      onValueChange={(value) => setFood({ ...food, OrganicFood: value as "none" | "some" | "half" | "most" | "all" })}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select organic consumption" />
                       </SelectTrigger>
@@ -304,7 +423,7 @@ export default function CalculatorPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button>Save Food Data</Button>
+                  <Button onClick={() => handleSaveChanges("food")}>Save Food Data</Button>
                 </CardFooter>
               </Card>
 
@@ -320,7 +439,11 @@ export default function CalculatorPage() {
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
                     <Label>Shopping frequency</Label>
-                    <RadioGroup defaultValue="moderate" className="grid grid-cols-2 gap-4">
+                    <RadioGroup
+                      defaultValue="moderate"
+                      className="grid grid-cols-2 gap-4"
+                      onValueChange={(value) => setShopping({ ...shopping, shoppingType: value })}
+                    >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="minimal" id="minimal" />
                         <Label htmlFor="minimal" className="flex items-center">
@@ -355,19 +478,25 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Sustainable products percentage</Label>
-                      <span className="text-sm font-medium">{shoppingEmissions}%</span>
+                      <span className="text-sm font-medium">{shopping.sustainableProducts}%</span>
                     </div>
                     <Slider
-                      defaultValue={[shoppingEmissions]}
+                      defaultValue={[shopping.sustainableProducts]}
                       max={100}
                       step={5}
-                      onValueChange={(value) => setShoppingEmissions(value[0])}
+                      onValueChange={(value) => {
+                        setShopping({ ...shopping, sustainableProducts: value[0] })
+                        setShoppingEmissions(value[0])
+                      }}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Recycling habits</Label>
-                    <Select defaultValue="most">
+                    <Select
+                      defaultValue="most"
+                      onValueChange={(value) => setShopping({ ...shopping, RecyclingHabbits: value as "none" | "some" | "most" | "all" })}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select recycling level" />
                       </SelectTrigger>
@@ -382,7 +511,12 @@ export default function CalculatorPage() {
 
                   <div className="space-y-2">
                     <Label>Fast fashion vs. sustainable clothing</Label>
-                    <Select defaultValue="mixed">
+                    <Select
+                      defaultValue="mixed"
+                      onValueChange={(value) =>
+                        setShopping({ ...shopping, fashionVsustainable: value as "fast" | "mixed" | "sustainable" | "secondhand" | "minimal" })
+                      }
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select clothing habits" />
                       </SelectTrigger>
@@ -397,7 +531,7 @@ export default function CalculatorPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button>Save Shopping Data</Button>
+                  <Button onClick={() => handleSaveChanges("shopping")}>Save Shopping Data</Button>
                 </CardFooter>
               </Card>
 
@@ -412,12 +546,18 @@ export default function CalculatorPage() {
               <CardTitle>Your Carbon Footprint</CardTitle>
               <CardDescription>Based on your current lifestyle choices</CardDescription>
             </CardHeader>
+
+
+
+
+
+
+            {/* UPDATE IT ONLY WHEN SAVE CHANGES IS CLICKED AND DATA IS RECIEVED FROM BACKEND */}
             <CardContent>
               <div className="text-center mb-6">
                 <div className="text-4xl font-bold">{totalEmissions}</div>
                 <div className="text-sm text-muted-foreground">kg CO2e per month</div>
               </div>
-
               <CarbonImpactChart
                 data={[
                   { name: "Transport", value: transportEmissions },
@@ -427,6 +567,12 @@ export default function CalculatorPage() {
                 ]}
               />
 
+
+
+
+
+
+              {/* UPDATE IT ONLY WHEN SAVE CHANGES IS CLICKED AND DATA IS RECIEVED FROM BACKEND */}
               <div className="mt-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
@@ -457,6 +603,13 @@ export default function CalculatorPage() {
                   <span className="font-medium">{shoppingEmissions} kg</span>
                 </div>
               </div>
+
+
+
+
+
+
+
             </CardContent>
           </Card>
 
@@ -465,6 +618,8 @@ export default function CalculatorPage() {
               <CardTitle>Reduction Potential</CardTitle>
               <CardDescription>How much you could reduce with small changes</CardDescription>
             </CardHeader>
+
+            {/* [HERE MAKE SOME CHANGES ..USE GEN AI TO PREDICT THE AMOUT THE THINGS CAN BE CHANGED..ABOUT HOW MUCH % THE CARBON EMISSION CAN BE REDUCED] */}
             <CardContent>
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -516,4 +671,3 @@ export default function CalculatorPage() {
     </div>
   )
 }
-

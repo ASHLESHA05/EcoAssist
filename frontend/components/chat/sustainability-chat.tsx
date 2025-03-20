@@ -70,7 +70,7 @@ export function SustainabilityChat() {
 
       if (res.status === 200) {
         console.log("User Details fetched");
-        setPoints(res.data.points || 0);
+        setPoints(res.data.points || 1);
       } else {
         console.log("Failed to fetch user details");
       }
