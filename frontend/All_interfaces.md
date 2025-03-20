@@ -238,16 +238,14 @@ interface Action {
 Here’s the markdown version of your API documentation:  
 
 
-## 11. Save to Memory (`/update-to-memory`) [POST]
+### 11. Save to Memory (`/update-to-memory`) [POST]
 
-### Endpoint:
+**Endpoint:** `/update-chat-memory` [POST]
 
-POST {NEXT_PUBLIC_BACKEND_URL}/update-chat-memory
-
-### Description:
+**Description:**
 Saves chat memory by sending the user’s request and response along with their email.
 
-### Request Body (JSON):
+**Request Body (JSON):**
 ```json
 {
   "req": "How can I reduce my electricity bill?",
