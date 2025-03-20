@@ -8,12 +8,15 @@ export const metadata = {
   title: "EcoAI - Reduce Your Carbon Footprint",
   description: "Personalized AI assistant for sustainable living",
 }
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { UserProvider, useUser } from '@auth0/nextjs-auth0/client';
+import SurveyPopup from "@/components/SurveyPopUP/popUp"
+import NotificationPopup from "@/components/Notification/popUpNotify"
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <UserProvider>
@@ -25,7 +28,8 @@ export default function RootLayout({
               <main className="flex-1 overflow-auto">{children}</main>
             </div>
           </SidebarProvider>
-          
+          <SurveyPopup/>
+          <NotificationPopup/>
         </ThemeProvider>
       </body>
       </UserProvider>

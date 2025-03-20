@@ -21,6 +21,8 @@ export default function SurveyPopup() {
   const [isNewUser, setIsNewUser] = useState<boolean>(true)
   const {user,error,isLoading} = useUser()
   // Check if the user is new
+
+
   const checkIfNewUser = async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/isNewUser`,{
@@ -143,7 +145,7 @@ export default function SurveyPopup() {
   // Check if the user is new on component mount
   useEffect(() => {
     checkIfNewUser()
-  }, [])
+  }, [user])
 
   if (!isVisible) return null
 
@@ -219,9 +221,12 @@ export default function SurveyPopup() {
                 )}
               </div>
             ))}
+            <div className="flex justify-center">
             <Button type="submit" className="w-60 bg-green-600 hover:bg-green-700 text-white">
-              Submit
+                Submit
             </Button>
+            </div>
+
           </form>
         </CardContent>
       </Card>

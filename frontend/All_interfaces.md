@@ -538,8 +538,70 @@ def getSurveyData(email):
     return {"question": "answers"}
 ```
 ---
+## 22. PopupNotify - AI + Backend (No DB)  
+
+**Task:**  
+- Get the user's email from the request parameters.  
+- Fetch user details that include the following:  
+  - `carbonFootprint`  
+  - `waterSaved`  
+  - `energySaved`  
+  - `wasteReduced`  
+- This data should be fetched from the database similarly to how it is done for the "Get All Details" in the dashboard, but with limited fields.  
+- Send this data to the AI using the function `getNotification(data)`.  
+- AI will respond with a notification that includes a **title**, **description**, and **quote**.  
+
+---
+
+**Endpoint:** `/popupNotify` [GET]  
+
+### Request:
+```json
+{
+  "email": "email"
+}
+```
+---
+
+## 23.ActivityUpdate
+**Endpoint**
+`POST /updateDailyActivities`
+
+## Request
+Sends a POST request to update daily activities for a user.
+
+### Code Example
+```typescript
+const response = await axios.post(
+  `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/updateDailyActivities`,
+  {
+    email: user.email,
+    activities: activities (json),
+  }
+);
+```
+
+just store as email, json  ...where json has {act1: 'jj'}
+on recieving updae append to json..
+on 12 AM reset
 
 
+## 24. Endpoint
+`GET /getDailyActivity`
+
+## Request
+Sends a GET request to retrieve the daily activities of a user.
+
+### Code Example
+```typescript
+const response = await axios.get(
+  `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/getDailyActivity`,
+  {
+    params: {
+      email: user.email,
+    },
+  }
+);
 
 
 

@@ -7,9 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Leaf, Mail, Github, Heart, ArrowDown, ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Spinner from "@/components/sninner";
-import SurveyPopup from "@/components/SurveyPopUP/popUp";
-import { Input } from "@/components/ui/input";
+
 
 export default function Main() {
   const { user, error, isLoading } = useUser();
@@ -135,7 +133,7 @@ export default function Main() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1 }}
           >
-            <SurveyPopup/>
+            
             <h1 className="text-4xl font-bold">{getTimeOfDay()}, {user.name}!</h1>
             <p className="text-lg text-gray-300">Email: {user.email}</p>
             <br></br>
