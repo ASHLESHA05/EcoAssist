@@ -238,7 +238,7 @@ interface Action {
 Here’s the markdown version of your API documentation:  
 
 
-### 11. Save to Memory (`/update-to-memory`) [POST]
+### 11. Save to Memory
 
 **Endpoint:** `/update-chat-memory` [POST]
 
