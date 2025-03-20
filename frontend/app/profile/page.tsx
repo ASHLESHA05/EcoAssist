@@ -40,10 +40,30 @@ export default function ProfilePage() {
   // Fetch user data when user is available
   useEffect(() => {
     if (user) {
+      userPlan()
       userLogin()
       fetchData();
     }
   }, [user]);
+
+  const userPlan = async ():Promise<void>=>{
+    try{
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/getMyPlan`,{
+          params:{
+            email: user?.email
+          }
+        }
+      )
+      if(res.status === 200){
+        setPlanTitle(res.data.title)
+        setPlanDescription(res.data.description)
+      }
+      
+    }catch(error){
+      console.error("Error in getting userrplan")
+    }
+  }
 
   const userLogin = async ():Promise<void>=>{
     try{

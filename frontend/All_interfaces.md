@@ -437,7 +437,27 @@ emissionData : {
 ```
 
 ---
+
+### 18. Get user plans (return 500 if no plans)
+
+***ENDPOINTS*** `/getMyPlan` [GET]
+
+```
+{
+  email: email
+}
+```
+
+returns:
+
+```
+{
+  title: string,
+  description: string,
+}
+```
 ---
+
 
 
 
