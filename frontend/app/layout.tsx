@@ -3,6 +3,7 @@ import "@/app/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
+import { Toaster } from "sonner"
 
 export const metadata = {
   title: "EcoAI - Reduce Your Carbon Footprint",
@@ -28,8 +29,9 @@ export default function RootLayout({
               <main className="flex-1 overflow-auto">{children}</main>
             </div>
           </SidebarProvider>
+          <Toaster position="top-center" richColors />
           <SurveyPopup/>
-          <NotificationPopup/>
+          <NotificationPopup/><Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>
       </UserProvider>

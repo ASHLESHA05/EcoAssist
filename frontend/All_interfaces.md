@@ -654,21 +654,29 @@ data = {
     "FeedbackForm": {}  # Replace with actual user preference JSON
   }
 }
+```
+---
+---
 
-Based on the provided data about the user's carbon footprint, water usage, power consumption, waste management, eco-score, and historical carbon data, generate 5 personalized plans for carbon footprint reduction.
+### 19 . Get  My plan 
+*** Endpoints**
+```
+const checkResponse = await fetch(`/api/getMyPlan?email=${email}&plan=${planTitle}`)
 
-Each plan should be formatted as follows:
-{
-  "plan_1": {
-    "title": "Title of the first plan",
-    "description": "Detailed description of the first plan"
-  },
-  "plan_2": {
-    "title": "Title of the second plan",
-    "description": "Detailed description of the second plan"
-  },
-  ... and so on for plans 3, 4, and 5
-}
+i want you to compare this plan with existing one in the table 
+if it is same then just return 200
 
-The plans should be personalized based on the data provided, addressing specific areas where the user can improve their environmental impact. Make references to their current metrics, goals, and historical data to create meaningful and relevant recommendations.
-"""
+else return 500
+```
+### 20 Save me plan:
+*** Endpoints**
+```
+const saveResponse = await fetch("/api/savePlan", {
+                 method: "PUT",
+                 headers: { "Content-Type": "application/json" },
+                 body: JSON.stringify({ email, plan: planTitle }),
+               })
+
+
+here you replace the old content in the coloum with planTitle
+```

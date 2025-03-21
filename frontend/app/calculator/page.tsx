@@ -14,6 +14,7 @@ import ComparisonSimulator from "@/components/calculator/comparison-simulator"
 import { useUser } from "@auth0/nextjs-auth0/client"
 import axios from "axios"
 import { calculator } from "@/types/types"
+import ReductionPlanModal from "@/components/ReductionPlanModel"
 
 // Define the interfaces
 export interface Transportation {
@@ -86,7 +87,7 @@ export default function CalculatorPage() {
     RecyclingHabbits: "most",
     fashionVsustainable: "mixed",
   })
-
+  
   // Total emissions
   const [TotalCarbon,setCarbontotal] = useState(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
   const [paramsData, setParams] = useState<Calculator | any>({
@@ -95,7 +96,7 @@ export default function CalculatorPage() {
     food: food,
     shopping: shopping,
   });
-  
+  const [showReductionPlanModal, setShowReductionPlanModal] = useState<boolean>(false)
   useEffect(() => {
     const getData = async () => {
       try {
@@ -786,11 +787,19 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              <Button className="w-full mt-6">Get Personalized Reduction Plan</Button>
+              <Button className="w-full mt-6" onClick={() => setShowReductionPlanModal(true)}>
+                Get Personalized Reduction Plan
+              </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+      {showReductionPlanModal && (
+        <ReductionPlanModal
+          email={user?.email || ""}
+          onClose={() => setShowReductionPlanModal(false)}
+        />
+      )}
     </div>
   )
 }
