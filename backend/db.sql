@@ -78,3 +78,29 @@ CREATE TABLE redemption_options (
     points_required INT NOT NULL,
     is_active BOOLEAN DEFAULT TRUE
 );
+
+CREATE TABLE dashboard_metrics (
+    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
+    carbon_footprint_qty INT NOT NULL,
+    prev_month_cmp INT NOT NULL,
+    is_increase_carbon BOOLEAN NOT NULL,
+    remaining_monthly_goal INT NOT NULL,
+  
+    water_saved INT NOT NULL,
+    water_prev_month_cmp INT NOT NULL,
+    is_increase_water BOOLEAN NOT NULL,
+    water_remaining_monthly_goal INT NOT NULL,
+  
+    power_saved INT NOT NULL,
+    power_prev_month_cmp INT NOT NULL,
+    is_increase_power BOOLEAN NOT NULL,
+    power_remaining_monthly_goal INT NOT NULL,
+  
+    waste_reduced INT NOT NULL,
+    waste_prev_month_cmp INT NOT NULL,
+    is_increase_waste BOOLEAN NOT NULL,
+    waste_remaining_monthly_goal INT NOT NULL,
+  
+    earned_at TIMESTAMP DEFAULT now(),
+    PRIMARY KEY (user_id)
+);
