@@ -50,10 +50,7 @@ def update_notifications():
         # Update preferences JSONB column
         query = """
         UPDATE users 
-        SET preferences = jsonb_set(
-            COALESCE(preferences, '{}'::jsonb),
-            %s, %s::jsonb, true
-        )
+        SET preferences = jsonb_set(preferences, %s, %s::jsonb, true)
         WHERE email = %s;
         """
         cursor.execute(query, [f"{{{key}}}", json.dumps(value), email])
