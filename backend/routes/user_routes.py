@@ -368,6 +368,8 @@ def clear_plan():
 def get_leaderboard():
     # Get email from request params
     email = request.args.get("email")
+    
+    print("email: ", email)
 
     if not email:
         return jsonify({"error": "Email parameter is required"}), 400
@@ -384,7 +386,6 @@ def get_leaderboard():
         if not user_result:
             return jsonify({"error": "User not found"}), 404
 
-        user_id = user_result[0]
 
         # Query to get friends' leaderboard data (name, score, badges)
         query = """
@@ -402,13 +403,15 @@ def get_leaderboard():
         GROUP BY u2.name, e.score;
         """
 
-        cursor.execute(query, (user_id,))
+        cursor.execute(query, (email,))
         leaderboard = cursor.fetchall()
 
         # Formatting response
         leaderboard_data = [
             {"name": row[0], "score": row[1], "badges": row[2]} for row in leaderboard
         ]
+        
+        print(leaderboard_data)
 
         return jsonify(leaderboard_data), 200
 

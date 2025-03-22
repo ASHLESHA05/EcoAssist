@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { Badge } from '@/components/ui/badge';
+import { log } from 'console';
 
 const LeaderboardTable = () => {
   const { user, error, isLoading } = useUser();
   const [leaderboardData, setLeaderboardData] = useState<
-    { name: string; score: number; badges: string[] }[]
+    { name: string; score: number|null; badges: string[]|[null] }[]
   >([]);
 
   useEffect(() => {
@@ -13,10 +14,12 @@ const LeaderboardTable = () => {
       if (user?.email) {
         try {
           const response = await fetch(`http://localhost:8080/leaderboard?email=${user.email}`);
+          console.log(response)
           if (!response.ok) {
             throw new Error('Failed to fetch leaderboard data');
           }
-          const data = await response.json();
+          const data = await response.json()
+          console.log(data)
           setLeaderboardData(data); // Use the API response directly
         } catch (error) {
           console.error('Failed to fetch leaderboard data:', error);
