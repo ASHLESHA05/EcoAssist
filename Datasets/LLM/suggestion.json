@@ -1,0 +1,1916 @@
+[
+    {
+      "id": 1,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 30,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 500
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 7
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 10
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 300
+      },
+      "carbon_footprint_kgCO2e": 1500,
+      "suggestions": [
+        "Switch to a hybrid or electric vehicle to reduce transportation emissions.",
+        "Consider carpooling or using public transport at least twice a week.",
+        "Switch to a renewable energy provider or install solar panels to reduce energy-related emissions.",
+        "Reduce meat consumption to 3-4 meals per week and incorporate plant-based alternatives.",
+        "Improve recycling habits by sorting waste and recycling paper, plastic, and glass.",
+        "Start composting organic waste to reduce landfill emissions.",
+        "Reduce shopping frequency and opt for sustainable, long-lasting products.",
+        "Minimize single-use plastics by using reusable bags, bottles, and containers.",
+        "Install water-saving devices and reduce daily water usage to lower your footprint."
+      ]
+    },
+    {
+      "id": 2,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 5,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 100
+      },
+      "carbon_footprint_kgCO2e": 200,
+      "suggestions": [
+        "Your carbon footprint is already low—great job! To reduce it further, consider advocating for renewable energy in your community.",
+        "Continue your excellent recycling and composting habits.",
+        "Encourage others to adopt sustainable practices like cycling and reducing waste.",
+        "Consider reducing your energy consumption even further by using energy-efficient appliances.",
+        "Explore ways to reduce water usage, such as shorter showers or fixing leaks."
+      ]
+    },
+    {
+      "id": 3,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 20,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 3
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 800,
+      "suggestions": [
+        "Consider walking or cycling for shorter trips to reduce reliance on public transport.",
+        "Switch to a green energy provider to lower your energy-related emissions.",
+        "Reduce meat consumption to 1-2 meals per week and incorporate more plant-based options.",
+        "Improve recycling habits by recycling all possible materials.",
+        "Start composting food scraps to reduce waste sent to landfills.",
+        "Reduce shopping frequency and choose products with minimal packaging.",
+        "Replace single-use plastics with reusable alternatives like cloth bags and metal straws.",
+        "Install low-flow showerheads and faucets to reduce water usage."
+      ]
+    },
+    {
+      "id": 4,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 10,
+        "frequency_per_week": 3
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "most",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 3
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 150
+      },
+      "carbon_footprint_kgCO2e": 600,
+      "suggestions": [
+        "Consider switching to an electric vehicle or using public transport for your car trips.",
+        "Explore renewable energy options or energy-efficient appliances to reduce energy emissions.",
+        "Your vegan diet is already low-emission—consider sharing plant-based recipes to inspire others.",
+        "Continue your excellent recycling and composting habits.",
+        "Reduce shopping frequency and focus on buying secondhand or sustainable products.",
+        "Maintain your low use of single-use plastics and encourage others to do the same.",
+        "Install water-efficient fixtures to further reduce your water usage."
+      ]
+    },
+    {
+      "id": 5,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 2,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 150
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 4
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 400,
+      "suggestions": [
+        "Your walking habit is excellent for reducing emissions—keep it up!",
+        "Consider reducing meat consumption to 2-3 meals per week to lower your dietary carbon footprint.",
+        "Improve recycling habits by ensuring all recyclable materials are properly sorted.",
+        "Start composting organic waste to reduce landfill emissions.",
+        "Reduce shopping frequency and opt for products with minimal packaging.",
+        "Replace single-use plastics with reusable alternatives.",
+        "Install water-saving devices to lower your daily water usage."
+      ]
+    },
+    {
+      "id": 26,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 30,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 7
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 1100,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle to reduce transportation emissions.",
+        "Consider switching to a renewable energy provider.",
+        "Reduce meat consumption to 2-3 meals per week and try plant-based alternatives.",
+        "Improve recycling habits and start composting food waste.",
+        "Reduce shopping frequency and use reusable bags instead of single-use plastics.",
+        "Install low-flow fixtures to lower water usage."
+      ]
+    },
+    {
+      "id": 27,
+      "transportation": {
+        "mode": "cycling",
+        "distance_km": 15,
+        "frequency_per_week": 6
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 150
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 120
+      },
+      "carbon_footprint_kgCO2e": 250,
+      "suggestions": [
+        "Your lifestyle is highly sustainable—great job! Consider advocating for green initiatives in your community.",
+        "Continue your excellent transportation, diet, and waste management habits.",
+        "Explore further energy savings with energy-efficient appliances."
+      ]
+    },
+    {
+      "id": 28,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 20,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 8
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 250
+      },
+      "carbon_footprint_kgCO2e": 850,
+      "suggestions": [
+        "Your public transport use is great. Switch to a renewable energy provider.",
+        "Improve waste management by recycling more and starting to compost.",
+        "Reduce shopping frequency and replace single-use plastics with reusables.",
+        "Install water-saving devices to lower your water usage."
+      ]
+    },
+    {
+      "id": 29,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 25,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 3
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 3
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 550,
+      "suggestions": [
+        "Consider walking or cycling for shorter trips to reduce electric car usage.",
+        "Reduce meat consumption to 1-2 meals per week.",
+        "Continue your excellent energy and waste management habits.",
+        "Reduce shopping frequency and switch to reusable products."
+      ]
+    },
+    {
+      "id": 30,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 2,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 450
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 7
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 9
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 300
+      },
+      "carbon_footprint_kgCO2e": 1200,
+      "suggestions": [
+        "Your walking habit is excellent. Switch to a renewable energy provider.",
+        "Reduce meat consumption to 3-4 meals per week and try plant-based options.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-efficient fixtures to lower usage."
+      ]
+    },
+    {
+      "id": 31,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 40,
+        "frequency_per_week": 6
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 500
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 220
+      },
+      "carbon_footprint_kgCO2e": 1300,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle for your commute.",
+        "Consider a renewable energy provider to lower energy emissions.",
+        "Your vegan diet is excellent—keep it up!",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 32,
+      "transportation": {
+        "mode": "cycling",
+        "distance_km": 10,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 250
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 4
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 150
+      },
+      "carbon_footprint_kgCO2e": 400,
+      "suggestions": [
+        "Your transportation and waste habits are great. Reduce meat consumption to 2 meals per week.",
+        "Continue using renewable energy and minimizing waste.",
+        "Maintain your low-impact lifestyle choices."
+      ]
+    },
+    {
+      "id": 33,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 12,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 7
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 900,
+      "suggestions": [
+        "Switch to a renewable energy provider to lower energy emissions.",
+        "Improve waste management by recycling more and composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices to reduce usage."
+      ]
+    },
+    {
+      "id": 34,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 15,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 6
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 800,
+      "suggestions": [
+        "Consider cycling for shorter trips to reduce car usage.",
+        "Switch to a renewable energy provider.",
+        "Reduce meat consumption to 3 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 35,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 3,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 120
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 2
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 1
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 100
+      },
+      "carbon_footprint_kgCO2e": 200,
+      "suggestions": [
+        "Your lifestyle is very sustainable. Consider reducing meat consumption further.",
+        "Continue your excellent habits in transportation, energy, and waste management.",
+        "Share your low-impact practices with others."
+      ]
+    },
+    {
+      "id": 36,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 20,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 250
+      },
+      "carbon_footprint_kgCO2e": 1000,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle.",
+        "Consider a renewable energy provider.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices."
+      ]
+    },
+    {
+      "id": 37,
+      "transportation": {
+        "mode": "cycling",
+        "distance_km": 8,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 4
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 160
+      },
+      "carbon_footprint_kgCO2e": 450,
+      "suggestions": [
+        "Your cycling and vegan diet are excellent. Switch to a renewable energy provider.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 38,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 18,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 8
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 3
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 140
+      },
+      "carbon_footprint_kgCO2e": 600,
+      "suggestions": [
+        "Your transportation and energy choices are great. Reduce meat consumption to 3-4 meals per week.",
+        "Continue your excellent waste management habits.",
+        "Maintain your low-impact lifestyle."
+      ]
+    },
+    {
+      "id": 39,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 20,
+        "frequency_per_week": 3
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 4
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 900,
+      "suggestions": [
+        "Consider walking for shorter trips.",
+        "Switch to a renewable energy provider.",
+        "Reduce meat consumption to 2 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics."
+      ]
+    },
+    {
+      "id": 40,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 5,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 250
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 130
+      },
+      "carbon_footprint_kgCO2e": 350,
+      "suggestions": [
+        "Your walking and diet choices are excellent. Switch to a renewable energy provider.",
+        "Continue your great waste management habits.",
+        "Maintain your low-impact lifestyle."
+      ]
+    },
+    {
+      "id": 41,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 25,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 3
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 750,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle.",
+        "Reduce meat consumption to 1-2 meals per week.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 42,
+      "transportation": {
+        "mode": "cycling",
+        "distance_km": 12,
+        "frequency_per_week": 6
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 6
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 950,
+      "suggestions": [
+        "Your cycling is great. Switch to a renewable energy provider.",
+        "Reduce meat consumption to 3 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics."
+      ]
+    },
+    {
+      "id": 43,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 15,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 180
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 120
+      },
+      "carbon_footprint_kgCO2e": 300,
+      "suggestions": [
+        "Your lifestyle is very sustainable. Continue your excellent habits.",
+        "Consider advocating for public transport improvements.",
+        "Explore further energy savings with efficient appliances."
+      ]
+    },
+    {
+      "id": 44,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 30,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 4
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 160
+      },
+      "carbon_footprint_kgCO2e": 650,
+      "suggestions": [
+        "Consider cycling for shorter trips.",
+        "Switch to a renewable energy provider.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 45,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 1,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 7
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 220
+      },
+      "carbon_footprint_kgCO2e": 800,
+      "suggestions": [
+        "Your walking habit is excellent. Switch to a renewable energy provider.",
+        "Reduce meat consumption to 2-3 meals per week.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices."
+      ]
+    },
+    {
+      "id": 50,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 35,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 450
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 7
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 10
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 280
+      },
+      "carbon_footprint_kgCO2e": 1400,
+      "suggestions": [
+        "Switch to public transport or carpooling for your daily commute.",
+        "Consider switching to a renewable energy provider or installing solar panels.",
+        "Reduce meat consumption to 3-4 meals per week and try plant-based alternatives.",
+        "Improve recycling habits and start composting food waste.",
+        "Reduce shopping frequency and opt for sustainable, long-lasting products.",
+        "Minimize single-use plastics by using reusable bags and containers.",
+        "Install low-flow showerheads and faucets to reduce water usage."
+      ]
+    },
+    {
+      "id": 51,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 10,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 120
+      },
+      "carbon_footprint_kgCO2e": 250,
+      "suggestions": [
+        "Your lifestyle is highly sustainable—great job! Consider advocating for renewable energy in your community.",
+        "Continue your excellent transportation, diet, and waste management habits.",
+        "Explore further energy savings with energy-efficient appliances."
+      ]
+    },
+    {
+      "id": 52,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 25,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 4
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 850,
+      "suggestions": [
+        "Consider walking or cycling for shorter trips to reduce public transport use.",
+        "Switch to a renewable energy provider to lower energy emissions.",
+        "Reduce meat consumption to 2 meals per week and incorporate more plant-based options.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and choose products with minimal packaging.",
+        "Replace single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 53,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 15,
+        "frequency_per_week": 3
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 250
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "most",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 3
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 150
+      },
+      "carbon_footprint_kgCO2e": 550,
+      "suggestions": [
+        "Consider switching to an electric vehicle or using public transport for your car trips.",
+        "Your energy and diet choices are great—keep it up!",
+        "Continue your excellent recycling and composting habits.",
+        "Reduce shopping frequency and focus on buying secondhand or sustainable products."
+      ]
+    },
+    {
+      "id": 54,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 3,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 6
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 8
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 250
+      },
+      "carbon_footprint_kgCO2e": 1000,
+      "suggestions": [
+        "Your walking habit is excellent. Switch to a renewable energy provider.",
+        "Reduce meat consumption to 3 meals per week and try plant-based alternatives.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives.",
+        "Install water-saving devices to lower usage."
+      ]
+    },
+    {
+      "id": 55,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 40,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 500
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 1200,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle for your commute.",
+        "Consider a renewable energy provider to lower energy emissions.",
+        "Your vegan diet is excellent—keep it up!",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 56,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 8,
+        "frequency_per_week": 6
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 180
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 3
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 140
+      },
+      "carbon_footprint_kgCO2e": 350,
+      "suggestions": [
+        "Your transportation and waste habits are great. Reduce meat consumption to 1-2 meals per week.",
+        "Continue using renewable energy and minimizing waste.",
+        "Maintain your low-impact lifestyle choices."
+      ]
+    },
+    {
+      "id": 57,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 20,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 7
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 220
+      },
+      "carbon_footprint_kgCO2e": 950,
+      "suggestions": [
+        "Switch to a renewable energy provider to lower energy emissions.",
+        "Improve waste management by recycling more and composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices to reduce usage."
+      ]
+    },
+    {
+      "id": 58,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 20,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 850,
+      "suggestions": [
+        "Consider cycling for shorter trips to reduce car usage.",
+        "Switch to a renewable energy provider.",
+        "Reduce meat consumption to 2-3 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 59,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 2,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 150
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 2
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 1
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 110
+      },
+      "carbon_footprint_kgCO2e": 200,
+      "suggestions": [
+        "Your lifestyle is very sustainable. Consider reducing meat consumption further.",
+        "Continue your excellent habits in transportation, energy, and waste management.",
+        "Share your low-impact practices with others."
+      ]
+    },
+    {
+      "id": 60,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 30,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 240
+      },
+      "carbon_footprint_kgCO2e": 1050,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle.",
+        "Consider a renewable energy provider.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices."
+      ]
+    },
+    {
+      "id": 61,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 12,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 250
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 4
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 160
+      },
+      "carbon_footprint_kgCO2e": 400,
+      "suggestions": [
+        "Your cycling and vegan diet are excellent. Switch to a renewable energy provider.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 62,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 18,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 7
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 3
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 140
+      },
+      "carbon_footprint_kgCO2e": 650,
+      "suggestions": [
+        "Your transportation and energy choices are great. Reduce meat consumption to 3-4 meals per week.",
+        "Continue your excellent waste management habits.",
+        "Maintain your low-impact lifestyle."
+      ]
+    },
+    {
+      "id": 63,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 25,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 4
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 950,
+      "suggestions": [
+        "Consider walking for shorter trips.",
+        "Switch to a renewable energy provider.",
+        "Reduce meat consumption to 2 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics."
+      ]
+    },
+    {
+      "id": 64,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 4,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 250
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 130
+      },
+      "carbon_footprint_kgCO2e": 300,
+      "suggestions": [
+        "Your walking and diet choices are excellent. Switch to a renewable energy provider.",
+        "Continue your great waste management habits.",
+        "Maintain your low-impact lifestyle."
+      ]
+    },
+    {
+      "id": 65,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 20,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 3
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 800,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle.",
+        "Reduce meat consumption to 1-2 meals per week.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 66,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 15,
+        "frequency_per_week": 6
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 900,
+      "suggestions": [
+        "Your cycling is great. Switch to a renewable energy provider.",
+        "Reduce meat consumption to 2-3 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics."
+      ]
+    },
+    {
+      "id": 67,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 22,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 120
+      },
+      "carbon_footprint_kgCO2e": 350,
+      "suggestions": [
+        "Your lifestyle is very sustainable. Continue your excellent habits.",
+        "Consider advocating for public transport improvements.",
+        "Explore further energy savings with efficient appliances."
+      ]
+    },
+    {
+      "id": 68,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 30,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 350
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 4
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 160
+      },
+      "carbon_footprint_kgCO2e": 700,
+      "suggestions": [
+        "Consider cycling for shorter trips.",
+        "Switch to a renewable energy provider.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 69,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 1,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 300
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 7
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 220
+      },
+      "carbon_footprint_kgCO2e": 850,
+      "suggestions": [
+        "Your walking habit is excellent. Switch to a renewable energy provider.",
+        "Reduce meat consumption to 2-3 meals per week.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices."
+      ]
+    },
+    {
+      "id": 70,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 25,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 400
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 6
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 8
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 1100,
+      "suggestions": [
+        "Switch to public transport or carpooling for your commute.",
+        "Consider switching to a renewable energy provider.",
+        "Reduce meat consumption to 3 meals per week and try plant-based alternatives.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 101,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 20,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "cooking_gas_usage": {
+        "type": "natural gas",
+        "usage_kg_per_month": 10
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 7
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 8
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 250
+      },
+      "carbon_footprint_kgCO2e": 1300,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle for your commute.",
+        "Consider a renewable energy provider to lower electricity emissions.",
+        "Reduce cooking gas usage by switching to an electric stove powered by renewable energy.",
+        "Cut meat consumption to 3-4 meals per week and incorporate plant-based options.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices to lower usage."
+      ]
+    },
+    {
+      "id": 102,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 12,
+        "frequency_per_week": 6
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 200
+      },
+      "cooking_gas_usage": {
+        "type": "propane",
+        "usage_kg_per_month": 5
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 130
+      },
+      "carbon_footprint_kgCO2e": 300,
+      "suggestions": [
+        "Your lifestyle is very sustainable—great job! Consider reducing propane use by switching to an electric induction cooktop.",
+        "Continue your excellent transportation, diet, and waste management habits.",
+        "Explore further energy savings with energy-efficient appliances."
+      ]
+    },
+    {
+      "id": 103,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 15,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 300
+      },
+      "cooking_gas_usage": {
+        "type": "natural gas",
+        "usage_kg_per_month": 8
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 4
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 850,
+      "suggestions": [
+        "Switch to a renewable energy provider for electricity and cooking (e.g., electric stove).",
+        "Reduce natural gas usage by cooking more efficiently or using smaller appliances like a microwave.",
+        "Cut meat consumption to 2 meals per week and try plant-based alternatives.",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 104,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 25,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 250
+      },
+      "cooking_gas_usage": {
+        "type": "none",
+        "usage_kg_per_month": 0
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "most",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 3
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 150
+      },
+      "carbon_footprint_kgCO2e": 500,
+      "suggestions": [
+        "Your electric car and renewable energy use are great. Consider cycling for shorter trips.",
+        "Continue avoiding cooking gas with electric alternatives.",
+        "Maintain your excellent vegetarian diet and waste management habits.",
+        "Reduce shopping frequency to further lower your footprint."
+      ]
+    },
+    {
+      "id": 105,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 2,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 350
+      },
+      "cooking_gas_usage": {
+        "type": "propane",
+        "usage_kg_per_month": 12
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 6
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 7
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 200
+      },
+      "carbon_footprint_kgCO2e": 1100,
+      "suggestions": [
+        "Your walking habit is excellent. Switch to a renewable energy provider for electricity.",
+        "Reduce propane use by switching to an electric stove or cooking less frequently with gas.",
+        "Cut meat consumption to 3 meals per week and try plant-based options.",
+        "Improve recycling habits and start composting.",
+        "Reduce shopping frequency and avoid single-use plastics."
+      ]
+    },
+    {
+      "id": 106,
+      "transportation": {
+        "mode": "car",
+        "distance_km": 30,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 450
+      },
+      "cooking_gas_usage": {
+        "type": "natural gas",
+        "usage_kg_per_month": 15
+      },
+      "diet": {
+        "type": "vegan",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 1250,
+      "suggestions": [
+        "Switch to public transport or an electric vehicle for your commute.",
+        "Consider a renewable energy provider and switch to electric cooking to reduce natural gas use.",
+        "Your vegan diet is excellent—keep it up!",
+        "Improve recycling habits and start composting.",
+        "Reduce single-use plastics with reusable alternatives."
+      ]
+    },
+    {
+      "id": 107,
+      "transportation": {
+        "mode": "bicycle",
+        "distance_km": 8,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 180
+      },
+      "cooking_gas_usage": {
+        "type": "none",
+        "usage_kg_per_month": 0
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 3
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 2
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 140
+      },
+      "carbon_footprint_kgCO2e": 350,
+      "suggestions": [
+        "Your transportation and energy choices are great. Reduce meat consumption to 1-2 meals per week.",
+        "Continue avoiding cooking gas with electric alternatives.",
+        "Maintain your excellent waste management habits."
+      ]
+    },
+    {
+      "id": 108,
+      "transportation": {
+        "mode": "public transport",
+        "distance_km": 20,
+        "frequency_per_week": 5
+      },
+      "energy_usage": {
+        "source": "fossil fuels",
+        "monthly_kwh": 400
+      },
+      "cooking_gas_usage": {
+        "type": "propane",
+        "usage_kg_per_month": 10
+      },
+      "diet": {
+        "type": "vegetarian",
+        "meat_meals_per_week": 0
+      },
+      "waste_management": {
+        "recycling": "minimal",
+        "composting": "no",
+        "waste_generated_kg_per_week": 6
+      },
+      "lifestyle": {
+        "shopping_frequency": "frequent",
+        "single_use_plastics": "high",
+        "water_usage_liters_per_day": 220
+      },
+      "carbon_footprint_kgCO2e": 1000,
+      "suggestions": [
+        "Switch to a renewable energy provider and replace propane with an electric stove.",
+        "Improve waste management by recycling more and composting.",
+        "Reduce shopping frequency and avoid single-use plastics.",
+        "Install water-saving devices to reduce usage."
+      ]
+    },
+    {
+      "id": 109,
+      "transportation": {
+        "mode": "electric car",
+        "distance_km": 15,
+        "frequency_per_week": 4
+      },
+      "energy_usage": {
+        "source": "mixed",
+        "monthly_kwh": 300
+      },
+      "cooking_gas_usage": {
+        "type": "natural gas",
+        "usage_kg_per_month": 7
+      },
+      "diet": {
+        "type": "meat-heavy",
+        "meat_meals_per_week": 5
+      },
+      "waste_management": {
+        "recycling": "some",
+        "composting": "no",
+        "waste_generated_kg_per_week": 5
+      },
+      "lifestyle": {
+        "shopping_frequency": "moderate",
+        "single_use_plastics": "medium",
+        "water_usage_liters_per_day": 180
+      },
+      "carbon_footprint_kgCO2e": 900,
+      "suggestions": [
+        "Consider cycling for shorter trips to reduce car usage.",
+        "Switch to a renewable energy provider and replace natural gas with electric cooking.",
+        "Reduce meat consumption to 2-3 meals per week.",
+        "Improve recycling and start composting.",
+        "Reduce single-use plastics with reusable options."
+      ]
+    },
+    {
+      "id": 110,
+      "transportation": {
+        "mode": "walking",
+        "distance_km": 3,
+        "frequency_per_week": 7
+      },
+      "energy_usage": {
+        "source": "renewable",
+        "monthly_kwh": 150
+      },
+      "cooking_gas_usage": {
+        "type": "none",
+        "usage_kg_per_month": 0
+      },
+      "diet": {
+        "type": "mixed",
+        "meat_meals_per_week": 2
+      },
+      "waste_management": {
+        "recycling": "all",
+        "composting": "yes",
+        "waste_generated_kg_per_week": 1
+      },
+      "lifestyle": {
+        "shopping_frequency": "minimal",
+        "single_use_plastics": "low",
+        "water_usage_liters_per_day": 110
+      },
+      "carbon_footprint_kgCO2e": 250,
+      "suggestions": [
+        "Your lifestyle is very sustainable. Reduce meat consumption further to 1 meal per week.",
+        "Continue avoiding cooking gas with electric alternatives.",
+        "Maintain your excellent habits in transportation, energy, and waste management."
+      ]
+    }
+  ]

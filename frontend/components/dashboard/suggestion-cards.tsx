@@ -64,7 +64,6 @@ export default function SuggestionCards() {
                 name: user.name,
                 email: user.email,
               },
-              timeout: 5000,
             }
           );
           if (res.status === 200) {

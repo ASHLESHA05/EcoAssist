@@ -7,7 +7,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Leaf, Mail, Github, Heart, ArrowDown, ExternalLink } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import { data } from "@/data/dummyData";
+import axios from "axios";
+interface Weather{
+  temperature: number;
+  humidity: number;
+  airQuality: number;
+  uvIndex: number;
+}
 
 export default function Main() {
   const { user, error, isLoading } = useUser();
@@ -15,9 +22,76 @@ export default function Main() {
   const [showQuote, setShowQuote] = useState(true);
   const [showAboutCard, setShowAboutCard] = useState(false);
   console.log(user)
+    const [city, setCity] = useState('Bengaluru');
+    const [state, setState] = useState('Karnataka');
+    const [weatherData, setData1] = useState<Weather>({
+      temperature: 27,
+      humidity: 84,
+      airQuality: 100,
+      uvIndex: 12,
+    });
 
+
+
+
+  
+  const fetchLocation = async()=>{
+    try {
+      const response = await fetch('/api/location');
+      if (!response.ok) throw new Error('Error fetching IP location');
+      const ipLocation = await response.json();
+      
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCity(ipLocation.city)
+          setState('karnataka')
+        },
+      );
+    } catch (err) {
+      console.log("Unable to fetch API")
+    }
+  }
+
+  async function fetchWeather(city:string,state:string){
+    console.log("Fetch Weather called")
+    if (!city || !state) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/weather?city=${city}&state=${state}`);
+      if (!response.ok) throw new Error('Error fetching weather data');
+      const result = await response.json();
+      // setData(result);
+      setData1({
+        temperature : result.temperature,
+        humidity : result.humidity,
+        airQuality : result.airQuality,
+        uvIndex : result.uvIndex
+      })
+      console.log(result)
+    
+    } catch (err) {
+      console.log("Error",err)
+    }
+  }
+  async function sendData(){
+      try{
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/weather-data`,{
+            weatherData
+          }
+        );
+      }catch(erro){
+        console.log("Error")
+      }
+  }
   // Simulate a delay for animations
   useEffect(() => {
+    fetchLocation();
+    fetchWeather(city,state);
+    sendData()
     const timer = setTimeout(() => {
       setShowButtons(true);
     }, 2000); // Delay before buttons appear

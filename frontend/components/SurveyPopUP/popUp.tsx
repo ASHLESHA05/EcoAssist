@@ -12,7 +12,24 @@ import { Label } from "@/components/ui/label"
 import { SurveyQuestion } from "@/types/types"
 import { useUser } from "@auth0/nextjs-auth0/client"
 
-
+const input_data = {
+  "Eco-Score": "User's eco-friendly score",
+  "Carbon Footprint (kg)": {"Transport": 20, "Home": 15, "Food": 30, "Shopping": 10},
+  "Water Saved": 50,
+  "Energy Saved": 40,
+  "Waste Reduced": 20,
+  "User Plan": {"title": "Green Living", "description": "Reduce carbon footprint"},
+  "Current User Activity": {
+      "Mode of transport": "Car",
+      "Distance": 10,
+      "Home Energy Source": "Solar",
+      "Electricity Usage": 200,
+      "Heating Type": "Electric",
+      "Food Diet Type": "Vegetarian",
+      "Food Waste": 5,
+      "Organic Food Consumption": "Yes"
+  }
+}
 
 export default function SurveyPopup() {
   const [questions, setQuestions] = useState<SurveyQuestion[]>([])
@@ -42,7 +59,7 @@ export default function SurveyPopup() {
   // Fetch survey questions from the API
   const fetchSurveyQuestions = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/getSurveyQuestions`,
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/ser`,
         {
             params:{
                 email:user?.email
@@ -57,7 +74,9 @@ export default function SurveyPopup() {
       // Use dummy data if API fails
 
       try{
-        const response = await axios.get("/api/getSurveyQuestions")
+        const response = await axios.post("/api/ser",{
+          input_data
+        })
         setQuestions(response.data.questions)
         setIsVisible(true)
         setLastDisplayed(Date.now())

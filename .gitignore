@@ -20,6 +20,8 @@ out/
 # production
 build
 
+Lama
+
 # misc
 .DS_Store
 *.pem

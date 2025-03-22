@@ -118,31 +118,34 @@ export function SustainabilityChat() {
     setIsLoading(true);
 
     try {
+      // Determine the correct API endpoint based on memoryEnabled
+      const apiEndpoint = memoryEnabled 
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL|| "http://localhost:8080"}/chatPremium` 
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL|| "http://localhost:8080"}/chat`;
+    
       // Send user input to the backend API
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
-        message: input,
-      });
-
-      let assistantMessage;
-      if (response.status === 200) {
-        // Add assistant message from backend
-        assistantMessage = {
-          id: `assistant-${messages.length + 1}`,
-          role: "assistant",
-          content: response.data.response,
-        };
-      } else {
+      const response = await axios.post(apiEndpoint, { message: input });
+    
+      if (response.status !== 200) {
         throw new Error("Backend response not OK");
       }
-
+    
+      // Add assistant message from backend
+      const assistantMessage = {
+        id: `assistant-${messages.length + 1}`,
+        role: "assistant",
+        content: response.data.response,
+      };
+    
       setMessages((prev) => [...prev, assistantMessage]);
-
+    
       // Save chat memory if memory is enabled
       if (memoryEnabled) {
         await saveChatMemory(input, assistantMessage.content);
       }
     } catch (error) {
-      console.error("Error fetching AI response:", error);
+      console.error("Error in chat handling:", error);
+
 
       // Fallback to dummy data if backend is unavailable
       const mostSimilarQuestion = findMostSimilarQuestion(input);

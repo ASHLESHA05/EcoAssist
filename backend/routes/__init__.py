@@ -8,3 +8,6 @@ from .user_routes import *
 from .notification_routes import *
 from .dashboard_routes import *
 from .memory_routes import *
+from .userServiceBot import *
+from .chat_routes import *
+from .chatBot import *

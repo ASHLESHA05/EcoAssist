@@ -35,14 +35,22 @@ const dymmy_details:AllDetails = {
 }
 //-------------------------------------------------------------------------------
 
+
+
 export default function Dashboard() {
   const router = useRouter();
   const { user, error, isLoading } = useUser();
   const { score } = useScoreStore();
   const [allData , setData] = useState<AllDetails>(dymmy_details)
+
+
   if (!user && !isLoading) {
     router.push('/');
   }
+
+
+
+
 
   //------------------------------------BACKEND CODE----(fetch-all-details)---------------
   async function fetchAllDetails() {
@@ -65,6 +73,7 @@ export default function Dashboard() {
   }
   useEffect(()=>{
     fetchAllDetails();
+
   },[user])
   
   console.log(dymmy_details)
