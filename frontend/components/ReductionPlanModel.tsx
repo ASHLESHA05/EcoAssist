@@ -50,13 +50,16 @@
 //   const handleFollowPlan = async (planTitle: string) => {
 //     try {
 //       // Check if the user is already following the plan
-//       const checkResponse = await fetch(`/api/getMyPlan?email=${email}&plan=${planTitle}`)
-//       if (checkResponse.status === 200) {
-//         toast.info("You are already following this plan.", {
-//           description: "No changes were made.",
-//         })
-//         return
-//       }
+//       const checkResponse = await fetch(`/api/getMyPlan?email=${email}`);
+        // if (checkResponse.status === 200) {
+        //   const data = await checkResponse.json(); // Parse response JSON
+        //   if (data.title === planTitle) {
+        //     toast.info("You are already following this plan.", {
+        //       description: "No changes were made.",
+        //     });
+        //     return;
+        //   }
+        // }
 
 //       // If the user is following a different plan, prompt to replace it
 //       if (followedPlan) {
