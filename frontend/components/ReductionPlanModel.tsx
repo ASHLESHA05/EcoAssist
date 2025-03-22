@@ -47,7 +47,7 @@
 //   }, [email])
 
 //   // Handle following a plan
-//   const handleFollowPlan = async (planTitle: string) => {
+//   const handleFollowPlan = async (planTitle: string , planDescription: string) => {
 //     try {
 //       // Check if the user is already following the plan
 //       const checkResponse = await fetch(`/api/getMyPlan?email=${email}`);
@@ -72,7 +72,7 @@
 //               const saveResponse = await fetch("/api/savePlan", {
 //                 method: "PUT",
 //                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ email, plan: planTitle }),
+//                 body: JSON.stringify({ email, title: planTitle, description: planDescription }),
 //               })
 //               if (!saveResponse.ok) throw new Error("Failed to save plan")
 
@@ -92,7 +92,7 @@
 //         const saveResponse = await fetch("/api/savePlan", {
 //           method: "PUT",
 //           headers: { "Content-Type": "application/json" },
-//           body: JSON.stringify({ email, plan: planTitle }),
+//           body: JSON.stringify({ email, title: planTitle, description: planDescription  }),
 //         })
 //         if (!saveResponse.ok) throw new Error("Failed to save plan")
 
@@ -123,7 +123,7 @@
 //                 <CardDescription>{plan.description}</CardDescription>
 //               </CardHeader>
 //               <CardContent className="flex gap-4">
-//                 <Button onClick={() => handleFollowPlan(plan.title)}>Follow Plan</Button>
+//                 <Button onClick={() => handleFollowPlan(plan.title,plan.description)}>Follow Plan</Button>
 //                 <Button variant="link" onClick={() => window.open(plan.Link, "_blank")}>
 //                   Learn More
 //                 </Button>
