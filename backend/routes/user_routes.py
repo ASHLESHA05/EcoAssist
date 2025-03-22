@@ -344,3 +344,167 @@ def clear_plan():
         # Close the cursor and connection
         cursor.close()
         conn.close()
+        
+@routes_bp.route("/leaderboard", methods=["GET"])
+def get_leaderboard():
+    # Get email from request params
+    email = request.args.get("email")
+    
+    if not email:
+        return jsonify({"error": "Email parameter is required"}), 400
+
+    # Get database connection
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Fetch user_id from email
+        cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
+        user_result = cursor.fetchone()
+        
+        if not user_result:
+            return jsonify({"error": "User not found"}), 404
+
+        user_id = user_result[0]
+
+        # Query to get friends' leaderboard data (name, score, badges)
+        query = """
+        SELECT 
+            u.name, 
+            e.score, 
+            COALESCE(json_agg(b.name) FILTER (WHERE b.name IS NOT NULL), '[]') AS badges
+        FROM users u
+        JOIN connections c ON u.user_id = c.friend_id
+        JOIN ecoscoredata e ON u.user_id = e.user_id
+        LEFT JOIN user_badges ub ON u.user_id = ub.user_id
+        LEFT JOIN badges b ON ub.badge_id = b.badge_id
+        WHERE c.user_id = %s
+        GROUP BY u.user_id, e.score
+        ORDER BY e.score DESC;
+        """
+
+        cursor.execute(query, (user_id,))
+        leaderboard = cursor.fetchall()
+
+        # Formatting response
+        leaderboard_data = [
+            {"name": row[0], "score": row[1], "badges": row[2]} for row in leaderboard
+        ]
+
+        return jsonify(leaderboard_data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+        
+@routes_bp.route("/search-friends", methods=["GET"])
+def search_friends():
+    # Get email and search query from request params
+    email = request.args.get("email")
+    search_query = request.args.get("query")
+
+    if not email or not search_query:
+        return jsonify({"error": "Both email and query parameters are required"}), 400
+
+    # Get database connection
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Fetch user_id from email
+        cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
+        user_result = cursor.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "User not found"}), 404
+
+        user_id = user_result[0]
+        like_pattern = f"%{search_query}%"  # Use LIKE for partial match
+
+        # Query to search users by name or email and check if they are friends
+        query = """
+        SELECT 
+            u.name, 
+            u.email,
+            EXISTS (
+                SELECT 1 FROM connections c 
+                WHERE (c.user_id = %s AND c.friend_id = u.user_id) 
+                   OR (c.friend_id = %s AND c.user_id = u.user_id)
+            ) AS is_friend
+        FROM users u
+        WHERE (u.name ILIKE %s OR u.email ILIKE %s)
+          AND u.email != %s
+        ORDER BY is_friend DESC, u.name ASC;
+        """
+
+        cursor.execute(query, (user_id, user_id, like_pattern, like_pattern, email))
+        results = cursor.fetchall()
+
+        # Formatting response
+        search_results = [
+            {"name": row[0], "email": row[1], "isFriend": row[2]} for row in results
+        ]
+
+        return jsonify(search_results), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+        
+@routes_bp.route("/add-friend", methods=["POST"])
+def add_friend():
+    data = request.get_json()
+    email = data.get("email")
+    friend_email = data.get("friendEmail")
+
+    if not email or not friend_email:
+        return jsonify({"error": "Both email and friendEmail are required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Get user_id of the requester
+        cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
+        user_result = cursor.fetchone()
+
+        # Get user_id of the friend
+        cursor.execute("SELECT user_id FROM users WHERE email = %s", (friend_email,))
+        friend_result = cursor.fetchone()
+
+        if not user_result or not friend_result:
+            return jsonify({"error": "One or both users not found"}), 404
+
+        user_id = user_result[0]
+        friend_id = friend_result[0]
+
+        # Check if the friendship already exists
+        cursor.execute("""
+            SELECT 1 FROM connections 
+            WHERE (user_id = %s AND friend_id = %s) 
+               OR (user_id = %s AND friend_id = %s)
+        """, (user_id, friend_id, friend_id, user_id))
+
+        if cursor.fetchone():
+            return jsonify({"message": "Already friends"}), 200
+
+        # Insert friendship in both directions (ensuring unique constraint)
+        cursor.execute("INSERT INTO connections (user_id, friend_id) VALUES (%s, %s)", (user_id, friend_id))
+        cursor.execute("INSERT INTO connections (user_id, friend_id) VALUES (%s, %s)", (friend_id, user_id))
+
+        conn.commit()
+        return jsonify({"message": "Friend added successfully"}), 201
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
