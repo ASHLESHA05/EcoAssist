@@ -3,11 +3,12 @@ from . import routes_bp  # Import the blueprint from __init__.py
 from database.connection import get_db_connection  # Import database connection
 import json
 
+
 @routes_bp.route("/isNewUser", methods=["GET"])
 def is_new_user():
     # Extract the email from the request parameters
     email = request.args.get("email")
-    
+
     # Validate if the email is provided
     if not email:
         return jsonify({"error": "Email parameter is required"}), 400
@@ -35,6 +36,7 @@ def is_new_user():
         # Close the cursor and connection
         cursor.close()
         conn.close()
+
 
 @routes_bp.route("/userLogin", methods=["POST"])
 def user_login():
@@ -65,7 +67,7 @@ def user_login():
             # If the user does not exist, insert into the database
             cursor.execute(
                 "INSERT INTO users (name, email, location) VALUES (%s, %s, %s)",
-                (name, email, location)
+                (name, email, location),
             )
             conn.commit()
             return jsonify({"message": "User registered successfully"}), 201
@@ -78,7 +80,7 @@ def user_login():
         # Close the cursor and connection
         cursor.close()
         conn.close()
-        
+
 
 @routes_bp.route("/get-userDetails", methods=["GET"])
 def get_user_details():
@@ -114,6 +116,7 @@ def get_user_details():
     finally:
         cursor.close()
         conn.close()
+
 
 @routes_bp.route("/update-user", methods=["PUT"])
 def update_user():
@@ -174,7 +177,9 @@ def update_user():
 def update_profile_visibility():
     data = request.json
     email = data.get("email")  # Identify user by email
-    profile_visibility = data.get("profileVisibility")  # New visibility state (True/False)
+    profile_visibility = data.get(
+        "profileVisibility"
+    )  # New visibility state (True/False)
 
     if not email or profile_visibility is None:
         return jsonify({"error": "Missing required fields"}), 400
@@ -194,6 +199,7 @@ def update_profile_visibility():
     finally:
         cursor.close()
         conn.close()
+
 
 @routes_bp.route("/delete-user", methods=["DELETE"])
 def delete_user():
@@ -228,9 +234,14 @@ def delete_user():
 def save_plan():
     # Extract the request data
     data = request.get_json()
-    
+
     # Check if necessary parameters are present
-    if not data or "email" not in data or "title" not in data or "description" not in data:
+    if (
+        not data
+        or "email" not in data
+        or "title" not in data
+        or "description" not in data
+    ):
         return jsonify({"error": "Missing required fields"}), 400
 
     email = data["email"]
@@ -248,19 +259,25 @@ def save_plan():
 
         if existing_plan:
             # If a plan exists, update it
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE user_plan 
                 SET title = %s, description = %s, created_at = NOW()
                 WHERE email = %s
-            """, (title, description, email))
+            """,
+                (title, description, email),
+            )
             conn.commit()
             return jsonify({"message": "Plan updated successfully"}), 200
         else:
             # If no plan exists, insert a new one
-            cursor.execute("""
+            cursor.execute(
+                """
                 INSERT INTO user_plan (email, title, description)
                 VALUES (%s, %s, %s)
-            """, (email, title, description))
+            """,
+                (email, title, description),
+            )
             conn.commit()
             return jsonify({"message": "Plan created successfully"}), 201
 
@@ -272,12 +289,13 @@ def save_plan():
         # Close the cursor and connection
         cursor.close()
         conn.close()
-        
+
+
 @routes_bp.route("/getMyPlan", methods=["GET"])
 def get_my_plan():
     # Extract the email from the request parameters
     email = request.args.get("email")
-    
+
     # Validate if the email is provided
     if not email:
         return jsonify({"error": "Email parameter is required"}), 400
@@ -288,15 +306,14 @@ def get_my_plan():
 
     try:
         # Query to fetch the user's plan details from the user_plan table
-        cursor.execute("SELECT title, description FROM user_plan WHERE email = %s", (email,))
+        cursor.execute(
+            "SELECT title, description FROM user_plan WHERE email = %s", (email,)
+        )
         result = cursor.fetchone()
 
         if result:
             # If plan is found, return the plan details
-            return jsonify({
-                "title": result[0],
-                "description": result[1]
-            }), 200
+            return jsonify({"title": result[0], "description": result[1]}), 200
         else:
             # If no plan is found for the user
             return jsonify({"message": "No plan found for this user"}), 404
@@ -308,6 +325,7 @@ def get_my_plan():
         # Close the cursor and connection
         cursor.close()
         conn.close()
+
 
 @routes_bp.route("/clearPlan", methods=["DELETE"])
 def clear_plan():
@@ -344,12 +362,13 @@ def clear_plan():
         # Close the cursor and connection
         cursor.close()
         conn.close()
-        
+
+
 @routes_bp.route("/leaderboard", methods=["GET"])
 def get_leaderboard():
     # Get email from request params
     email = request.args.get("email")
-    
+
     if not email:
         return jsonify({"error": "Email parameter is required"}), 400
 
@@ -361,7 +380,7 @@ def get_leaderboard():
         # Fetch user_id from email
         cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
         user_result = cursor.fetchone()
-        
+
         if not user_result:
             return jsonify({"error": "User not found"}), 404
 
@@ -370,17 +389,17 @@ def get_leaderboard():
         # Query to get friends' leaderboard data (name, score, badges)
         query = """
         SELECT 
-            u.name, 
-            e.score, 
-            COALESCE(json_agg(b.name) FILTER (WHERE b.name IS NOT NULL), '[]') AS badges
+            u2.name AS friend_name, 
+            e.score AS ecoscore, 
+            json_agg(b.name) AS badges
         FROM users u
-        JOIN connections c ON u.user_id = c.friend_id
-        JOIN ecoscoredata e ON u.user_id = e.user_id
-        LEFT JOIN user_badges ub ON u.user_id = ub.user_id
+        JOIN connections c ON u.user_id = c.user_id
+        JOIN users u2 ON c.friend_id = u2.user_id
+        LEFT JOIN ecoscoredata e ON u2.user_id = e.user_id
+        LEFT JOIN user_badges ub ON u2.user_id = ub.user_id
         LEFT JOIN badges b ON ub.badge_id = b.badge_id
-        WHERE c.user_id = %s
-        GROUP BY u.user_id, e.score
-        ORDER BY e.score DESC;
+        WHERE u.email = %s
+        GROUP BY u2.name, e.score;
         """
 
         cursor.execute(query, (user_id,))
@@ -399,7 +418,8 @@ def get_leaderboard():
     finally:
         cursor.close()
         conn.close()
-        
+
+
 @routes_bp.route("/search-friends", methods=["GET"])
 def search_friends():
     # Get email and search query from request params
@@ -456,7 +476,8 @@ def search_friends():
     finally:
         cursor.close()
         conn.close()
-        
+
+
 @routes_bp.route("/add-friend", methods=["POST"])
 def add_friend():
     data = request.get_json()
@@ -485,18 +506,27 @@ def add_friend():
         friend_id = friend_result[0]
 
         # Check if the friendship already exists
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT 1 FROM connections 
             WHERE (user_id = %s AND friend_id = %s) 
                OR (user_id = %s AND friend_id = %s)
-        """, (user_id, friend_id, friend_id, user_id))
+        """,
+            (user_id, friend_id, friend_id, user_id),
+        )
 
         if cursor.fetchone():
             return jsonify({"message": "Already friends"}), 200
 
         # Insert friendship in both directions (ensuring unique constraint)
-        cursor.execute("INSERT INTO connections (user_id, friend_id) VALUES (%s, %s)", (user_id, friend_id))
-        cursor.execute("INSERT INTO connections (user_id, friend_id) VALUES (%s, %s)", (friend_id, user_id))
+        cursor.execute(
+            "INSERT INTO connections (user_id, friend_id) VALUES (%s, %s)",
+            (user_id, friend_id),
+        )
+        cursor.execute(
+            "INSERT INTO connections (user_id, friend_id) VALUES (%s, %s)",
+            (friend_id, user_id),
+        )
 
         conn.commit()
         return jsonify({"message": "Friend added successfully"}), 201
