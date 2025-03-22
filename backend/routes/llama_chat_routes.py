@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from ..models.llama_chatbot import LlamaCarbonFootprintChatBot
-from ..utils.llama_memory_manager import LlamaChatMemoryManager
-from ..config import LlamaConfig
+from .models.llama_chatbot import LlamaCarbonFootprintChatBot
+from .utils.llama_memory_manager import LlamaChatMemoryManager
+from .config import LlamaConfig
 
 # Create a Blueprint for LLaMa chat routes with unique name
 llama_chat_bp = Blueprint('llama_chat', __name__)

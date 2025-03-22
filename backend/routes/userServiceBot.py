@@ -3,7 +3,7 @@ from . import routes_bp  # Import the blueprint from __init__.py
 from database.connection import get_db_connection  # Import database connection
 import json
 from datetime import datetime
-from ..utils.user_data import fetch_user_data
+from .utils.user_data import fetch_user_data
 
 
 import torch

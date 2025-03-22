@@ -17,6 +17,7 @@ export function SustainabilityChat() {
   const [points, setPoints] = useState(0);
   const [memoryEnabled, setMemoryEnabled] = useState(false); // State for memory switch
   const { user, error, isLoading_ } = useUser();
+  const [isSubscribed,setIsSubscribed] = useState()
   const [messages, setMessages] = useState([
     {
       id: "welcome-1",
@@ -49,9 +50,31 @@ export function SustainabilityChat() {
     }
   }, [messages]);
 
+  const checkSubscription = async (): Promise<void> => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/check-subscription`,
+        {
+          params: {
+            email: user?.email,
+          },
+        }
+      );
+      if (res.status === 200) {
+        setIsSubscribed(res.data.isSubscribed || false); // Update subscription status
+      }
+    } catch (error) {
+      console.error("Error checking subscription:", error);
+}};
   // Handle memory state change
   const handleMemoryStateChange = (value: boolean) => {
+    checkSubscription()
+    if (isSubscribed){
     setMemoryEnabled(value);
+    }
+    else{
+      setMemoryEnabled(false)
+    }
     console.log("Memory state changed:", value);
   };
 
@@ -191,7 +214,7 @@ export function SustainabilityChat() {
             <span className="text-green-500">{points} EcoPoints</span>
           </Badge>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">Memory</span>
+            <span className="text-sm text-gray-400">Ultra mood</span>
             <Switch
               checked={memoryEnabled}
               onCheckedChange={handleMemoryStateChange}

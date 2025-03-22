@@ -1,10 +1,9 @@
 from flask import Blueprint, request, jsonify
-from ..models.chatbot import CarbonFootprintChatbot
-from ..utils.user_data import fetch_user_data
-from ..config import Config
+from .models.chatbot import CarbonFootprintChatbot
+from .utils.user_data import fetch_user_data
+from .config import Config
 
-# Create a Blueprint for chat-related routes
-chat_bp = Blueprint('chat', __name__)
+
 
 # Create a chatbot instance
 chatbot_instance = CarbonFootprintChatbot(Config.GEMINI_API_KEY, Config.DB_PATH)
@@ -12,7 +11,7 @@ chatbot_instance = CarbonFootprintChatbot(Config.GEMINI_API_KEY, Config.DB_PATH)
 
 
 #Yet to be added in Ui
-@chat_bp.route('/chatPremium', methods=['POST'])
+@routes_bp.route('/chatPremium', methods=['POST'])
 def handle_chat():
     """
     Handles POST requests for chat interactions.
