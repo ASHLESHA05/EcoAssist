@@ -541,3 +541,64 @@ def add_friend():
     finally:
         cursor.close()
         conn.close()
+
+@routes_bp.route("/check-subscription", methods=["GET"])
+def check_subscription():
+    email = request.args.get("email")
+
+    if not email:
+        return jsonify({"error": "Email parameter is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Check subscription status
+        cursor.execute("SELECT isSubscribed FROM users WHERE email = %s", (email,))
+        result = cursor.fetchone()
+
+        if not result:
+            return jsonify({"error": "User not found"}), 404
+
+        is_subscribed = result[0]  # Extract boolean value
+
+        return jsonify({"isSubscribed": is_subscribed}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+        
+@routes_bp.route("/subscribe", methods=["POST"])
+def subscribe():
+    data = request.get_json()
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Check if the user exists
+        cursor.execute("SELECT email FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Update the isSubscribed field to True
+        cursor.execute("UPDATE users SET isSubscribed = TRUE WHERE email = %s", (email,))
+        conn.commit()
+
+        return jsonify({"message": "Subscription successful", "isSubscribed": True}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
