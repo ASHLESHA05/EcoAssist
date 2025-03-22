@@ -75,6 +75,7 @@ export interface Actions{
   title: string;
   icon : string;
   points : number;
+  locked : boolean
 }
 
 export interface AllDetails{

@@ -545,7 +545,6 @@ def add_friend():
 @routes_bp.route("/check-subscription", methods=["GET"])
 def check_subscription():
     email = request.args.get("email")
-
     if not email:
         return jsonify({"error": "Email parameter is required"}), 400
 
@@ -554,9 +553,9 @@ def check_subscription():
 
     try:
         # Check subscription status
-        cursor.execute("SELECT isSubscribed FROM users WHERE email = %s", (email,))
+        cursor.execute("SELECT is_subscribed FROM users WHERE email = %s", (email,))
         result = cursor.fetchone()
-
+        print(result)
         if not result:
             return jsonify({"error": "User not found"}), 404
 
@@ -565,6 +564,7 @@ def check_subscription():
         return jsonify({"isSubscribed": is_subscribed}), 200
 
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
 
     finally:
@@ -591,10 +591,10 @@ def subscribe():
             return jsonify({"error": "User not found"}), 404
 
         # Update the isSubscribed field to True
-        cursor.execute("UPDATE users SET isSubscribed = TRUE WHERE email = %s", (email,))
+        cursor.execute("UPDATE users SET is_subscribed = TRUE WHERE email = %s", (email,))
         conn.commit()
 
-        return jsonify({"message": "Subscription successful", "isSubscribed": True}), 200
+        return jsonify({"message": "Subscription successful", "is_subscribed": True}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

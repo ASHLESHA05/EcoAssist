@@ -28,14 +28,81 @@ const Users = dynamic(() => import("lucide-react").then((mod) => mod.Users), { s
 const Settings = dynamic(() => import("lucide-react").then((mod) => mod.Settings), { ssr: false });
 const Leaf = dynamic(() => import("lucide-react").then((mod) => mod.Leaf), { ssr: false });
 const LogOut = dynamic(() => import("lucide-react").then((mod) => mod.LogOut), { ssr: false });
+const Star = dynamic(() => import("lucide-react").then((mod) => mod.Star), { ssr: false });
+const CheckCircle = dynamic(() => import("lucide-react").then((mod) => mod.CheckCircle), { ssr: false });
 
+// Define the PremiumModal component with TypeScript
+interface PremiumModalProps {
+  onClose: () => void;
+  onSubscribe: () => void;
+  isSubscribed: boolean; // Add isSubscribed as a prop
+}
+
+export const PremiumModal: React.FC<PremiumModalProps> = ({ onClose, onSubscribe, isSubscribed }) => {
+  const [isSubscribedLocal, setIsSubscribedLocal] = useState<boolean>(isSubscribed);
+
+  const handleSubscribe = () => {
+    onSubscribe();
+    setIsSubscribedLocal(true);
+    setTimeout(() => {
+      onClose();
+    }, 2000); // Close the modal after 2 seconds
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-gradient-to-r from-green-900 to-black p-6 rounded-lg border-2 border-gold-500 relative">
+        {/* Close (X) Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-2 right-2 text-white hover:text-gray-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        {isSubscribedLocal ? (
+          <div className="flex flex-col items-center justify-center">
+            <CheckCircle className="h-16 w-16 text-green-500" />
+            <h2 className="text-2xl font-bold text-white mt-4">Congratulations!</h2>
+            <p className="text-white">You are now a Premium member.</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-2xl font-bold text-white">Go Premium</h2>
+            <p className="text-white mt-2">No ads, get more quick actions and activities, and more!</p>
+            <button
+              onClick={handleSubscribe}
+              className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            >
+              Subscribe
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export function AppSidebar() {
   const [userData, setUserData] = useState<UserDetails | null>(null);
+  const [showPremiumModal, setShowPremiumModal] = useState<boolean>(false);
   const { isMobile } = useSidebar();
   const router = useRouter();
   const { user, error, isLoading } = useUser(); // ✅ Always call hooks at the top
-
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false); 
   // Function to fetch user details from the backend
   const fetchData = async (): Promise<void> => {
     try {
@@ -52,7 +119,7 @@ export function AppSidebar() {
       if (res.status === 200) {
         console.log("User Details fetched");
         setUserData(res.data);
-        
+        setIsSubscribed(res.data.isSubscribed || false); // Update subscription status
       } else {
         console.log("Failed to fetch user details");
       }
@@ -60,13 +127,31 @@ export function AppSidebar() {
       console.error("Error while fetching user details (sidebar):", error);
     }
   };
+  const checkSubscription = async (): Promise<void> => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/check-subscription`,
+        {
+          params: {
+            email: user?.email,
+          },
+        }
+      );
+      if (res.status === 200) {
+        setIsSubscribed(res.data.isSubscribed || false); // Update subscription status
+      }
+    } catch (error) {
+      console.error("Error checking subscription:", error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       fetchData();
+      checkSubscription();
     }
   }, [user]);
-  console.log("user",userData?.Level)
+  console.log("user", userData?.Level);
 
   // Handle user logout
   const handleLogout = () => {
@@ -82,7 +167,7 @@ export function AppSidebar() {
       SOCIAL: "/social",
       PROFILE: "/profile",
       HOME: "/Home",
-      NOTES: "/list-today-details"
+      NOTES: "/list-today-details",
     };
     if (routes[val]) {
       router.push(routes[val]);
@@ -92,6 +177,26 @@ export function AppSidebar() {
   // Handle logo click
   const handleLogoClick = () => {
     router.push("/");
+  };
+
+  // Handle subscription
+  const handleSubscribe = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/subscribe`,
+        {
+          email: user?.email,
+        }
+      );
+      if (res.status === 200) {
+        setIsSubscribed(true); // Update subscription status
+        console.log("User subscribed successfully");
+      } else {
+        console.log("Failed to subscribe");
+      }
+    } catch (error) {
+      console.error("Error while subscribing:", error);
+    }
   };
 
   // ✅ Ensure hooks are always called before conditionally returning JSX
@@ -160,6 +265,14 @@ export function AppSidebar() {
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Premium">
+              <a onClick={() => setShowPremiumModal(true)} className="flex items-center gap-2 cursor-pointer">
+                <Star className="h-5 w-5" />
+                <span>Premium</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
 
@@ -192,6 +305,15 @@ export function AppSidebar() {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
+      )}
+
+      {/* Render the Premium Modal */}
+      {showPremiumModal && (
+        <PremiumModal
+          onClose={() => setShowPremiumModal(false)}
+          onSubscribe={handleSubscribe}
+          isSubscribed={isSubscribed} // Pass isSubscribed status
+        />
       )}
     </Sidebar>
   );
