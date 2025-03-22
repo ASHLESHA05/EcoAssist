@@ -368,7 +368,7 @@ def clear_plan():
 def get_leaderboard():
     # Get email from request params
     email = request.args.get("email")
-    
+
     print("email: ", email)
 
     if not email:
@@ -385,7 +385,6 @@ def get_leaderboard():
 
         if not user_result:
             return jsonify({"error": "User not found"}), 404
-
 
         # Query to get friends' leaderboard data (name, score, badges)
         query = """
@@ -410,7 +409,7 @@ def get_leaderboard():
         leaderboard_data = [
             {"name": row[0], "score": row[1], "badges": row[2]} for row in leaderboard
         ]
-        
+
         print(leaderboard_data)
 
         return jsonify(leaderboard_data), 200
@@ -542,6 +541,7 @@ def add_friend():
         cursor.close()
         conn.close()
 
+
 @routes_bp.route("/check-subscription", methods=["GET"])
 def check_subscription():
     email = request.args.get("email")
@@ -570,7 +570,8 @@ def check_subscription():
     finally:
         cursor.close()
         conn.close()
-        
+
+
 @routes_bp.route("/subscribe", methods=["POST"])
 def subscribe():
     data = request.get_json()
@@ -591,10 +592,53 @@ def subscribe():
             return jsonify({"error": "User not found"}), 404
 
         # Update the isSubscribed field to True
-        cursor.execute("UPDATE users SET is_subscribed = TRUE WHERE email = %s", (email,))
+        cursor.execute(
+            "UPDATE users SET is_subscribed = TRUE WHERE email = %s", (email,)
+        )
         conn.commit()
 
-        return jsonify({"message": "Subscription successful", "is_subscribed": True}), 200
+        return (
+            jsonify({"message": "Subscription successful", "is_subscribed": True}),
+            200,
+        )
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@routes_bp.route("/unsubscribe", methods=["POST"])
+def unsubscribe():
+    data = request.get_json()
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        # Check if the user exists
+        cursor.execute("SELECT email FROM users WHERE email = %s", (email,))
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # Update the is_subscribed field to False
+        cursor.execute(
+            "UPDATE users SET is_subscribed = FALSE WHERE email = %s", (email,)
+        )
+        conn.commit()
+
+        return (
+            jsonify({"message": "Unsubscription successful", "is_subscribed": False}),
+            200,
+        )
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

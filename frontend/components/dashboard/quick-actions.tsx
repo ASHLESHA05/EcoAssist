@@ -206,6 +206,25 @@ export default function QuickActions() {
       toast.error("Failed to subscribe. Please try again later.");
     }
   };
+  const handleUnsubscribe = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/unsubscribe`,
+        {
+          email: user?.email,
+        }
+      );
+      if (res.status === 200) {
+        setIsSubscribed(false); // Update subscription status
+        toast.success("You have successfully unsubscribed.");
+      } else {
+        toast.error("Failed to unsubscribe. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error while unsubscribing:", error);
+      toast.error("Failed to unsubscribe. Please try again later.");
+    }
+  };
 
   const handleLockedActionClick = (title: string) => {
     if (!isSubscribed) {
@@ -295,6 +314,7 @@ export default function QuickActions() {
         <PremiumModal
           onClose={() => setShowPremiumModal(false)}
           onSubscribe={handleSubscribe}
+          onUnsubscribe={handleUnsubscribe}
           isSubscribed={isSubscribed} // Pass isSubscribed status
         />
       )}

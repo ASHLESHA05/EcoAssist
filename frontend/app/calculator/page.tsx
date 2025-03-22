@@ -59,7 +59,7 @@ export default function CalculatorPage() {
   const [homeEmissions, setHomeEmissions] = useState(80)
   const [foodEmissions, setFoodEmissions] = useState(60)
   const [shoppingEmissions, setShoppingEmissions] = useState(40)
-  
+ 
   // State for form inputs
   const [transport, setTransport] = useState<Transportation>({
     transportationMode: "car",
@@ -97,6 +97,27 @@ export default function CalculatorPage() {
     shopping: shopping,
   });
   const [showReductionPlanModal, setShowReductionPlanModal] = useState<boolean>(false)
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+  const checkSubscription = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/check-subscription`,
+        {
+          params: {
+            email: user?.email,
+          },
+        }
+      );
+      if (res.status === 200) {
+        setIsSubscribed(res.data.isSubscribed || false); // Update subscription status
+      }
+    } catch (error) {
+      console.error("Error checking subscription:", error);
+    }
+  };
+  
+  // Fetch subscription status when the component mounts or user changes
+ 
   useEffect(() => {
     const getData = async () => {
       try {
@@ -134,6 +155,7 @@ export default function CalculatorPage() {
 
     if (user?.email) {
       getData();
+      checkSubscription();
     }
   }, [user?.email]);
 
@@ -148,7 +170,7 @@ export default function CalculatorPage() {
       shopping,
     }
 
-  
+    
 
     // Call the SaveChanges function with the calculator object
     SaveChanges(calculator[category],category)
@@ -208,7 +230,7 @@ export default function CalculatorPage() {
       console.error("An error occured in saveChanges ",error)
     }
   }
-
+  
   const handleCalculate =async(type : string )=>{
     console.log("Calculating")
     //API req to backend AI to get the calculated thing
@@ -798,6 +820,7 @@ export default function CalculatorPage() {
         <ReductionPlanModal
           email={user?.email || ""}
           onClose={() => setShowReductionPlanModal(false)}
+          isSubscribed={isSubscribed}
         />
       )}
     </div>
