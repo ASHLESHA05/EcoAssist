@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Check, Search } from "lucide-react"; // Import the Check icon for the tick mark
+import { toast } from "sonner"; // Import toast from sonner
 
 const FriendsSection = () => {
   const { user } = useUser();
@@ -19,7 +20,9 @@ const FriendsSection = () => {
     if (!searchQuery.trim()) return; // Don't search if the query is empty
 
     try {
-      const response = await fetch(`http://localhost:8080/search-friends?email=${user?.email}&query=${searchQuery}`);
+      const response = await fetch(
+        `http://localhost:8080/search-friends?email=${user?.email}&query=${searchQuery}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch search results");
       }
@@ -27,6 +30,7 @@ const FriendsSection = () => {
       setSearchResults(data); // Set the search results
     } catch (error) {
       console.error("Failed to search friends:", error);
+      toast.error("Failed to search friends"); // Show error toast
     }
   };
 
@@ -38,7 +42,7 @@ const FriendsSection = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({email: user?.email, friendEmail: friendEmail }),
+        body: JSON.stringify({ email: user?.email, friendEmail: friendEmail }),
       });
 
       if (!response.ok) {
@@ -51,8 +55,15 @@ const FriendsSection = () => {
           result.email === friendEmail ? { ...result, isFriend: true } : result
         )
       );
+
+      // Show success toast
+      const addedFriend = searchResults.find((result) => result.email === friendEmail);
+      if (addedFriend) {
+        toast.success(`${addedFriend.name} (${addedFriend.email}) added successfully to your friend list!`);
+      }
     } catch (error) {
       console.error("Failed to add friend:", error);
+      toast.error("Failed to add friend"); // Show error toast
     }
   };
 
