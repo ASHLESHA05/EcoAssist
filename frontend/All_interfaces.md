@@ -602,20 +602,13 @@ const response = await axios.get(
     },
   }
 );
-
-
-
-
-
-
-
-
-
-
-
-
 ```
-prompt = """
+
+### 25. Endpoint
+`const response = await fetch(`/api/getReductionPlan?email=${email}`)`
+```
+for this you have to fetch this
+
 data = {
   "usageMetrics": {
     "carbonFootprint": {
@@ -655,28 +648,37 @@ data = {
   }
 }
 ```
+
+`and send this to llama and i want response in this format`
+```
+{
+  "plan_1": {
+    "title": "Title of the first plan",
+    "description": "Detailed description of the first plan",
+    "Link": "The Link"
+  },
+  "plan_2": {
+    "title": "Title of the second plan",
+    "description": "Detailed description of the second plan",
+    "Link": "The Link"
+  },
+  ... and so on for plans 3, 4, and 5
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 ---
 
-### 19 . Get  My plan 
-*** Endpoints**
-```
-const checkResponse = await fetch(`/api/getMyPlan?email=${email}&plan=${planTitle}`)
-
-i want you to compare this plan with existing one in the table 
-if it is same then just return 200
-
-else return 500
-```
-### 20 Save me plan:
-*** Endpoints**
-```
-const saveResponse = await fetch("/api/savePlan", {
-                 method: "PUT",
-                 headers: { "Content-Type": "application/json" },
-                 body: JSON.stringify({ email, plan: planTitle }),
-               })
-
-
-here you replace the old content in the coloum with planTitle
-```
