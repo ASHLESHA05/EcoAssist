@@ -13,34 +13,34 @@ const Car = dynamic(() => import("lucide-react").then((mod) => mod.Car), { ssr: 
 const Lightbulb = dynamic(() => import("lucide-react").then((mod) => mod.Lightbulb), { ssr: false })
 const ShoppingBag = dynamic(() => import("lucide-react").then((mod) => mod.ShoppingBag), { ssr: false })
 const Utensils = dynamic(() => import("lucide-react").then((mod) => mod.Utensils), { ssr: false })
-const X = dynamic(() => import("lucide-react").then((mod) => mod.X), { ssr: false }))
+const X = dynamic(() => import("lucide-react").then((mod) => mod.X), { ssr: false })
 
 const suggestions_ : Suggestions[] = [
   {
     title: "Reduce Commute Impact",
     description: "Try carpooling or public transit twice a week to reduce emissions by 20%",
-    icon: Car,
+    icon: "Car",
     color: "text-blue-500",
     bgColor: "bg-blue-500/10",
   },
   {
     title: "Energy Saving Tips",
     description: "Switch to LED bulbs and save up to 75% on lighting energy costs",
-    icon: Lightbulb,
+    icon: "Lightbulb",
     color: "text-yellow-500",
     bgColor: "bg-yellow-500/10",
   },
   {
     title: "Sustainable Diet",
     description: "Try plant-based meals twice a week to reduce your food carbon footprint",
-    icon: Utensils,
+    icon: "Utensils",
     color: "text-green-500",
     bgColor: "bg-green-500/10",
   },
   {
     title: "Eco-Friendly Shopping",
     description: "Choose products with minimal packaging to reduce waste",
-    icon: ShoppingBag,
+    icon: "ShoppingBag",
     color: "text-purple-500",
     bgColor: "bg-purple-500/10",
   },
@@ -48,8 +48,8 @@ const suggestions_ : Suggestions[] = [
 
 export default function SuggestionCards() {
   const { user, error, isLoading } = useUser();
-  const [learnMoreDesc, setLearnMoreDesc] = useState<string>("");
-  const [learnMoreLink, setLearnMoreLink] = useState<string>("");
+  const [learnMoreDesc, setLearnMoreDesc] = useState<string>("Default description GenAI takes time to generate it.");
+  const [learnMoreLink, setLearnMoreLink] = useState<string>("#");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<Suggestions[]>(suggestions_);
 
@@ -97,7 +97,7 @@ export default function SuggestionCards() {
       }
     } catch (error) {
       console.error("Error fetching detailed description:", error);
-      setLearnMoreDesc("Default description due to an error.");
+      setLearnMoreDesc("Default description GenAI takes time to generate it.");
       setLearnMoreLink("#");
       setIsModalOpen(true);
     }
@@ -107,13 +107,28 @@ export default function SuggestionCards() {
     setIsModalOpen(false);
   };
 
+  const renderIcon = (icon: string, color: string) => {
+    switch (icon) {
+      case "Car":
+        return <Car className={`h-5 w-5 ${color}`} />;
+      case "Lightbulb":
+        return <Lightbulb className={`h-5 w-5 ${color}`} />;
+      case "Utensils":
+        return <Utensils className={`h-5 w-5 ${color}`} />;
+      case "ShoppingBag":
+        return <ShoppingBag className={`h-5 w-5 ${color}`} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {suggestions.map((suggestion, index) => (
         <Card key={index}>
           <CardHeader className="flex flex-row items-center gap-3 pb-2">
             <div className={`p-2 rounded-full ${suggestion.bgColor}`}>
-              <suggestion.icon className={`h-5 w-5 ${suggestion.color}`} />
+              {renderIcon(suggestion.icon || "Car", suggestion.color)}
             </div>
             <CardTitle className="text-base">{suggestion.title}</CardTitle>
           </CardHeader>

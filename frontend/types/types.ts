@@ -60,7 +60,7 @@ export interface EcoScoreData{
 export interface Suggestions{
     title : string;
     description: string;
-    icon : string;
+    icon ?: string;
     color : string;
     bgColor : string;
 }
