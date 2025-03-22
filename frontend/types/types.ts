@@ -1,8 +1,8 @@
 
 export interface NotificationType {
   dailyTips: boolean;
-  AchievementAlert: boolean;
-  FriendActivity: boolean;
+  achievementAlert: boolean;
+  friendActivity: boolean;
 }
 export interface UserDetails {
     name: string;

@@ -13,8 +13,8 @@ function NotificationSettings() {
   const { user, error, isLoading } = useUser();
   const [notifications, setNotifications] = useState<NotificationType>({
     dailyTips: false,
-    AchievementAlert: false,
-    FriendActivity: false,
+    achievementAlert: false,
+    friendActivity: false,
   });
 
   // Fetch notification settings on component mount
@@ -41,7 +41,7 @@ function NotificationSettings() {
     setNotifications(newState);
 
     try {
-      await axios.post(
+      await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/update-notifications`,
         {
           key,
@@ -82,7 +82,7 @@ function NotificationSettings() {
               <p className="font-medium">Achievement Alerts</p>
               <p className="text-sm text-muted-foreground">Get notified when you earn new badges</p>
             </div>
-            <Switch id="achievement-alert" checked={notifications.AchievementAlert} onCheckedChange={() => handleToggle("AchievementAlert")} />
+            <Switch id="achievement-alert" checked={notifications.achievementAlert} onCheckedChange={() => handleToggle("achievementAlert")} />
           </div>
           <Separator />
 
@@ -91,7 +91,7 @@ function NotificationSettings() {
               <p className="font-medium">Friend Activity</p>
               <p className="text-sm text-muted-foreground">Updates about your friends' sustainability actions</p>
             </div>
-            <Switch id="friend-activity" checked={notifications.FriendActivity} onCheckedChange={() => handleToggle("FriendActivity")} />
+            <Switch id="friend-activity" checked={notifications.friendActivity} onCheckedChange={() => handleToggle("friendActivity")} />
           </div>
         </CardContent>
       </Card>

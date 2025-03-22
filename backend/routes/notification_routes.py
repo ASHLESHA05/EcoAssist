@@ -6,6 +6,7 @@ import json
 @routes_bp.route("/get-notificationSettings", methods=["GET"])
 def get_notification_settings():
     email = request.args.get("email")
+    print(email)
     if not email:
         return jsonify({"error": "Email parameter is required"}), 400
 
@@ -15,9 +16,8 @@ def get_notification_settings():
     try:
         cursor.execute("SELECT preferences FROM users WHERE email = %s", (email,))
         result = cursor.fetchone()
-
         if result and result[0]:
-            preferences = json.loads(result[0])
+            preferences = result[0]
             notification_settings = {
                 "dailyTips": preferences.get("dailyTips", True),
                 "achievementAlert": preferences.get("achievementAlert", True),
@@ -27,6 +27,7 @@ def get_notification_settings():
         else:
             return jsonify({"message": "User not found or preferences missing"}), 404
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
     finally:
         cursor.close()
@@ -45,7 +46,6 @@ def update_notifications():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
     try:
         # Update preferences JSONB column
         query = """
