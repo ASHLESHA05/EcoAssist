@@ -211,9 +211,12 @@ def calculate_carbon_emission():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @routes_bp.route("/calculate-carbon-update", methods=["GET"])
 def get_carbon_emission():
     """Calculate carbon emissions and update database."""
+    conn = None
+    cursor = None
     try:
         email = request.args.get("email")
         if not email:
@@ -247,13 +250,16 @@ def get_carbon_emission():
             "fashionVsustainable": request.args.get("shoppingdata[fashionVsustainable]"),
         }
 
+        # Calculate emissions
         emission_data = calculate_emission(
             email, transport_data, home_data, food_data, shopping_data
         )
 
+        # Connect to the database
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # Insert or update the carbon_footprint table
         query = """
             INSERT INTO carbon_footprint 
             (user_email, transport_data, home_data, food_data, shopping_data, emission_data)
@@ -276,6 +282,23 @@ def get_carbon_emission():
                 json.dumps(emission_data),
             ),
         )
+
+        # Calculate the total carbon footprint quantity
+        total_carbon_footprint_qty = (
+            emission_data.get("transport", 0)
+            + emission_data.get("home", 0)
+            + emission_data.get("food", 0)
+            + emission_data.get("shopping", 0)
+        )
+
+        # Update the dashboard_metrics table with the total carbon footprint quantity
+        update_dashboard_query = """
+            UPDATE dashboard_metrics
+            SET carbon_footprint_qty = %s
+            WHERE user_id = (SELECT user_id FROM users WHERE email = %s);
+        """
+        cursor.execute(update_dashboard_query, (total_carbon_footprint_qty, email))
+
         conn.commit()
 
         return jsonify({"emissionData": emission_data}), 200
@@ -284,8 +307,10 @@ def get_carbon_emission():
         return jsonify({"error": str(e)}), 500
 
     finally:
-        cursor.close()
-        conn.close()
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 @routes_bp.route("/get-calcData", methods=["GET"])
 def get_calc_data():

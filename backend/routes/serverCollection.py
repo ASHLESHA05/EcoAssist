@@ -1,22 +1,23 @@
 from flask import request, jsonify
 import requests
 from . import routes_bp
-from database.connection import get_db_connection  # Import the database connection
+from apscheduler.schedulers.background import BackgroundScheduler
+from database.connection import get_db_connection 
 
-@routes_bp.route('/fetchServer', methods=['GET'])
-def fetchAdd():
+# Initialize the scheduler
+scheduler = BackgroundScheduler()
+scheduler.start()
+
+def fetch_and_store_data():
+    """Function to fetch data from the external API and store it in the database."""
     try:
-        # Get email parameter from the request
-        email = request.args.get("email")
-        
-        # Check if email is provided
-        if not email:
-            return jsonify({"error": "Email parameter is missing"}), 400
-        
+        # Example email (replace with dynamic logic if needed)
+        email = "ashleshat5@gmail.com"
+
         # Make the request to the external API
         response = requests.get(f'https://smart-application-test-server.vercel.app/api/saveData?email={email}')
         response.raise_for_status()  # This will raise an exception for HTTP errors
-        
+
         # Parse the response data
         response_data = response.json()
         data = {
@@ -25,7 +26,7 @@ def fetchAdd():
             "waste": response_data.get("waste"),
             "water": response_data.get("water")
         }
-        
+
         # Extract relevant metrics
         energy_data = data.get("energy", {})
         lights_count = energy_data.get("lights", {}).get("count", 0)
@@ -36,11 +37,11 @@ def fetchAdd():
         heater_consumption = energy_data.get("heater", {}).get("consumption", 0)
         waste_generated = data.get("waste", 0)
         water_usage = data.get("water", 0)
-        
+
         # Store the data in the database
         conn = get_db_connection()
         cursor = conn.cursor()
-        
+
         # Insert or update the dashboard_metrics table
         query = """
             INSERT INTO dashboard_metrics (
@@ -56,15 +57,16 @@ def fetchAdd():
                 power_saved = EXCLUDED.power_saved,
                 waste_reduced = EXCLUDED.waste_reduced;
         """
-        
+
         cursor.execute("SELECT user_id FROM users WHERE email = %s", (email,))
         user_result = cursor.fetchone()
 
         if not user_result:
-            return jsonify({"error": "User not found"}), 404
+            print("User not found")
+            return
 
         user_id = user_result[0]
-        
+
         # Execute the query
         cursor.execute(query, (
             user_id,  # Assuming email is the user_id
@@ -72,47 +74,52 @@ def fetchAdd():
             lights_consumption + fan_consumption + heater_consumption,  # power_saved
             waste_generated  # waste_reduced
         ))
-        
+
         conn.commit()
-        
-        # Return the data to the client
-        return jsonify({
-            "status": "success",
-            "data": data,
-            "inserted_metrics": {
-                "water_saved": water_usage,
-                "power_saved": lights_consumption + fan_consumption + heater_consumption,
-                "waste_reduced": waste_generated
-            }
-        }), 200
-        
+        print("Data fetched and stored successfully")
+
     except requests.exceptions.HTTPError as http_err:
-        # Handle HTTP errors (like 404, 500, etc.)
-        return jsonify({"error": f"HTTP error occurred: {http_err}"}), 500
-        
+        print(f"HTTP error occurred: {http_err}")
+
     except requests.exceptions.ConnectionError as conn_err:
-        # Handle connection errors
-        return jsonify({"error": "Connection error occurred. Server might be down."}), 503
-        
+        print("Connection error occurred. Server might be down.")
+
     except requests.exceptions.Timeout as timeout_err:
-        # Handle timeout errors
-        return jsonify({"error": "Request timed out. Try again later."}), 504
-        
+        print("Request timed out. Try again later.")
+
     except requests.exceptions.RequestException as req_err:
-        # Handle any other requests-related errors
-        return jsonify({"error": f"Request error occurred: {req_err}"}), 500
-        
+        print(f"Request error occurred: {req_err}")
+
     except ValueError as val_err:
-        # Handle JSON decoding errors
-        return jsonify({"error": "Invalid JSON response from server"}), 500
-        
+        print("Invalid JSON response from server")
+
     except Exception as e:
-        # Handle any other unexpected errors
-        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
-        
+        print(f"An unexpected error occurred: {str(e)}")
+
     finally:
         # Close the database connection
         if 'conn' in locals():
             cursor.close()
             conn.close()
-            
+
+# Schedule the task to run every 15 seconds
+scheduler.add_job(fetch_and_store_data, 'interval', seconds=15)
+
+# Flask route for manual triggering (optional)
+@routes_bp.route('/fetchServer', methods=['GET'])
+def fetchAdd():
+    try:
+        # Get email parameter from the request
+        email = request.args.get("email")
+
+        # Check if email is provided
+        if not email:
+            return jsonify({"error": "Email parameter is missing"}), 400
+
+        # Call the fetch_and_store_data function
+        fetch_and_store_data()
+
+        return jsonify({"status": "success", "message": "Data fetched and stored successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"error": f"An unexpected error occurred: {str(e)}"}), 500
