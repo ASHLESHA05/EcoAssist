@@ -58,7 +58,7 @@ export default function SuggestionCards() {
       const getSuggestions = async () => {
         try {
           const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/get-Suggestions`,
+            "http://localhost:8080/get-Suggestions",
             {
               params: {
                 name: user.name,
