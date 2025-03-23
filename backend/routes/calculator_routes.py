@@ -25,7 +25,7 @@ def get_carbon_emission():
 
     if not email or not params_data:
         return jsonify({"error": "Missing required parameters"}), 400
-
+    
     try:
         # The paramsData is passed as a string, so we need to parse it as JSON
         params_data = json.loads(params_data)

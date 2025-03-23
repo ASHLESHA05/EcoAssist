@@ -12,12 +12,14 @@ import SuggestionChips from "./suggestion-chips";
 import axios from "axios";
 import { dummyChatData } from "@/data/dummy_chat";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { useToast } from "@/hooks/use-toast"
 
 export function SustainabilityChat() {
   const [points, setPoints] = useState(0);
   const [memoryEnabled, setMemoryEnabled] = useState(false); // State for memory switch
   const { user, error, isLoading_ } = useUser();
   const [isSubscribed,setIsSubscribed] = useState()
+  const { toast } = useToast()
   const [messages, setMessages] = useState([
     {
       id: "welcome-1",
@@ -73,6 +75,11 @@ export function SustainabilityChat() {
     setMemoryEnabled(value);
     }
     else{
+      toast({
+        title: "No acess",
+        description: "Subscribe to get Ultr",
+      })
+
       setMemoryEnabled(false)
     }
     console.log("Memory state changed:", value);
@@ -147,7 +154,10 @@ export function SustainabilityChat() {
         : `${process.env.NEXT_PUBLIC_BACKEND_URL|| "http://localhost:8080"}/chat`;
     
       // Send user input to the backend API
-      const response = await axios.post(apiEndpoint, { message: input });
+      const response = await axios.post(`${apiEndpoint}?email=${encodeURIComponent(user?.email)}`, {
+        message: input
+      });
+      
     
       if (response.status !== 200) {
         throw new Error("Backend response not OK");

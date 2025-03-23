@@ -12,6 +12,7 @@ export const metadata = {
 import { UserProvider, useUser } from '@auth0/nextjs-auth0/client';
 import SurveyPopup from "@/components/SurveyPopUP/popUp"
 import NotificationPopup from "@/components/Notification/popUpNotify"
+import { ToastProvider } from "@radix-ui/react-toast"
 export default function RootLayout({
   children,
 }: {
@@ -27,6 +28,7 @@ export default function RootLayout({
             <div className="flex h-screen">
               <AppSidebar />
               <main className="flex-1 overflow-auto">{children}</main>
+              <ToastProvider />
             </div>
           </SidebarProvider>
           <Toaster position="top-center" richColors />

@@ -2,15 +2,15 @@ from flask import Blueprint, request, jsonify
 from .models.llama_chatbot import LlamaCarbonFootprintChatBot
 from .utils.llama_memory_manager import LlamaChatMemoryManager
 from .config import LlamaConfig
-
+from . import routes_bp
 # Create a Blueprint for LLaMa chat routes with unique name
-llama_chat_bp = Blueprint('llama_chat', __name__)
+# llama_chat_bp = Blueprint('llama_chat', __name__)
 
 # Initialize chatbot and memory manager
 llama_chatbot = LlamaCarbonFootprintChatBot(LlamaConfig.MODEL_PATH)
 llama_memory_manager = LlamaChatMemoryManager(LlamaConfig.MEMORY_DIR)
 
-@llama_chat_bp.route('/chat', methods=['POST'])
+@routes_bp.route('/chat', methods=['POST'])
 def handle_llama_chat():
     """
     Handle regular LLaMa chat requests (without memory).
@@ -42,7 +42,7 @@ def handle_llama_chat():
         print(f"Error in /llama/chat endpoint: {str(e)}")
         return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
 
-@llama_chat_bp.route('/chatPremium', methods=['POST'])
+@routes_bp.route('/chatPremium', methods=['POST'])
 def handle_llama_chat_premium():
     """
     Handle premium LLaMa chat requests with conversation memory.
@@ -98,7 +98,7 @@ def handle_llama_chat_premium():
         print(f"Error in /llama/chatPremium endpoint: {str(e)}")
         return jsonify({'error': 'Internal server error', 'details': str(e)}), 500
 
-@llama_chat_bp.route('/clear-memory', methods=['POST'])
+@routes_bp.route('/clear-memory', methods=['POST'])
 def clear_llama_memory():
     """Clear LLaMa chat memory for a user."""
     try:
