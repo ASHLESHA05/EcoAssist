@@ -22,5 +22,5 @@ def fetch_user_data(email):
             "Food diet type": "omnivore, Food Waste: medium, Organic food consumption: occasional"
         }
     }
-    # Example mock data
     return str(user_data)
+    

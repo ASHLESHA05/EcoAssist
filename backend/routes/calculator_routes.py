@@ -8,8 +8,9 @@ import joblib
 import numpy as np
 
 model = joblib.load(
-    r"C:\programing\terrathon\EcoAssist\backend\routes\carbon_calculator.pkl"
+    r"D:\Terrathon\backend\routes\carbon_calculator.pkl"
 )
+
 
 def fetch_user_data(email):
     """Fetch additional data from an external API."""
@@ -211,7 +212,6 @@ def calculate_carbon_emission():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 @routes_bp.route("/calculate-carbon-update", methods=["GET"])
 def get_carbon_emission():
     """Calculate carbon emissions and update database."""
@@ -219,6 +219,34 @@ def get_carbon_emission():
     cursor = None
     try:
         email = request.args.get("email")
+
+        transport_data = {
+            "transportationMode": request.args.get("transportdata[transportationMode]"),
+            "commuteDistance": request.args.get("transportdata[commuteDistance]"),
+            "flightsCount": request.args.get("transportdata[flightsCount]"),
+        }
+
+        home_data = {
+            "energySource": request.args.get("homedata[energySource]"),
+            "electricityUsage": request.args.get("homedata[electricityUsage]"),
+            "homeSize": request.args.get("homedata[homeSize]"),
+            "heatingType": request.args.get("homedata[heatingType]"),
+        }
+
+        food_data = {
+            "dietType": request.args.get("fooddata[dietType]"),
+            "localFoodPercentage": request.args.get("fooddata[localFoodPercentage]"),
+            "foodWaste": request.args.get("fooddata[foodWaste]"),
+            "OrganicFood": request.args.get("fooddata[OrganicFood]"),
+        }
+
+        shopping_data = {
+            "shoppingType": request.args.get("shoppingdata[shoppingType]"),
+            "sustainableProducts": request.args.get("shoppingdata[sustainableProducts]"),
+            "RecyclingHabbits": request.args.get("shoppingdata[RecyclingHabbits]"),
+            "fashionVsustainable": request.args.get("shoppingdata[fashionVsustainable]"),
+        }
+
         if not email:
             return jsonify({"error": "Email is required"}), 400
 
@@ -307,10 +335,8 @@ def get_carbon_emission():
         return jsonify({"error": str(e)}), 500
 
     finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
+        cursor.close()
+        conn.close()
 
 @routes_bp.route("/get-calcData", methods=["GET"])
 def get_calc_data():

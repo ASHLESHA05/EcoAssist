@@ -1,5 +1,6 @@
 from flask import request, jsonify
 import requests
+import requests
 from . import routes_bp
 from apscheduler.schedulers.background import BackgroundScheduler
 from database.connection import get_db_connection 
