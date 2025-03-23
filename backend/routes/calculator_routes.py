@@ -6,7 +6,7 @@ import requests
 import pandas as pd
 import joblib
 
-model = joblib.load('carbon_calculator.pkl')
+model = joblib.load(r'C:\programing\terrathon\EcoAssist\backend\routes\carbon_calculator.pkl')
 
 
 def fetch_user_data(email):
