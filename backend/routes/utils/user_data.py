@@ -5,3 +5,4 @@ def fetch_user_data(email):
     """
     # Example mock data
     return "User drives 20km daily and uses 100 kWh of electricity monthly"
+    
