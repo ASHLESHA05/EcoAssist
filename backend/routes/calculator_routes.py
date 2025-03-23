@@ -159,18 +159,15 @@ def get_carbon_emission():
 
 @routes_bp.route("/calculate-carbon", methods=["GET"])
 def calculate_carbon_emission():
-    email = request.args.get("email")
-    params_data = request.args.get("paramsData")
-
+    """Calculate carbon emission based on user input and API data."""
     try:
-        # The paramsData is passed as a string, so we need to parse it as JSON
-        params_data = json.loads(params_data)
+        email = request.args.get("email")
 
-        # Extract individual category data
-        transport_data = params_data.get("transport", {})
-        home_data = params_data.get("home", {})
-        food_data = params_data.get("food", {})
-        shopping_data = params_data.get("shopping", {})
+        # Extract individual category data and parse JSON strings
+        transport_data = json.loads(request.args.get("transportdata", "{}"))
+        home_data = json.loads(request.args.get("homedata", "{}"))
+        food_data = json.loads(request.args.get("fooddata", "{}"))
+        shopping_data = json.loads(request.args.get("shoppingdata", "{}"))
 
         # Compute carbon emission
         emission_data = calculate_emission(email, transport_data, home_data, food_data, shopping_data)
