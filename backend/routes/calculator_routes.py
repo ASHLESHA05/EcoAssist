@@ -6,29 +6,40 @@ import requests
 import pandas as pd
 import joblib
 
-model = joblib.load(r'C:\programing\terrathon\EcoAssist\backend\routes\carbon_calculator.pkl')
+model = joblib.load(
+    r"C:\programing\terrathon\EcoAssist\backend\routes\carbon_calculator.pkl"
+)
 
 
 def fetch_user_data(email):
     """Fetch additional data from an external API."""
-    url = f'https://smart-application-test-server.vercel.app/api/saveData?email={email}'
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-        return {
-            "water_usage": data.get("water", 0),
-            "light": data.get("energy", {}).get("lights", {}).get("count", 0),
-            "light_consumption": data.get("energy", {}).get("lights", {}).get("consumption", 0),
-            "fan": data.get("energy", {}).get("fan", {}).get("count", 0),
-            "fan_consumption": data.get("energy", {}).get("fan", {}).get("consumption", 0),
-            "heater": data.get("energy", {}).get("heater", {}).get("count", 0),
-            "heater_consumption": data.get("energy", {}).get("heater", {}).get("consumption", 0),
-            "waste_generated": data.get("waste", 0)
-        }
-    else:
-        print("Error fetching data:", response.status_code)
-        return {}
+    url = f"https://smart-application-test-server.vercel.app/api/saveData?email={email}"
+    try:
+        response = requests.get(url, timeout=10)  # Add a timeout to avoid hanging
+        if response.status_code == 200:
+            data = response.json()
+            return {
+                "water_usage": data.get("water", 0),
+                "light": data.get("energy", {}).get("lights", {}).get("count", 0),
+                "light_consumption": data.get("energy", {})
+                .get("lights", {})
+                .get("consumption", 0),
+                "fan": data.get("energy", {}).get("fan", {}).get("count", 0),
+                "fan_consumption": data.get("energy", {})
+                .get("fan", {})
+                .get("consumption", 0),
+                "heater": data.get("energy", {}).get("heater", {}).get("count", 0),
+                "heater_consumption": data.get("energy", {})
+                .get("heater", {})
+                .get("consumption", 0),
+                "waste_generated": data.get("waste", 0),
+            }
+        else:
+            print(f"Error fetching data: {response.status_code}")
+            return {}  # Return an empty dictionary if the API fails
+    except Exception as e:
+        print(f"Error fetching data: {e}")
+        return {}  # Return an empty dictionary if there's an exception
 
 def calculate_emission(email, transport, home, food, shopping):
     """Calculate separate carbon footprints for transport, home, food, and shopping."""
@@ -40,53 +51,75 @@ def calculate_emission(email, transport, home, food, shopping):
         except (ValueError, TypeError):
             return default
 
+    def safe_float(value, default=0.0):
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return default
+
     # Define the list of all columns (21 in total)
     all_columns = [
-        'mode_of_transportation', 'daily_commute_distance', 'flights_per_month',
-        'home_energy_source', 'monthly_electricity_usage', 'home_size', 'heating_type',
-        'water_usage', 'light', 'light_consumption', 'fan', 'fan_consumption',
-        'heater', 'heater_consumption', 'diet', 'food_waste', 'organic_food_consumption',
-        'waste_generated', 'shopping_frequency', 'recycling_habit', 'fast_fashion_vs_sustainable'
+        "mode_of_transportation",
+        "daily_commute_distance",
+        "flights_per_month",
+        "home_energy_source",
+        "monthly_electricity_usage",
+        "home_size",
+        "heating_type",
+        "water_usage",
+        "light",
+        "light_consumption",
+        "fan",
+        "fan_consumption",
+        "heater",
+        "heater_consumption",
+        "diet",
+        "food_waste",
+        "organic_food_consumption",
+        "waste_generated",
+        "shopping_frequency",
+        "recycling_habit",
+        "fast_fashion_vs_sustainable",
     ]
-    
+
     # Initialize all columns with default values (0 or "")
     default_data = {col: 0 if isinstance(col, str) else "" for col in all_columns}
 
     # Categories data
     categories = {
         "transport": {
-            'mode_of_transportation': transport.get('transportationMode', 'car'),
-            'daily_commute_distance': safe_int(transport.get('commuteDistance'), 10),
-            'flights_per_month': safe_int(transport.get('flightsCount'), 0),
+            "mode_of_transportation": transport.get("transportationMode", "car"),
+            "daily_commute_distance": safe_float(transport.get("commuteDistance"), 10.0),
+            "flights_per_month": safe_int(transport.get("flightsCount"), 0),
         },
         "home": {
-            'home_energy_source': home.get('energySource', 'grid'),
-            'monthly_electricity_usage': safe_int(home.get('electricityUsage'), 100),
-            'home_size': home.get('homeSize', 'medium'),
-            'heating_type': home.get('heatingType', 'electric'),
-            'water_usage': safe_int(additional_data.get('water_usage'), 100),
-            'light': safe_int(additional_data.get('light'), 5),
-            'light_consumption': safe_int(additional_data.get('light_consumption'), 50),
-            'fan': safe_int(additional_data.get('fan'), 2),
-            'fan_consumption': safe_int(additional_data.get('fan_consumption'), 75),
-            'heater': safe_int(additional_data.get('heater'), 1),
-            'heater_consumption': safe_int(additional_data.get('heater_consumption'), 1000),
+            "home_energy_source": home.get("energySource", "grid"),
+            "monthly_electricity_usage": safe_float(home.get("electricityUsage"), 100.0),
+            "home_size": home.get("homeSize", "medium"),
+            "heating_type": home.get("heatingType", "electric"),
+            "water_usage": safe_float(additional_data.get("water_usage"), 100.0),
+            "light": safe_int(additional_data.get("light"), 5),
+            "light_consumption": safe_float(additional_data.get("light_consumption"), 50.0),
+            "fan": safe_int(additional_data.get("fan"), 2),
+            "fan_consumption": safe_float(additional_data.get("fan_consumption"), 75.0),
+            "heater": safe_int(additional_data.get("heater"), 1),
+            "heater_consumption": safe_float(additional_data.get("heater_consumption"), 1000.0),
         },
         "food": {
-            'diet': food.get('dietType', 'mixed'),
-            'food_waste': food.get('foodWaste', 'medium'),
-            'organic_food_consumption': food.get('OrganicFood', 'some'),
-            'waste_generated': safe_int(additional_data.get('waste_generated'), 10)
+            "diet": food.get("dietType", "mixed"),
+            "food_waste": food.get("foodWaste", "medium"),
+            "organic_food_consumption": food.get("OrganicFood", "some"),
+            "waste_generated": safe_float(additional_data.get("waste_generated"), 10.0),
         },
         "shopping": {
-            'shopping_frequency': shopping.get('shoppingType', 'moderate'),
-            'recycling_habit': shopping.get('RecyclingHabbits', 'most'),
-            'fast_fashion_vs_sustainable': shopping.get('fashionVsustainable', 'mixed'),
-        }
+            "shopping_frequency": shopping.get("shoppingType", "moderate"),
+            "recycling_habit": shopping.get("RecyclingHabbits", "most"),
+            "fast_fashion_vs_sustainable": shopping.get("fashionVsustainable", "mixed"),
+        },
     }
 
     emissions = {}
-    
+
     # Iterate over each category
     for category, data in categories.items():
         # Create a copy of the default data
@@ -113,6 +146,7 @@ def calculate_carbon_emission():
     """Calculate carbon emissions from request query parameters."""
     try:
         email = request.args.get("email")
+        print(email)
         if not email:
             return jsonify({"error": "Email is required"}), 400
 
@@ -120,8 +154,11 @@ def calculate_carbon_emission():
         home_data = json.loads(request.args.get("homedata", "{}"))
         food_data = json.loads(request.args.get("fooddata", "{}"))
         shopping_data = json.loads(request.args.get("shoppingdata", "{}"))
+        print(transport_data,home_data,food_data,shopping_data)
 
-        emission_data = calculate_emission(email, transport_data, home_data, food_data, shopping_data)
+        emission_data = calculate_emission(
+            email, transport_data, home_data, food_data, shopping_data
+        )
 
         return jsonify({"emissionData": emission_data}), 200
 
@@ -142,7 +179,9 @@ def get_carbon_emission():
         if not email:
             return jsonify({"error": "Email is required"}), 400
 
-        emission_data = calculate_emission(email, transport_data, home_data, food_data, shopping_data)
+        emission_data = calculate_emission(
+            email, transport_data, home_data, food_data, shopping_data
+        )
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -159,9 +198,15 @@ def get_carbon_emission():
                 emission_data = EXCLUDED.emission_data;
         """
         cursor.execute(
-            query, 
-            (email, json.dumps(transport_data), json.dumps(home_data), json.dumps(food_data), 
-             json.dumps(shopping_data), json.dumps(emission_data))
+            query,
+            (
+                email,
+                json.dumps(transport_data),
+                json.dumps(home_data),
+                json.dumps(food_data),
+                json.dumps(shopping_data),
+                json.dumps(emission_data),
+            ),
         )
         conn.commit()
 
@@ -173,7 +218,7 @@ def get_carbon_emission():
     finally:
         cursor.close()
         conn.close()
-        
+
 
 @routes_bp.route("/get-calcData", methods=["GET"])
 def get_calc_data():

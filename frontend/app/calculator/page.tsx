@@ -1,107 +1,130 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Slider } from "@/components/ui/slider"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import CarbonImpactChart from "@/components/calculator/carbon-impact-chart"
-import ComparisonSimulator from "@/components/calculator/comparison-simulator"
-import { useUser } from "@auth0/nextjs-auth0/client"
-import axios from "axios"
-import { calculator } from "@/types/types"
-import ReductionPlanModal from "@/components/ReductionPlanModel"
+import { useEffect, useState } from "react";
+import { Car, Home, ShoppingBag, Utensils, Plane } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import CarbonImpactChart from "@/components/calculator/carbon-impact-chart";
+import ComparisonSimulator from "@/components/calculator/comparison-simulator";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import axios from "axios";
+import { calculator } from "@/types/types";
+import ReductionPlanModal from "@/components/ReductionPlanModel";
+import { Input } from "@/components/ui/input";
 
 // Define the interfaces
 export interface Transportation {
-  transportationMode: string
-  commuteDistance: number
-  flightsCount: "0" | "1-2" | "3-5" | "6+"
+  transportationMode: string;
+  commuteDistance: number;
+  flightsCount: number;
 }
 
 export interface HomeEnergy {
-  energySource: string
-  electricityUsage: number
-  homeSize: "small" | "medium" | "large" | "xlarge"
-  heatingType: "gas" | "electric" | "oil" | "heatpump" | "wood"
+  energySource: string;
+  electricityUsage: number;
+  homeSize: "small" | "medium" | "large" | "xlarge";
+  heatingType: "gas" | "electric" | "oil" | "heatpump" | "wood";
 }
 
 export interface FoodConsumption {
-  dietType: string
-  localFoodPercentage: number
-  foodWaste: "low" | "medium" | "high"
-  OrganicFood: "none" | "some" | "half" | "most" | "all"
+  dietType: string;
+  localFoodPercentage: number;
+  foodWaste: "low" | "medium" | "high";
+  OrganicFood: "none" | "some" | "half" | "most" | "all";
 }
 
 export interface Shopping {
-  shoppingType: string
-  sustainableProducts: number
-  RecyclingHabbits: "none" | "some" | "most" | "all"
-  fashionVsustainable: "fast" | "mixed" | "sustainable" | "secondhand" | "minimal"
+  shoppingType: string;
+  sustainableProducts: number;
+  RecyclingHabbits: "none" | "some" | "most" | "all";
+  fashionVsustainable:
+    | "fast"
+    | "mixed"
+    | "sustainable"
+    | "secondhand"
+    | "minimal";
 }
 
 export interface Calculator {
-  transport: Transportation
-  home: HomeEnergy
-  food: FoodConsumption
-  shopping: Shopping
+  transport: Transportation;
+  home: HomeEnergy;
+  food: FoodConsumption;
+  shopping: Shopping;
 }
 
 export default function CalculatorPage() {
-
-  const {user,error,isLoading} = useUser()
+  const { user, error, isLoading } = useUser();
   // State for emissions
-  const [transportEmissions, setTransportEmissions] = useState(120)
-  const [homeEmissions, setHomeEmissions] = useState(80)
-  const [foodEmissions, setFoodEmissions] = useState(60)
-  const [shoppingEmissions, setShoppingEmissions] = useState(40)
- 
+  const [transportEmissions, setTransportEmissions] = useState(120);
+  const [homeEmissions, setHomeEmissions] = useState(80);
+  const [foodEmissions, setFoodEmissions] = useState(60);
+  const [shoppingEmissions, setShoppingEmissions] = useState(40);
+
   // State for form inputs
   const [transport, setTransport] = useState<Transportation>({
     transportationMode: "car",
-    commuteDistance: 12, // Default value based on transportEmissions / 10
-    flightsCount: "1-2",
-  })
+    commuteDistance: 12,
+    flightsCount: 1, // Default value as a number
+  });
 
   const [home, setHome] = useState<HomeEnergy>({
     energySource: "grid",
     electricityUsage: 80,
     homeSize: "medium",
     heatingType: "electric",
-  })
+  });
 
   const [food, setFood] = useState<FoodConsumption>({
     dietType: "mixed",
     localFoodPercentage: 50,
     foodWaste: "medium",
     OrganicFood: "some",
-  })
+  });
 
   const [shopping, setShopping] = useState<Shopping>({
     shoppingType: "moderate",
     sustainableProducts: 50,
     RecyclingHabbits: "most",
     fashionVsustainable: "mixed",
-  })
-  
+  });
+
   // Total emissions
-  const [TotalCarbon,setCarbontotal] = useState(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
+  const [TotalCarbon, setCarbontotal] = useState(
+    transportEmissions + homeEmissions + foodEmissions + shoppingEmissions
+  );
   const [paramsData, setParams] = useState<Calculator | any>({
     transport: transport,
     home: home,
     food: food,
     shopping: shopping,
   });
-  const [showReductionPlanModal, setShowReductionPlanModal] = useState<boolean>(false)
+  const [showReductionPlanModal, setShowReductionPlanModal] =
+    useState<boolean>(false);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const checkSubscription = async () => {
     try {
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/check-subscription`,
+        `${
+          process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"
+        }/check-subscription`,
         {
           params: {
             email: user?.email,
@@ -115,14 +138,16 @@ export default function CalculatorPage() {
       console.error("Error checking subscription:", error);
     }
   };
-  
+
   // Fetch subscription status when the component mounts or user changes
- 
+
   useEffect(() => {
     const getData = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/get-calcData`,
+          `${
+            process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"
+          }/get-calcData`,
           {
             params: {
               email: user?.email,
@@ -130,22 +155,31 @@ export default function CalculatorPage() {
           }
         );
         console.log("Data received:", res.data);
-        if (res.status === 200){
+        if (res.status === 200) {
           console.log("Good result");
-          setTransport(res.data.transportData)
-          setHome(res.data.homeData)
-          setFood(res.data.foodData)
-          setShopping(res.data.soppingData)
-          setTransportEmissions(res.data.emissionData.transport)
-          setFoodEmissions(res.data.emissionData.food)
-          setHomeEmissions(res.data.emissionData.home)
-          setShoppingEmissions(res.data.emissionData.shopping)
-          setCarbontotal(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
+          setTransport(res.data.transportData || transport);
+          setHome(res.data.homeData || home);
+          setFood(res.data.foodData || food);
+          setShopping(res.data.shoppingData || shopping);
+          setTransportEmissions(
+            res.data.emissionData?.transport || transportEmissions
+          );
+          setFoodEmissions(res.data.emissionData?.food || foodEmissions);
+          setHomeEmissions(res.data.emissionData?.home || homeEmissions);
+          setShoppingEmissions(
+            res.data.emissionData?.shopping || shoppingEmissions
+          );
+          setCarbontotal(
+            (res.data.emissionData?.transport || transportEmissions) +
+              (res.data.emissionData?.home || homeEmissions) +
+              (res.data.emissionData?.food || foodEmissions) +
+              (res.data.emissionData?.shopping || shoppingEmissions)
+          );
           setParams({
-            transport: res.data.transportData,
-            home: res.data.homeData,
-            food: res.data.foodData,
-            shopping: res.data.shoppingData,
+            transport: res.data.transportData || transport,
+            home: res.data.homeData || home,
+            food: res.data.foodData || food,
+            shopping: res.data.shoppingData || shopping,
           });
         }
       } catch (error) {
@@ -159,30 +193,30 @@ export default function CalculatorPage() {
     }
   }, [user?.email]);
 
-
   // Save changes function
   const handleSaveChanges = (category: keyof Calculator) => {
-    console.log("Handle Changes clicked")
+    console.log("Handle Changes clicked");
     const calculator: Calculator = {
       transport,
       home,
       food,
       shopping,
-    }
-
-    
+    };
 
     // Call the SaveChanges function with the calculator object
-    SaveChanges(calculator[category],category)
-  }
+    SaveChanges(calculator[category], category);
+  };
 
-  const SaveChanges =async (data: Transportation | HomeEnergy | FoodConsumption | Shopping,category:string) => {
-    console.log("Saving changes:", data)
+  const SaveChanges = async (
+    data: Transportation | HomeEnergy | FoodConsumption | Shopping,
+    category: string
+  ) => {
+    console.log("Saving changes:", data);
     // You can also store this in a global state or send it to an API
-    // API request for to save where it can calculate and return 
+    // API request for to save where it can calculate and return
     // Make anotherr buttor just to calculate
     // Intially an get req to fetch the datase
-    try{
+    try {
       //This API request wil send email , and currently changes data, Backend task is to find all data and if avaiable else 0 ,
       // pass that data to AI , obtain reult like
       /*
@@ -194,79 +228,85 @@ export default function CalculatorPage() {
           }
         Update the table and and return the emissionData
       */
-      
- 
 
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/calculate-carbon-update`,
-          {
-            params: {
-              email: user?.email,
-              paramsData: {
-                transport: category === "transport" ? data : transport,
-                home: category === "home" ? data : home,
-                food: category === "food" ? data : food,
-                shopping: category === "shopping" ? data : shopping,
-              },
-            },
-          }
-        );
-        
-        if (res.status === 200) {
-          console.log("Calculated Data");
-          setTransportEmissions(res.data.emissionData.transport);
-          setFoodEmissions(res.data.emissionData.food);
-          setHomeEmissions(res.data.emissionData.home);
-          setShoppingEmissions(res.data.emissionData.shopping);
-          setParams({
-            transport: category === "transport" ? data : transport,
-            home: category === "home" ? data : home,
-            food: category === "food" ? data : food,
-            shopping: category === "shopping" ? data : shopping,
-          });
-        }
-
-    }catch(error){
-      console.error("An error occured in saveChanges ",error)
-    }
-  }
-  
-  const handleCalculate =async(type : string )=>{
-    console.log("Calculating")
-    //API req to backend AI to get the calculated thing
-    try{
       const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/calculate-carbon`,{
-          params:{
-            transportdata : transport,
+        `${
+          process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"
+        }/calculate-carbon-update`,
+        {
+          params: {
+            email: user?.email,
+            paramsData: {
+              transport: category === "transport" ? data : transport,
+              home: category === "home" ? data : home,
+              food: category === "food" ? data : food,
+              shopping: category === "shopping" ? data : shopping,
+            },
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        console.log("Calculated Data");
+        setTransportEmissions(res.data.emissionData.transport);
+        setFoodEmissions(res.data.emissionData.food);
+        setHomeEmissions(res.data.emissionData.home);
+        setShoppingEmissions(res.data.emissionData.shopping);
+        setParams({
+          transport: category === "transport" ? data : transport,
+          home: category === "home" ? data : home,
+          food: category === "food" ? data : food,
+          shopping: category === "shopping" ? data : shopping,
+        });
+      }
+    } catch (error) {
+      console.error("An error occured in saveChanges ", error);
+    }
+  };
+
+  const handleCalculate = async (type: string) => {
+    console.log("Calculating");
+    //API req to backend AI to get the calculated thing
+    try {
+      const res = await axios.get(
+        `${
+          process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"
+        }/calculate-carbon`,
+        {
+          params: {
+            email: user?.email,
+            transportdata: transport,
             homedata: home,
             fooddata: food,
-            shoppingdata : shopping
-          }
+            shoppingdata: shopping,
+          },
         }
-      )
-      if (res.status === 200){
-        //successfully calculated 
-        setTransportEmissions(res.data.emissionData.transport)
-        setFoodEmissions(res.data.emissionData.food)
-        setHomeEmissions(res.data.emissionData.home)
-        setShoppingEmissions(res.data.emissionData.shopping)
-        setCarbontotal(transportEmissions + homeEmissions + foodEmissions + shoppingEmissions)
-
+      );
+      console.log(res)
+      if (res.status === 200) {
+        //successfully calculated
+        setTransportEmissions(res.data.emissionData.transport);
+        setFoodEmissions(res.data.emissionData.food);
+        setHomeEmissions(res.data.emissionData.home);
+        setShoppingEmissions(res.data.emissionData.shopping);
+        setCarbontotal(
+          transportEmissions + homeEmissions + foodEmissions + shoppingEmissions
+        );
+      } else {
+        console.log("Something Went wrong in calculating");
       }
-      else{
-        console.log("Something Went wrong in calculating")
-      }
-    }catch(error){
-      console.error("Error in Calculating ",error)
+    } catch (error) {
+      console.error("Error in Calculating ", error);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Carbon Calculator</h1>
-        <p className="text-muted-foreground">Estimate and track your carbon footprint</p>
+        <p className="text-muted-foreground">
+          Estimate and track your carbon footprint
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -295,7 +335,9 @@ export default function CalculatorPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Transportation</CardTitle>
-                  <CardDescription>Calculate emissions from your daily commute and travel</CardDescription>
+                  <CardDescription>
+                    Calculate emissions from your daily commute and travel
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
@@ -303,7 +345,12 @@ export default function CalculatorPage() {
                     <RadioGroup
                       defaultValue="car"
                       className="grid grid-cols-2 gap-4"
-                      onValueChange={(value) => setTransport({ ...transport, transportationMode: value })}
+                      onValueChange={(value) =>
+                        setTransport({
+                          ...transport,
+                          transportationMode: value,
+                        })
+                      }
                     >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="car" id="car" />
@@ -339,43 +386,50 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Daily commute distance (miles)</Label>
-                      <span className="text-sm font-medium">{transport.commuteDistance} miles</span>
+                      <span className="text-sm font-medium">
+                        {transport.commuteDistance} miles
+                      </span>
                     </div>
                     <Slider
                       defaultValue={[transport.commuteDistance]}
                       max={50}
                       step={1}
                       onValueChange={(value) => {
-                        setTransport({ ...transport, commuteDistance: value[0] })
-                        
-                        
+                        setTransport({
+                          ...transport,
+                          commuteDistance: value[0],
+                        });
                       }}
                     />
                   </div>
 
                   <div className="space-y-2">
                     <Label>Flights per year</Label>
-                    <Select
-                      defaultValue="1-2"
-                      onValueChange={(value) => setTransport({ ...transport, flightsCount: value as "0" | "1-2" | "3-5" | "6+" })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select flights" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="0">None</SelectItem>
-                        <SelectItem value="1-2">1-2 flights</SelectItem>
-                        <SelectItem value="3-5">3-5 flights</SelectItem>
-                        <SelectItem value="6+">6+ flights</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input
+                      type="number"
+                      value={transport.flightsCount}
+                      onChange={(e) =>
+                        setTransport({
+                          ...transport,
+                          flightsCount: parseInt(e.target.value, 10) || 0,
+                        })
+                      }
+                      min={0}
+                      placeholder="Enter number of flights"
+                    />
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Button onClick={() => handleSaveChanges("transport")}>Save Transportation Data</Button>
-                  <Button onClick={()=> handleCalculate('transport')} className="bg-black text-white">Calculate</Button>
+                  <Button onClick={() => handleSaveChanges("transport")}>
+                    Save Transportation Data
+                  </Button>
+                  <Button
+                    onClick={() => handleCalculate("transport")}
+                    className="bg-black text-white"
+                  >
+                    Calculate
+                  </Button>
                 </CardFooter>
-                
               </Card>
               <ComparisonSimulator category="transport" />
             </TabsContent>
@@ -384,7 +438,9 @@ export default function CalculatorPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Home Energy</CardTitle>
-                  <CardDescription>Calculate emissions from your home energy usage</CardDescription>
+                  <CardDescription>
+                    Calculate emissions from your home energy usage
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
@@ -392,7 +448,9 @@ export default function CalculatorPage() {
                     <RadioGroup
                       defaultValue="grid"
                       className="grid grid-cols-2 gap-4"
-                      onValueChange={(value) => setHome({ ...home, energySource: value })}
+                      onValueChange={(value) =>
+                        setHome({ ...home, energySource: value })
+                      }
                     >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="grid" id="grid" />
@@ -428,14 +486,16 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Monthly electricity usage (kWh)</Label>
-                      <span className="text-sm font-medium">{home.electricityUsage} kWh</span>
+                      <span className="text-sm font-medium">
+                        {home.electricityUsage} kWh
+                      </span>
                     </div>
                     <Slider
                       defaultValue={[home.electricityUsage]}
                       max={200}
                       step={1}
                       onValueChange={(value) => {
-                        setHome({ ...home, electricityUsage: value[0] })
+                        setHome({ ...home, electricityUsage: value[0] });
                         // setHomeEmissions(value[0])
                       }}
                     />
@@ -445,16 +505,33 @@ export default function CalculatorPage() {
                     <Label>Home size</Label>
                     <Select
                       defaultValue="medium"
-                      onValueChange={(value) => setHome({ ...home, homeSize: value as "small" | "medium" | "large" | "xlarge" })}
+                      onValueChange={(value) =>
+                        setHome({
+                          ...home,
+                          homeSize: value as
+                            | "small"
+                            | "medium"
+                            | "large"
+                            | "xlarge",
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select home size" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="small">Small apartment (&lt; 800 sq ft)</SelectItem>
-                        <SelectItem value="medium">Medium home (800-1500 sq ft)</SelectItem>
-                        <SelectItem value="large">Large home (1500-3000 sq ft)</SelectItem>
-                        <SelectItem value="xlarge">Very large home (&gt; 3000 sq ft)</SelectItem>
+                        <SelectItem value="small">
+                          Small apartment (&lt; 800 sq ft)
+                        </SelectItem>
+                        <SelectItem value="medium">
+                          Medium home (800-1500 sq ft)
+                        </SelectItem>
+                        <SelectItem value="large">
+                          Large home (1500-3000 sq ft)
+                        </SelectItem>
+                        <SelectItem value="xlarge">
+                          Very large home (&gt; 3000 sq ft)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -463,7 +540,17 @@ export default function CalculatorPage() {
                     <Label>Heating type</Label>
                     <Select
                       defaultValue="gas"
-                      onValueChange={(value) => setHome({ ...home, heatingType: value as "gas" | "electric" | "oil" | "heatpump" | "wood" })}
+                      onValueChange={(value) =>
+                        setHome({
+                          ...home,
+                          heatingType: value as
+                            | "gas"
+                            | "electric"
+                            | "oil"
+                            | "heatpump"
+                            | "wood",
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select heating type" />
@@ -479,8 +566,15 @@ export default function CalculatorPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button onClick={() => handleSaveChanges("home")}>Save Home Energy Data</Button>
-                  <Button onClick={()=> handleCalculate('home')} className="bg-black text-white">Calculate</Button>
+                  <Button onClick={() => handleSaveChanges("home")}>
+                    Save Home Energy Data
+                  </Button>
+                  <Button
+                    onClick={() => handleCalculate("home")}
+                    className="bg-black text-white"
+                  >
+                    Calculate
+                  </Button>
                 </CardFooter>
               </Card>
 
@@ -491,7 +585,9 @@ export default function CalculatorPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Food Consumption</CardTitle>
-                  <CardDescription>Calculate emissions from your diet and food choices</CardDescription>
+                  <CardDescription>
+                    Calculate emissions from your diet and food choices
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
@@ -499,7 +595,9 @@ export default function CalculatorPage() {
                     <RadioGroup
                       defaultValue="mixed"
                       className="grid grid-cols-2 gap-4"
-                      onValueChange={(value) => setFood({ ...food, dietType: value })}
+                      onValueChange={(value) =>
+                        setFood({ ...food, dietType: value })
+                      }
                     >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="meat" id="meat" />
@@ -517,7 +615,10 @@ export default function CalculatorPage() {
                       </div>
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="vegetarian" id="vegetarian" />
-                        <Label htmlFor="vegetarian" className="flex items-center">
+                        <Label
+                          htmlFor="vegetarian"
+                          className="flex items-center"
+                        >
                           <Utensils className="h-4 w-4 mr-2" />
                           Vegetarian
                         </Label>
@@ -535,14 +636,16 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Local food percentage</Label>
-                      <span className="text-sm font-medium">{food.localFoodPercentage}%</span>
+                      <span className="text-sm font-medium">
+                        {food.localFoodPercentage}%
+                      </span>
                     </div>
                     <Slider
                       defaultValue={[food.localFoodPercentage]}
                       max={100}
                       step={5}
                       onValueChange={(value) => {
-                        setFood({ ...food, localFoodPercentage: value[0] })
+                        setFood({ ...food, localFoodPercentage: value[0] });
                         // setFoodEmissions(value[0])
                       }}
                     />
@@ -552,15 +655,26 @@ export default function CalculatorPage() {
                     <Label>Food waste</Label>
                     <Select
                       defaultValue="medium"
-                      onValueChange={(value) => setFood({ ...food, foodWaste: value as "low" | "medium" | "high" })}
+                      onValueChange={(value) =>
+                        setFood({
+                          ...food,
+                          foodWaste: value as "low" | "medium" | "high",
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select waste level" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="low">Low (&lt; 10% wasted)</SelectItem>
-                        <SelectItem value="medium">Medium (10-25% wasted)</SelectItem>
-                        <SelectItem value="high">High (&gt; 25% wasted)</SelectItem>
+                        <SelectItem value="low">
+                          Low (&lt; 10% wasted)
+                        </SelectItem>
+                        <SelectItem value="medium">
+                          Medium (10-25% wasted)
+                        </SelectItem>
+                        <SelectItem value="high">
+                          High (&gt; 25% wasted)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -569,7 +683,17 @@ export default function CalculatorPage() {
                     <Label>Organic food consumption</Label>
                     <Select
                       defaultValue="some"
-                      onValueChange={(value) => setFood({ ...food, OrganicFood: value as "none" | "some" | "half" | "most" | "all" })}
+                      onValueChange={(value) =>
+                        setFood({
+                          ...food,
+                          OrganicFood: value as
+                            | "none"
+                            | "some"
+                            | "half"
+                            | "most"
+                            | "all",
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select organic consumption" />
@@ -585,8 +709,15 @@ export default function CalculatorPage() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button onClick={() => handleSaveChanges("food")}>Save Food Data</Button>
-                  <Button onClick={()=> handleCalculate('food')} className="bg-black text-white">Calculate</Button>
+                  <Button onClick={() => handleSaveChanges("food")}>
+                    Save Food Data
+                  </Button>
+                  <Button
+                    onClick={() => handleCalculate("food")}
+                    className="bg-black text-white"
+                  >
+                    Calculate
+                  </Button>
                 </CardFooter>
               </Card>
 
@@ -597,7 +728,10 @@ export default function CalculatorPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Shopping & Consumption</CardTitle>
-                  <CardDescription>Calculate emissions from your purchases and consumption habits</CardDescription>
+                  <CardDescription>
+                    Calculate emissions from your purchases and consumption
+                    habits
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-2">
@@ -605,7 +739,9 @@ export default function CalculatorPage() {
                     <RadioGroup
                       defaultValue="moderate"
                       className="grid grid-cols-2 gap-4"
-                      onValueChange={(value) => setShopping({ ...shopping, shoppingType: value })}
+                      onValueChange={(value) =>
+                        setShopping({ ...shopping, shoppingType: value })
+                      }
                     >
                       <div className="flex items-center space-x-2 rounded-md border p-3">
                         <RadioGroupItem value="minimal" id="minimal" />
@@ -641,14 +777,19 @@ export default function CalculatorPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <Label>Sustainable products percentage</Label>
-                      <span className="text-sm font-medium">{shopping.sustainableProducts}%</span>
+                      <span className="text-sm font-medium">
+                        {shopping.sustainableProducts}%
+                      </span>
                     </div>
                     <Slider
                       defaultValue={[shopping.sustainableProducts]}
                       max={100}
                       step={5}
                       onValueChange={(value) => {
-                        setShopping({ ...shopping, sustainableProducts: value[0] })
+                        setShopping({
+                          ...shopping,
+                          sustainableProducts: value[0],
+                        });
                         // setShoppingEmissions(value[0])
                       }}
                     />
@@ -658,16 +799,33 @@ export default function CalculatorPage() {
                     <Label>Recycling habits</Label>
                     <Select
                       defaultValue="most"
-                      onValueChange={(value) => setShopping({ ...shopping, RecyclingHabbits: value as "none" | "some" | "most" | "all" })}
+                      onValueChange={(value) =>
+                        setShopping({
+                          ...shopping,
+                          RecyclingHabbits: value as
+                            | "none"
+                            | "some"
+                            | "most"
+                            | "all",
+                        })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select recycling level" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="none">None (Don't recycle)</SelectItem>
-                        <SelectItem value="some">Some (Basic recycling)</SelectItem>
-                        <SelectItem value="most">Most (Regular recycling)</SelectItem>
-                        <SelectItem value="all">All (Zero waste lifestyle)</SelectItem>
+                        <SelectItem value="none">
+                          None (Don't recycle)
+                        </SelectItem>
+                        <SelectItem value="some">
+                          Some (Basic recycling)
+                        </SelectItem>
+                        <SelectItem value="most">
+                          Most (Regular recycling)
+                        </SelectItem>
+                        <SelectItem value="all">
+                          All (Zero waste lifestyle)
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -677,25 +835,48 @@ export default function CalculatorPage() {
                     <Select
                       defaultValue="mixed"
                       onValueChange={(value) =>
-                        setShopping({ ...shopping, fashionVsustainable: value as "fast" | "mixed" | "sustainable" | "secondhand" | "minimal" })
+                        setShopping({
+                          ...shopping,
+                          fashionVsustainable: value as
+                            | "fast"
+                            | "mixed"
+                            | "sustainable"
+                            | "secondhand"
+                            | "minimal",
+                        })
                       }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select clothing habits" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="fast">Mostly fast fashion</SelectItem>
+                        <SelectItem value="fast">
+                          Mostly fast fashion
+                        </SelectItem>
                         <SelectItem value="mixed">Mix of both</SelectItem>
-                        <SelectItem value="sustainable">Mostly sustainable</SelectItem>
-                        <SelectItem value="secondhand">Mostly secondhand</SelectItem>
-                        <SelectItem value="minimal">Minimal new purchases</SelectItem>
+                        <SelectItem value="sustainable">
+                          Mostly sustainable
+                        </SelectItem>
+                        <SelectItem value="secondhand">
+                          Mostly secondhand
+                        </SelectItem>
+                        <SelectItem value="minimal">
+                          Minimal new purchases
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button onClick={() => handleSaveChanges("shopping")}>Save Shopping Data</Button>
-                  <Button onClick={()=> handleCalculate('shopping')} className="bg-black text-white">Calculate</Button>
+                  <Button onClick={() => handleSaveChanges("shopping")}>
+                    Save Shopping Data
+                  </Button>
+                  <Button
+                    onClick={() => handleCalculate("shopping")}
+                    className="bg-black text-white"
+                  >
+                    Calculate
+                  </Button>
                 </CardFooter>
               </Card>
 
@@ -708,12 +889,16 @@ export default function CalculatorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Your Carbon Footprint</CardTitle>
-              <CardDescription>Based on your current lifestyle choices</CardDescription>
+              <CardDescription>
+                Based on your current lifestyle choices
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center mb-6">
                 <div className="text-4xl font-bold">{TotalCarbon}</div>
-                <div className="text-sm text-muted-foreground">kg CO2e per month</div>
+                <div className="text-sm text-muted-foreground">
+                  kg CO2e per month
+                </div>
               </div>
               <CarbonImpactChart
                 data={[
@@ -758,12 +943,10 @@ export default function CalculatorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Reduction Potential</CardTitle>
-              <CardDescription>How much you could reduce with small changes</CardDescription>
+              <CardDescription>
+                How much you could reduce with small changes
+              </CardDescription>
             </CardHeader>
-
-
-
-
 
             {/* [HERE MAKE SOME CHANGES ..USE GEN AI TO PREDICT THE AMOUT THE THINGS CAN BE CHANGED..ABOUT HOW MUCH % THE CARBON EMISSION CAN BE REDUCED] */}
             <CardContent>
@@ -809,7 +992,10 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              <Button className="w-full mt-6" onClick={() => setShowReductionPlanModal(true)}>
+              <Button
+                className="w-full mt-6"
+                onClick={() => setShowReductionPlanModal(true)}
+              >
                 Get Personalized Reduction Plan
               </Button>
             </CardContent>
@@ -824,5 +1010,5 @@ export default function CalculatorPage() {
         />
       )}
     </div>
-  )
+  );
 }
