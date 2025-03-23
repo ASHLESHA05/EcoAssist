@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from .models.chatbot import CarbonFootprintChatbot
 from .utils.user_data import fetch_user_data
 from .config import Config
-
+from . import routes_bp  # Import the blueprint from __init__.py
 
 
 # Create a chatbot instance
@@ -40,7 +40,7 @@ def handle_chat():
         return jsonify({'error': 'Internal server error'}), 500
 
 # Additional routes can be added here
-@chat_bp.route('/clear-history', methods=['POST'])
+@routes_bp.route('/clear-history', methods=['POST'])
 def clear_history():
     """Clears the chat history."""
     try:

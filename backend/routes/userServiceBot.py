@@ -526,7 +526,7 @@ def get_sugessions():
 
 # didnt write route in frontend   
 @routes_bp.route("/get-Suggestions-premium", methods=["GET"])
-def get_sugessions():
+def get_sugessions_premium():
     email = request.args.get("email")
     user_data = {
     "eco_score": 65.0,
