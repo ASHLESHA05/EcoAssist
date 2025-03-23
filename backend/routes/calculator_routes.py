@@ -10,10 +10,10 @@ model = joblib.load('carbon_calculator.pkl')
 
 
 def fetch_user_data(email):
-    """Fetch additional data from the external API."""
+    """Fetch additional data from an external API."""
     url = f'https://smart-application-test-server.vercel.app/api/saveData?email={email}'
     response = requests.get(url)
-    
+
     if response.status_code == 200:
         data = response.json()
         return {
@@ -32,18 +32,14 @@ def fetch_user_data(email):
 
 def calculate_emission(email, transport, home, food, shopping):
     """Calculate separate carbon footprints for transport, home, food, and shopping."""
-    
-    # Fetch additional user data (electricity, waste, water usage)
     additional_data = fetch_user_data(email)
 
-    # Convert string numbers to proper types
     def safe_int(value, default=0):
         try:
             return int(value)
         except (ValueError, TypeError):
             return default
 
-    # Prepare data for each category separately
     categories = {
         "transport": pd.DataFrame({
             'mode_of_transportation': [transport.get('transportationMode', 'car')],
@@ -79,7 +75,6 @@ def calculate_emission(email, transport, home, food, shopping):
         })
     }
 
-    # Predict emissions for each category
     emissions = {}
     for category, data in categories.items():
         try:
@@ -88,51 +83,50 @@ def calculate_emission(email, transport, home, food, shopping):
             print(f"Error predicting {category} emissions: {e}")
             emissions[category] = None
 
-    # Return separate emissions
     return emissions
 
-    
-# def calculate_emission(email, transport, home, food, shopping):
-#     """
-#     Placeholder function for calculating carbon emissions.
-#     Replace with actual logic for emission computation.
-#     """
-#     return {
-#         "transport": 120 if transport else 0,
-#         "home": 80 if home else 0,
-#         "food": 60 if food else 0,
-#         "shopping": 40 if shopping else 0
-#     }
+@routes_bp.route("/calculate-carbon", methods=["GET"])
+def calculate_carbon_emission():
+    """Calculate carbon emissions from request query parameters."""
+    try:
+        email = request.args.get("email")
+        if not email:
+            return jsonify({"error": "Email is required"}), 400
+
+        transport_data = json.loads(request.args.get("transportdata", "{}"))
+        home_data = json.loads(request.args.get("homedata", "{}"))
+        food_data = json.loads(request.args.get("fooddata", "{}"))
+        shopping_data = json.loads(request.args.get("shoppingdata", "{}"))
+
+        emission_data = calculate_emission(email, transport_data, home_data, food_data, shopping_data)
+
+        return jsonify({"emissionData": emission_data}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @routes_bp.route("/calculate-carbon-update", methods=["GET"])
 def get_carbon_emission():
-    email = request.args.get("email")
-    params_data = request.args.get("paramsData")
-
-    if not email or not params_data:
-        return jsonify({"error": "Missing required parameters"}), 400
-    
+    """Calculate carbon emissions and update database."""
     try:
-        # The paramsData is passed as a string, so we need to parse it as JSON
-        params_data = json.loads(params_data)
+        email = request.args.get("email")
+        transport_data = json.loads(request.args.get("transportdata", "{}"))
+        home_data = json.loads(request.args.get("homedata", "{}"))
+        food_data = json.loads(request.args.get("fooddata", "{}"))
+        shopping_data = json.loads(request.args.get("shoppingdata", "{}"))
 
-        # Extract individual category data
-        transport_data = params_data.get("transport", {})
-        home_data = params_data.get("home", {})
-        food_data = params_data.get("food", {})
-        shopping_data = params_data.get("shopping", {})
+        if not email:
+            return jsonify({"error": "Email is required"}), 400
 
-        # Compute carbon emission
         emission_data = calculate_emission(email, transport_data, home_data, food_data, shopping_data)
 
-        # Database insertion
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Insert into carbon_footprint table
         query = """
-            INSERT INTO carbon_footprint (user_email, transport_data, home_data, food_data, shopping_data, emission_data)
+            INSERT INTO carbon_footprint 
+            (user_email, transport_data, home_data, food_data, shopping_data, emission_data)
             VALUES (%s, %s, %s, %s, %s, %s)
             ON CONFLICT (user_email) DO UPDATE
             SET transport_data = EXCLUDED.transport_data,
@@ -152,30 +146,10 @@ def get_carbon_emission():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
     finally:
         cursor.close()
         conn.close()
-
-
-@routes_bp.route("/calculate-carbon", methods=["GET"])
-def calculate_carbon_emission():
-    """Calculate carbon emission based on user input and API data."""
-    try:
-        email = request.args.get("email")
-
-        # Extract individual category data and parse JSON strings
-        transport_data = json.loads(request.args.get("transportdata", "{}"))
-        home_data = json.loads(request.args.get("homedata", "{}"))
-        food_data = json.loads(request.args.get("fooddata", "{}"))
-        shopping_data = json.loads(request.args.get("shoppingdata", "{}"))
-
-        # Compute carbon emission
-        emission_data = calculate_emission(email, transport_data, home_data, food_data, shopping_data)
-
-        return jsonify({"emissionData": emission_data}), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
         
 
 @routes_bp.route("/get-calcData", methods=["GET"])
