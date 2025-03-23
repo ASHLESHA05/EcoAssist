@@ -1,4 +1,4 @@
-def fetch_user_data():
+def fetch_user_data(email):
     """
     Fetches user data (e.g., from a database or session).
     Replace this with your actual logic to retrieve user-specific data.

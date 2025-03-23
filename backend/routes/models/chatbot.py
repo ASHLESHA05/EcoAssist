@@ -113,7 +113,7 @@ class CarbonFootprintChatbot:
 
     ### Chatbot Logic ###
 
-    def chatbot(self, user_data, message):
+    def     chatbot(self, user_data, message):
         """
         Processes the user's input (user_data and message) and generates a response.
 

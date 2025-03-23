@@ -12,26 +12,27 @@ import SuggestionChips from "./suggestion-chips";
 import axios from "axios";
 import { dummyChatData } from "@/data/dummy_chat";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast";
 
 export function SustainabilityChat() {
   const [points, setPoints] = useState(0);
-  const [memoryEnabled, setMemoryEnabled] = useState(false); // State for memory switch
-  const { user, error, isLoading_ } = useUser();
-  const [isSubscribed,setIsSubscribed] = useState()
-  const { toast } = useToast()
+  const [memoryEnabled, setMemoryEnabled] = useState(false);
+  const { user, error, isLoading: isUserLoading } = useUser();
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const { toast } = useToast();
   const [messages, setMessages] = useState([
     {
       id: "welcome-1",
       role: "assistant",
-      content:
-        `👋 Hi there! Welcome ${user?.name} I'm your EcoAssist, ready to help you adopt more sustainable practices. What would you like to know about reducing your carbon footprint today?`,
+      content: `👋 Hi there! Welcome ${
+        user?.name || "User"
+      }, I'm your EcoAssist, ready to help you adopt more sustainable practices. What would you like to know about reducing your carbon footprint today?`,
     },
-  ]); // State for chat messages
-  const [input, setInput] = useState(""); // State for input field
-  const [isLoading, setIsLoading] = useState(false); // State for loading indicator
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Ref for auto-scroll
-
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef(null);
+  const email = user?.email
   const suggestedQueries = [
     "How can I reduce my electricity bill this month?",
     "Suggest eco-friendly brands for cleaning products.",
@@ -52,79 +53,77 @@ export function SustainabilityChat() {
     }
   }, [messages]);
 
-  const checkSubscription = async (): Promise<void> => {
+  // Check subscription status
+  const checkSubscription = async () => {
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/check-subscription`,
         {
-          params: {
-            email: user?.email,
-          },
+          params: { email: user?.email },
         }
       );
       if (res.status === 200) {
-        setIsSubscribed(res.data.isSubscribed || false); // Update subscription status
+        setIsSubscribed(res.data.isSubscribed || false);
       }
     } catch (error) {
       console.error("Error checking subscription:", error);
-}};
-  // Handle memory state change
-  const handleMemoryStateChange = (value: boolean) => {
-    checkSubscription()
-    if (isSubscribed){
-    setMemoryEnabled(value);
     }
-    else{
-      toast({
-        title: "No acess",
-        description: "Subscribe to get Ultr",
-      })
-
-      setMemoryEnabled(false)
-    }
-    console.log("Memory state changed:", value);
   };
 
-  const fetchData = async (): Promise<void> => {
+  // Fetch user eco points
+  const fetchData = async () => {
+    if (!user) return;
     try {
       const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"}/get-Ecopoints`,
         {
-          params: {
-            name: user?.name,
-            email: user?.email,
-          },
+          params: { name: user?.name, email: user?.email },
           timeout: 5000,
         }
       );
-
       if (res.status === 200) {
-        console.log("User Details fetched");
-        setPoints(res.data.points || 1);
-      } else {
-        console.log("Failed to fetch user details");
+        setPoints(res.data.points || 0);
       }
     } catch (error) {
       console.error("Error while fetching user details:", error);
     }
   };
-  useEffect(()=>{
-    fetchData()
-  },[user])
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+      checkSubscription();
+    }
+  }, [user]);
+
+  // Handle memory state change
+  const handleMemoryStateChange = (value) => {
+    checkSubscription();
+    if (isSubscribed) {
+      setMemoryEnabled(value);
+      console.log("Memory state changed:", value);
+    } else {
+      toast({
+        title: "No access",
+        description: "Subscribe to get Ultra",
+      });
+      setMemoryEnabled(value);
+    }
+  };
 
   // Handle suggestion click
-  const handleSuggestedQuery = (suggestion: string) => {
-    setInput(suggestion); // Set the input field to the suggestion
-    handleSubmit({ preventDefault: () => {} } as React.FormEvent); // Auto-send the suggestion
+  const handleSuggestedQuery = (suggestion) => {
+    setInput(suggestion);
+    handleSubmit(); // Direct call without event
   };
 
   // Save chat memory to backend
-  const saveChatMemory = async (req: string, res: string, userEmail?: string) => {
+  const saveChatMemory = async (req, res, userEmail) => {
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/update-chat-memory`, {
+      await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/update-chat-memory`, {
         req,
         res,
-        userEmail, // Include the user's email in the request body
+        userEmail,
       });
       console.log("Chat memory saved successfully");
     } catch (error) {
@@ -133,11 +132,14 @@ export function SustainabilityChat() {
   };
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault(); // Prevent default form submission if event exists
+    console.log("submitted chat - start");
+    if (!input.trim()) {
+      console.log("submitted chat - empty input, aborting");
+      return;
+    }
 
-    // Add user message
     const userMessage = {
       id: `user-${messages.length + 1}`,
       role: "user",
@@ -148,39 +150,36 @@ export function SustainabilityChat() {
     setIsLoading(true);
 
     try {
-      // Determine the correct API endpoint based on memoryEnabled
-      const apiEndpoint = memoryEnabled 
-        ? `${process.env.NEXT_PUBLIC_BACKEND_URL|| "http://localhost:8080"}/chatPremium` 
-        : `${process.env.NEXT_PUBLIC_BACKEND_URL|| "http://localhost:8080"}/chat`;
-    
-      // Send user input to the backend API
-      const response = await axios.post(`${apiEndpoint}?email=${encodeURIComponent(user?.email)}`, {
-        message: input
-      });
+      console.log("Req send - before axios");
+      const apiEndpoint = memoryEnabled
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/chatPremium`
+        : `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080"}/chat`;
+
+      console.log(apiEndpoint)
+      const response = await axios.get(`${apiEndpoint}`,{
+        params:{
+          email: user?.email,
+          messages: messages
+        }
+      })
+
+
       
-    
-      if (response.status !== 200) {
-        throw new Error("Backend response not OK");
-      }
-    
-      // Add assistant message from backend
+      console.log("Req send - after axios", response.data);
+
       const assistantMessage = {
         id: `assistant-${messages.length + 1}`,
         role: "assistant",
-        content: response.data.response,
+        content: response.data.response || "No response from server",
       };
-    
       setMessages((prev) => [...prev, assistantMessage]);
-    
-      // Save chat memory if memory is enabled
+
       if (memoryEnabled) {
-        await saveChatMemory(input, assistantMessage.content);
+        await saveChatMemory(input, assistantMessage.content, user?.email);
+        console.log("Chat memory saved");
       }
     } catch (error) {
       console.error("Error in chat handling:", error);
-
-
-      // Fallback to dummy data if backend is unavailable
       const mostSimilarQuestion = findMostSimilarQuestion(input);
       const fallbackResponse = mostSimilarQuestion
         ? dummyChatData[mostSimilarQuestion]
@@ -193,17 +192,14 @@ export function SustainabilityChat() {
       };
       setMessages((prev) => [...prev, assistantMessage]);
 
-      // Save chat memory if memory is enabled
       if (memoryEnabled) {
-        await saveChatMemory(input, assistantMessage.content);
+        await saveChatMemory(input, assistantMessage.content, user?.email);
       }
     } finally {
       setIsLoading(false);
+      console.log("submitted chat - end");
     }
   };
-  messages.map((message: any) => (
-  console.log(message.content)
-  ))
 
   return (
     <div className="flex flex-col h-full bg-black text-white">
@@ -224,7 +220,7 @@ export function SustainabilityChat() {
             <span className="text-green-500">{points} EcoPoints</span>
           </Badge>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400">Ultra mood</span>
+            <span className="text-sm text-gray-400">Ultra mode</span>
             <Switch
               checked={memoryEnabled}
               onCheckedChange={handleMemoryStateChange}
@@ -236,27 +232,27 @@ export function SustainabilityChat() {
 
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-        {messages.map((message: any) => {
-  // Skip rendering if message.content is undefined
-  console.log("Message Content",message.content)
-  if (message.content === undefined) return null;
-
-  return (
-    <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-[80%] rounded-lg p-3 ${
-          message.role === "user" ? "bg-green-900 text-white" : "bg-gray-800 text-white"
-        }`}
-      >
-        {message.role === "assistant" ? (
-          <TypingEffect text={message.content} />
-        ) : (
-          <FormattedText text={message.content} />
-        )}
-      </div>
-    </div>
-  );
-})}
+          {messages.map((message) => {
+            if (!message.content) return null; // Skip undefined content
+            return (
+              <div
+                key={message.id}
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.role === "user" ? "bg-green-900 text-white" : "bg-gray-800 text-white"
+                  }`}
+                >
+                  {message.role === "assistant" ? (
+                    <TypingEffect text={message.content} />
+                  ) : (
+                    <FormattedText text={message.content} />
+                  )}
+                </div>
+              </div>
+            );
+          })}
           {isLoading && (
             <div className="flex justify-start">
               <div className="max-w-[80%] rounded-lg p-3 bg-gray-800">
@@ -277,12 +273,11 @@ export function SustainabilityChat() {
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} /> {/* Auto-scroll anchor */}
+          <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
       <div className="p-4 border-t border-gray-800">
-        {/* Show suggestions only for the first prompt */}
         {messages.length === 1 && (
           <SuggestionChips suggestions={suggestedQueries} onSelect={handleSuggestedQuery} />
         )}
@@ -293,20 +288,20 @@ export function SustainabilityChat() {
             className="bg-gray-800 hover:bg-gray-700 h-12 px-4"
             onClick={() => console.log("Voice input placeholder")}
           >
-            <Mic className="h-5 w-5 text-green-400" />{/* Microphone button */}
+            <Mic className="h-5 w-5 text-green-400" />
           </Button>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about sustainable practices..."
-            className="w-[70%] h-12 bg-gray-800 border-gray-700 text-white" // Adjusted width
+            className="w-[70%] h-12 bg-gray-800 border-gray-700 text-white"
           />
           <Button
             type="submit"
             disabled={isLoading || !input.trim()}
             className="bg-green-600 hover:bg-green-700 h-12 px-4"
           >
-            <Send className="h-5 w-5" /> {/* Send button */}
+            <Send className="h-5 w-5" />
           </Button>
         </form>
       </div>
@@ -315,7 +310,7 @@ export function SustainabilityChat() {
 }
 
 // Typing effect component
-const TypingEffect = ({ text = "" }: { text?: string }) => {
+const TypingEffect = ({ text = "" }) => {
   const [displayedText, setDisplayedText] = useState("");
 
   useEffect(() => {
@@ -327,7 +322,7 @@ const TypingEffect = ({ text = "" }: { text?: string }) => {
       } else {
         clearInterval(interval);
       }
-    }, 20); // Adjust typing speed here
+    }, 20);
 
     return () => clearInterval(interval);
   }, [text]);
@@ -335,23 +330,19 @@ const TypingEffect = ({ text = "" }: { text?: string }) => {
   return <FormattedText text={displayedText} />;
 };
 
-const FormattedText = ({ text = "" }: { text?: string }) => {
+// Formatted text component
+const FormattedText = ({ text = "" }) => {
   return (
     <div className="whitespace-pre-wrap">
       {text.split("\n").map((line, index) => (
-        <p key={index}>
-          {line.startsWith("- ") ? "• " + line.slice(2) : line} {/* Render bullet points */}
-        </p>
+        <p key={index}>{line.startsWith("- ") ? "• " + line.slice(2) : line}</p>
       ))}
     </div>
   );
 };
 
-// Dummy data fallback
-
-
 // Find the most similar question from dummy data
-const findMostSimilarQuestion = (input: string): string | null => {
+const findMostSimilarQuestion = (input) => {
   const inputTokens = input.toLowerCase().split(/\s+/);
   let maxSimilarity = 0;
   let mostSimilarQuestion = null;
@@ -366,12 +357,11 @@ const findMostSimilarQuestion = (input: string): string | null => {
     }
   }
 
-  // Only return a match if similarity is above a threshold
   return maxSimilarity > 0.5 ? mostSimilarQuestion : null;
 };
 
-// Calculate similarity between two token sets (simple Jaccard similarity)
-const calculateSimilarity = (tokens1: string[], tokens2: string[]): number => {
+// Calculate similarity between two token sets (Jaccard similarity)
+const calculateSimilarity = (tokens1, tokens2) => {
   const intersection = tokens1.filter((token) => tokens2.includes(token)).length;
   const union = new Set([...tokens1, ...tokens2]).size;
   return intersection / union;

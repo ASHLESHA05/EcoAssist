@@ -3,7 +3,7 @@ import sqlite3
 from google.generativeai import configure, GenerativeModel
 
 class CarbonFootprintChatbot:
-    def __init__(self, api_key, db_path='chat_history.db'):
+    def __init__(self, api_key="AIzaSyC5NO9hKx8qVlwhZeU9qVYo-kRUKvj9TGE", db_path='chat_history.db'):
         """
         Initializes the chatbot with API configuration and database setup.
 

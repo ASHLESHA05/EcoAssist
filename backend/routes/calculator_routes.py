@@ -7,7 +7,7 @@ import pandas as pd
 import joblib
 
 model = joblib.load(
-    r"C:\programing\terrathon\EcoAssist\backend\routes\carbon_calculator.pkl"
+    r"D:\Projects\Carbon_tracker\backend\routes\carbon_calculator.pkl"
 )
 
 

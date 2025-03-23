@@ -10,7 +10,7 @@ from . import routes_bp
 llama_chatbot = LlamaCarbonFootprintChatBot(LlamaConfig.MODEL_PATH)
 llama_memory_manager = LlamaChatMemoryManager(LlamaConfig.MEMORY_DIR)
 
-@routes_bp.route('/chat', methods=['POST'])
+@routes_bp.route('/chat', methods=['GET'])
 def handle_llama_chat():
     """
     Handle regular LLaMa chat requests (without memory).
@@ -21,13 +21,11 @@ def handle_llama_chat():
     }
     """
     try:
-        # Get data from request
-        data = request.get_json()
+        user_message = request.args.get("messages")
+        # if not data or 'message' not in data:
+        #     return jsonify({'error': 'No message provided'}), 400
         
-        if not data or 'message' not in data:
-            return jsonify({'error': 'No message provided'}), 400
         
-        user_message = data['message']
         
         # Generate response without context
         response = llama_chatbot.generate_response(
