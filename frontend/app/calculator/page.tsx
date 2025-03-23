@@ -212,23 +212,7 @@ export default function CalculatorPage() {
     category: string
   ) => {
     console.log("Saving changes:", data);
-    // You can also store this in a global state or send it to an API
-    // API request for to save where it can calculate and return
-    // Make anotherr buttor just to calculate
-    // Intially an get req to fetch the datase
     try {
-      //This API request wil send email , and currently changes data, Backend task is to find all data and if avaiable else 0 ,
-      // pass that data to AI , obtain reult like
-      /*
-        emissionData : {
-            tansport : 120,
-            home : 80,
-            food : 60,
-            shopping : 40
-          }
-        Update the table and and return the emissionData
-      */
-
       const res = await axios.get(
         `${
           process.env.NEXT_PUBLIC_BACKEND || "http://localhost:8080"
@@ -236,16 +220,14 @@ export default function CalculatorPage() {
         {
           params: {
             email: user?.email,
-            paramsData: {
-              transport: category === "transport" ? data : transport,
-              home: category === "home" ? data : home,
-              food: category === "food" ? data : food,
-              shopping: category === "shopping" ? data : shopping,
-            },
+            transportdata: JSON.stringify(category === "transport" ? data : transport),
+            homedata: JSON.stringify(category === "home" ? data : home),
+            fooddata: JSON.stringify(category === "food" ? data : food),
+            shoppingdata: JSON.stringify(category === "shopping" ? data : shopping),
           },
         }
       );
-
+  
       if (res.status === 200) {
         console.log("Calculated Data");
         setTransportEmissions(res.data.emissionData.transport);
@@ -260,13 +242,12 @@ export default function CalculatorPage() {
         });
       }
     } catch (error) {
-      console.error("An error occured in saveChanges ", error);
+      console.error("An error occurred in saveChanges ", error);
     }
   };
 
   const handleCalculate = async (type: string) => {
     console.log("Calculating");
-    //API req to backend AI to get the calculated thing
     try {
       const res = await axios.get(
         `${
@@ -275,25 +256,26 @@ export default function CalculatorPage() {
         {
           params: {
             email: user?.email,
-            transportdata: transport,
-            homedata: home,
-            fooddata: food,
-            shoppingdata: shopping,
+            transportdata: JSON.stringify(transport),
+            homedata: JSON.stringify(home),
+            fooddata: JSON.stringify(food),
+            shoppingdata: JSON.stringify(shopping),
           },
         }
       );
-      console.log(res)
       if (res.status === 200) {
-        //successfully calculated
         setTransportEmissions(res.data.emissionData.transport);
         setFoodEmissions(res.data.emissionData.food);
         setHomeEmissions(res.data.emissionData.home);
         setShoppingEmissions(res.data.emissionData.shopping);
         setCarbontotal(
-          transportEmissions + homeEmissions + foodEmissions + shoppingEmissions
+          res.data.emissionData.transport +
+            res.data.emissionData.home +
+            res.data.emissionData.food +
+            res.data.emissionData.shopping
         );
       } else {
-        console.log("Something Went wrong in calculating");
+        console.log("Something went wrong in calculating");
       }
     } catch (error) {
       console.error("Error in Calculating ", error);

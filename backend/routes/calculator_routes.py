@@ -43,96 +43,60 @@ def fetch_user_data(email):
     
 
 def calculate_emission(email, transport, home, food, shopping):
-    """Calculate separate carbon footprints for transport, home, food, and shopping."""
-    additional_data = fetch_user_data(email)
-
-    def safe_int(value, default=0):
-        try:
-            return int(value)
-        except (ValueError, TypeError):
-            return default
-
-    def safe_float(value, default=0.0):
-        try:
-            return float(value)
-        except (ValueError, TypeError):
-            return default
-
-    # Define the list of all columns (21 in total)
+    model = joblib.load(r"D:\Projects\Carbon_tracker\backend\routes\carbon_calculator.pkl")
+    emissions = {}
     all_columns = [
-        "mode_of_transportation",        # object (string)
-        "daily_commute_distance",        # int64
-        "flights_per_month",            # int64
-        "home_energy_source",           # object (string)
-        "monthly_electricity_usage",     # int64
-        "home_size",                    # object (string)
-        "heating_type",                 # object (string)
-        "water_usage",                  # int64
-        "light",                        # int64
-        "light_consumption",            # int64
-        "fan",                          # int64
-        "fan_consumption",              # int64
-        "heater",                       # int64
-        "heater_consumption",           # int64
-        "diet",                        # object (string)
-        "food_waste",                   # object (string)
-        "organic_food_consumption",     # object (string)
-        "waste_generated",              # int64
-        "shopping_frequency",           # object (string)
-        "recycling_habit",              # object (string)
-        "fast_fashion_vs_sustainable",  # object (string)
+        "mode_of_transportation",
+        "daily_commute_distance",
+        "flights_per_month",
+        "home_energy_source",
+        "monthly_electricity_usage",
+        "home_size",
+        "heating_type",
+        "water_usage",
+        "light",
+        "light_consumption",
+        "fan",
+        "fan_consumption",
+        "heater",
+        "heater_consumption",
+        "diet",
+        "food_waste",
+        "organic_food_consumption",
+        "waste_generated",
+        "shopping_frequency",
+        "recycling_habit",
+        "fast_fashion_vs_sustainable",
     ]
 
-    # Initialize all columns with default values based on their types
-    default_data = {
-        "mode_of_transportation": "",        # string
-        "daily_commute_distance": 0,        # int
-        "flights_per_month": 0,             # int
-        "home_energy_source": "",           # string
-        "monthly_electricity_usage": 0,     # int
-        "home_size": "",                    # string
-        "heating_type": "",                 # string
-        "water_usage": 0,                   # int
-        "light": 0,                         # int
-        "light_consumption": 0,             # int
-        "fan": 0,                           # int
-        "fan_consumption": 0,               # int
-        "heater": 0,                        # int
-        "heater_consumption": 0,            # int
-        "diet": "",                         # string
-        "food_waste": "",                   # string
-        "organic_food_consumption": "",     # string
-        "waste_generated": 0,               # int
-        "shopping_frequency": "",           # string
-        "recycling_habit": "",              # string
-        "fast_fashion_vs_sustainable": "",  # string
-    }
+    # Initialize all columns with default values (0 or "")
+    default_data = {col: 0 if isinstance(col, str) else "" for col in all_columns}
 
     # Categories data
     categories = {
         "transport": {
             "mode_of_transportation": transport.get("transportationMode", "car"),
-            "daily_commute_distance": safe_int(transport.get("commuteDistance"), 10),
+            "daily_commute_distance": safe_float(transport.get("commuteDistance"), 10.0),
             "flights_per_month": safe_int(transport.get("flightsCount"), 0),
         },
         "home": {
             "home_energy_source": home.get("energySource", "grid"),
-            "monthly_electricity_usage": safe_int(home.get("electricityUsage"), 100),
+            "monthly_electricity_usage": safe_float(home.get("electricityUsage"), 100.0),
             "home_size": home.get("homeSize", "medium"),
             "heating_type": home.get("heatingType", "electric"),
-            "water_usage": safe_int(additional_data.get("water_usage"), 100),
+            "water_usage": safe_float(additional_data.get("water_usage"), 100.0),
             "light": safe_int(additional_data.get("light"), 5),
-            "light_consumption": safe_int(additional_data.get("light_consumption"), 50),
+            "light_consumption": safe_float(additional_data.get("light_consumption"), 50.0),
             "fan": safe_int(additional_data.get("fan"), 2),
-            "fan_consumption": safe_int(additional_data.get("fan_consumption"), 75),
+            "fan_consumption": safe_float(additional_data.get("fan_consumption"), 75.0),
             "heater": safe_int(additional_data.get("heater"), 1),
-            "heater_consumption": safe_int(additional_data.get("heater_consumption"), 1000),
+            "heater_consumption": safe_float(additional_data.get("heater_consumption"), 1000.0),
         },
         "food": {
             "diet": food.get("dietType", "mixed"),
             "food_waste": food.get("foodWaste", "medium"),
             "organic_food_consumption": food.get("OrganicFood", "some"),
-            "waste_generated": safe_int(additional_data.get("waste_generated"), 10),
+            "waste_generated": safe_float(additional_data.get("waste_generated"), 10.0),
         },
         "shopping": {
             "shopping_frequency": shopping.get("shoppingType", "moderate"),
@@ -145,21 +109,13 @@ def calculate_emission(email, transport, home, food, shopping):
 
     # Iterate over each category
     for category, data in categories.items():
-        # Create a copy of the default data
-        category_data = default_data.copy()
-
-        # Update the category data with the relevant values
+        category_data = default_values.copy()
         category_data.update(data)
-
-        # Convert to DataFrame
         category_df = pd.DataFrame([category_data])
-        print(category_data)
 
         # Predict emissions using the model
         try:
-            # Convert float32 to float for JSON serialization
-            prediction = model.predict(category_df)
-            emissions[category] = float(np.round(prediction[0], 2) / 4)  # Convert to float
+            emissions[category] = round(model.predict(category_df)[0], 2)
         except Exception as e:
             print(f"Error predicting {category} emissions: {e}")
             emissions[category] = None
@@ -304,6 +260,9 @@ def get_carbon_emission():
         return jsonify({"emissionData": emission_data}), 200
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(e)
         return jsonify({"error": str(e)}), 500
 
     finally:
