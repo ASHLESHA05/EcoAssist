@@ -264,16 +264,30 @@ export default function CalculatorPage() {
         }
       );
       if (res.status === 200) {
-        setTransportEmissions(res.data.emissionData.transport);
-        setFoodEmissions(res.data.emissionData.food);
-        setHomeEmissions(res.data.emissionData.home);
-        setShoppingEmissions(res.data.emissionData.shopping);
-        setCarbontotal(
-          res.data.emissionData.transport +
-            res.data.emissionData.home +
-            res.data.emissionData.food +
-            res.data.emissionData.shopping
+        // Round emissions to 2 decimal places
+        const transportEmissionsRounded = parseFloat(res.data.emissionData.transport.toFixed(2));
+        const foodEmissionsRounded = parseFloat(res.data.emissionData.food.toFixed(2));
+        const homeEmissionsRounded = parseFloat(res.data.emissionData.home.toFixed(2));
+        const shoppingEmissionsRounded = parseFloat(res.data.emissionData.shopping.toFixed(2));
+      
+        // Set the rounded values to state
+        setTransportEmissions(transportEmissionsRounded);
+        setFoodEmissions(foodEmissionsRounded);
+        setHomeEmissions(homeEmissionsRounded);
+        setShoppingEmissions(shoppingEmissionsRounded);
+      
+        // Calculate and round the total emissions
+        const totalCarbonRounded = parseFloat(
+          (
+            transportEmissionsRounded +
+            homeEmissionsRounded +
+            foodEmissionsRounded +
+            shoppingEmissionsRounded
+          ).toFixed(2)
         );
+      
+        // Set the rounded total to state
+        setCarbontotal(totalCarbonRounded);
       } else {
         console.log("Something went wrong in calculating");
       }
