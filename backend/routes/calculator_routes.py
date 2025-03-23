@@ -8,6 +8,7 @@ import joblib
 
 model = joblib.load('carbon_calculator.pkl')
 
+
 def fetch_user_data(email):
     """Fetch additional data from the external API."""
     url = f'https://smart-application-test-server.vercel.app/api/saveData?email={email}'
@@ -28,47 +29,53 @@ def fetch_user_data(email):
     else:
         print("Error fetching data:", response.status_code)
         return {}
-    
-    
+
 def calculate_emission(email, transport, home, food, shopping):
     """Calculate separate carbon footprints for transport, home, food, and shopping."""
     
     # Fetch additional user data (electricity, waste, water usage)
     additional_data = fetch_user_data(email)
 
+    # Convert string numbers to proper types
+    def safe_int(value, default=0):
+        try:
+            return int(value)
+        except (ValueError, TypeError):
+            return default
+
     # Prepare data for each category separately
     categories = {
         "transport": pd.DataFrame({
             'mode_of_transportation': [transport.get('transportationMode', 'car')],
-            'daily_commute_distance': [transport.get('commuteDistance', 10)],
-            'flights_per_month': [transport.get('flightsCount', 0)],
+            'daily_commute_distance': [safe_int(transport.get('commuteDistance'), 10)],
+            'flights_per_month': [safe_int(transport.get('flightsCount'), 0)],
         }),
 
         "home": pd.DataFrame({
             'home_energy_source': [home.get('energySource', 'grid')],
-            'monthly_electricity_usage': [home.get('electricityUsage', 100)],
+            'monthly_electricity_usage': [safe_int(home.get('electricityUsage'), 100)],
             'home_size': [home.get('homeSize', 'medium')],
             'heating_type': [home.get('heatingType', 'electric')],
-            'water_usage': [additional_data.get('water_usage', 100)],
-            'light': [additional_data.get('light', 5)],
-            'light_consumption': [additional_data.get('light_consumption', 50)],
-            'fan': [additional_data.get('fan', 2)],
-            'fan_consumption': [additional_data.get('fan_consumption', 75)],
-            'heater': [additional_data.get('heater', 1)],
-            'heater_consumption': [additional_data.get('heater_consumption', 1000)],
+            'water_usage': [safe_int(additional_data.get('water_usage'), 100)],
+            'light': [safe_int(additional_data.get('light'), 5)],
+            'light_consumption': [safe_int(additional_data.get('light_consumption'), 50)],
+            'fan': [safe_int(additional_data.get('fan'), 2)],
+            'fan_consumption': [safe_int(additional_data.get('fan_consumption'), 75)],
+            'heater': [safe_int(additional_data.get('heater'), 1)],
+            'heater_consumption': [safe_int(additional_data.get('heater_consumption'), 1000)],
         }),
 
         "food": pd.DataFrame({
             'diet': [food.get('dietType', 'mixed')],
             'food_waste': [food.get('foodWaste', 'medium')],
-            'organic_food_consumption': [food.get('organicFood', 'some')],
-            'waste_generated': [additional_data.get('waste_generated', 10)]
+            'organic_food_consumption': [food.get('OrganicFood', 'some')],
+            'waste_generated': [safe_int(additional_data.get('waste_generated'), 10)]
         }),
 
         "shopping": pd.DataFrame({
             'shopping_frequency': [shopping.get('shoppingType', 'moderate')],
             'recycling_habit': [shopping.get('RecyclingHabbits', 'most')],
-            'fast_fashion_vs_sustainable': [shopping.get('fashionVsSustainable', 'mixed')],
+            'fast_fashion_vs_sustainable': [shopping.get('fashionVsustainable', 'mixed')],
         })
     }
 
@@ -83,6 +90,7 @@ def calculate_emission(email, transport, home, food, shopping):
 
     # Return separate emissions
     return emissions
+
     
 # def calculate_emission(email, transport, home, food, shopping):
 #     """
