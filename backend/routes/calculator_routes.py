@@ -8,7 +8,7 @@ import joblib
 import numpy as np
 
 model = joblib.load(
-    r"D:\Terrathon\backend\routes\carbon_calculator.pkl"
+    r"C:\programing\terrathon\EcoAssist\backend\routes\carbon_calculator.pkl"
 )
 
 def fetch_user_data(email):
@@ -304,9 +304,6 @@ def get_carbon_emission():
         return jsonify({"emissionData": emission_data}), 200
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print(e)
         return jsonify({"error": str(e)}), 500
 
     finally:
