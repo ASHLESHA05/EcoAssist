@@ -40,50 +40,73 @@ def calculate_emission(email, transport, home, food, shopping):
         except (ValueError, TypeError):
             return default
 
+    # Define the list of all columns (21 in total)
+    all_columns = [
+        'mode_of_transportation', 'daily_commute_distance', 'flights_per_month',
+        'home_energy_source', 'monthly_electricity_usage', 'home_size', 'heating_type',
+        'water_usage', 'light', 'light_consumption', 'fan', 'fan_consumption',
+        'heater', 'heater_consumption', 'diet', 'food_waste', 'organic_food_consumption',
+        'waste_generated', 'shopping_frequency', 'recycling_habit', 'fast_fashion_vs_sustainable'
+    ]
+    
+    # Initialize all columns with default values (0 or "")
+    default_data = {col: 0 if isinstance(col, str) else "" for col in all_columns}
+
+    # Categories data
     categories = {
-        "transport": pd.DataFrame({
-            'mode_of_transportation': [transport.get('transportationMode', 'car')],
-            'daily_commute_distance': [safe_int(transport.get('commuteDistance'), 10)],
-            'flights_per_month': [safe_int(transport.get('flightsCount'), 0)],
-        }),
-
-        "home": pd.DataFrame({
-            'home_energy_source': [home.get('energySource', 'grid')],
-            'monthly_electricity_usage': [safe_int(home.get('electricityUsage'), 100)],
-            'home_size': [home.get('homeSize', 'medium')],
-            'heating_type': [home.get('heatingType', 'electric')],
-            'water_usage': [safe_int(additional_data.get('water_usage'), 100)],
-            'light': [safe_int(additional_data.get('light'), 5)],
-            'light_consumption': [safe_int(additional_data.get('light_consumption'), 50)],
-            'fan': [safe_int(additional_data.get('fan'), 2)],
-            'fan_consumption': [safe_int(additional_data.get('fan_consumption'), 75)],
-            'heater': [safe_int(additional_data.get('heater'), 1)],
-            'heater_consumption': [safe_int(additional_data.get('heater_consumption'), 1000)],
-        }),
-
-        "food": pd.DataFrame({
-            'diet': [food.get('dietType', 'mixed')],
-            'food_waste': [food.get('foodWaste', 'medium')],
-            'organic_food_consumption': [food.get('OrganicFood', 'some')],
-            'waste_generated': [safe_int(additional_data.get('waste_generated'), 10)]
-        }),
-
-        "shopping": pd.DataFrame({
-            'shopping_frequency': [shopping.get('shoppingType', 'moderate')],
-            'recycling_habit': [shopping.get('RecyclingHabbits', 'most')],
-            'fast_fashion_vs_sustainable': [shopping.get('fashionVsustainable', 'mixed')],
-        })
+        "transport": {
+            'mode_of_transportation': transport.get('transportationMode', 'car'),
+            'daily_commute_distance': safe_int(transport.get('commuteDistance'), 10),
+            'flights_per_month': safe_int(transport.get('flightsCount'), 0),
+        },
+        "home": {
+            'home_energy_source': home.get('energySource', 'grid'),
+            'monthly_electricity_usage': safe_int(home.get('electricityUsage'), 100),
+            'home_size': home.get('homeSize', 'medium'),
+            'heating_type': home.get('heatingType', 'electric'),
+            'water_usage': safe_int(additional_data.get('water_usage'), 100),
+            'light': safe_int(additional_data.get('light'), 5),
+            'light_consumption': safe_int(additional_data.get('light_consumption'), 50),
+            'fan': safe_int(additional_data.get('fan'), 2),
+            'fan_consumption': safe_int(additional_data.get('fan_consumption'), 75),
+            'heater': safe_int(additional_data.get('heater'), 1),
+            'heater_consumption': safe_int(additional_data.get('heater_consumption'), 1000),
+        },
+        "food": {
+            'diet': food.get('dietType', 'mixed'),
+            'food_waste': food.get('foodWaste', 'medium'),
+            'organic_food_consumption': food.get('OrganicFood', 'some'),
+            'waste_generated': safe_int(additional_data.get('waste_generated'), 10)
+        },
+        "shopping": {
+            'shopping_frequency': shopping.get('shoppingType', 'moderate'),
+            'recycling_habit': shopping.get('RecyclingHabbits', 'most'),
+            'fast_fashion_vs_sustainable': shopping.get('fashionVsustainable', 'mixed'),
+        }
     }
 
     emissions = {}
+    
+    # Iterate over each category
     for category, data in categories.items():
+        # Create a copy of the default data
+        category_data = default_data.copy()
+
+        # Update the category data with the relevant values
+        category_data.update(data)
+
+        # Convert to DataFrame
+        category_df = pd.DataFrame([category_data])
+
+        # Predict emissions using the model
         try:
-            emissions[category] = round(model.predict(data)[0], 2)
+            emissions[category] = round(model.predict(category_df)[0], 2)
         except Exception as e:
             print(f"Error predicting {category} emissions: {e}")
             emissions[category] = None
 
     return emissions
+
 
 @routes_bp.route("/calculate-carbon", methods=["GET"])
 def calculate_carbon_emission():

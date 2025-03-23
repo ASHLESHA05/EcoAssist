@@ -12,3 +12,4 @@ from .userServiceBot import *
 from .chat_routes import *
 from .chatBot import *
 from .serverCollection import *
+from .calculator_routes import *
