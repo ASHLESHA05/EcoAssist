@@ -39,16 +39,16 @@ def calculate_emission(email, transport, home, food, shopping):
     # Prepare data for each category separately
     categories = {
         "transport": pd.DataFrame({
-            'mode_of_transportation': [transport.get('mode_of_transportation', 'car')],
-            'daily_commute_distance': [transport.get('daily_commute_distance', 10)],
-            'flights_per_month': [transport.get('flights_per_month', 0)],
+            'mode_of_transportation': [transport.get('transportationMode', 'car')],
+            'daily_commute_distance': [transport.get('commuteDistance', 10)],
+            'flights_per_month': [transport.get('flightsCount', 0)],
         }),
 
         "home": pd.DataFrame({
-            'home_energy_source': [home.get('home_energy_source', 'grid')],
-            'monthly_electricity_usage': [home.get('monthly_electricity_usage', 100)],
-            'home_size': [home.get('home_size', 'medium')],
-            'heating_type': [home.get('heating_type', 'electric')],
+            'home_energy_source': [home.get('energySource', 'grid')],
+            'monthly_electricity_usage': [home.get('electricityUsage', 100)],
+            'home_size': [home.get('homeSize', 'medium')],
+            'heating_type': [home.get('heatingType', 'electric')],
             'water_usage': [additional_data.get('water_usage', 100)],
             'light': [additional_data.get('light', 5)],
             'light_consumption': [additional_data.get('light_consumption', 50)],
@@ -59,16 +59,16 @@ def calculate_emission(email, transport, home, food, shopping):
         }),
 
         "food": pd.DataFrame({
-            'diet': [food.get('diet', 'mixed')],
-            'food_waste': [food.get('food_waste', 'medium')],
-            'organic_food_consumption': [food.get('organic_food_consumption', 'some')],
+            'diet': [food.get('dietType', 'mixed')],
+            'food_waste': [food.get('foodWaste', 'medium')],
+            'organic_food_consumption': [food.get('organicFood', 'some')],
             'waste_generated': [additional_data.get('waste_generated', 10)]
         }),
 
         "shopping": pd.DataFrame({
-            'shopping_frequency': [shopping.get('shopping_frequency', 'moderate')],
-            'recycling_habit': [shopping.get('recycling_habit', 'most')],
-            'fast_fashion_vs_sustainable': [shopping.get('fast_fashion_vs_sustainable', 'mixed')],
+            'shopping_frequency': [shopping.get('shoppingType', 'moderate')],
+            'recycling_habit': [shopping.get('RecyclingHabbits', 'most')],
+            'fast_fashion_vs_sustainable': [shopping.get('fashionVsSustainable', 'mixed')],
         })
     }
 
