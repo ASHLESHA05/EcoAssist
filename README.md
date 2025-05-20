@@ -121,4 +121,4 @@ res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate")
 
 ---
 
-This implementation allows you to save and fetch user data using the same API route. Let me know if you need further assistance!
+This implementation allows you to save and fetch user data using the same API route. Let me know if you need further assistance
